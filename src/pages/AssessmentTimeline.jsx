@@ -265,12 +265,42 @@ function AssessmentTimeline({ cart }) {
                 const weekEnd = new Date(weekStart);
                 weekEnd.setDate(weekStart.getDate() + 6);
 
+                // Identify "Hell Weeks" - weeks with 3+ assessments
+                const isHellWeek = weekAssessments.length >= 3;
+                const isVeryBusyWeek = weekAssessments.length >= 5;
+
                 return (
-                  <div key={weekKey} className="bg-white rounded-lg shadow-md p-6">
-                    <h3 className="text-lg font-semibold text-smu-blue mb-4">
-                      Week of {weekStart.toLocaleDateString('en-SG', { month: 'long', day: 'numeric' })} -{' '}
-                      {weekEnd.toLocaleDateString('en-SG', { month: 'long', day: 'numeric' })}
-                    </h3>
+                  <div
+                    key={weekKey}
+                    className={`rounded-lg shadow-md p-6 border-2 ${
+                      isVeryBusyWeek
+                        ? 'bg-red-50 border-red-400'
+                        : isHellWeek
+                        ? 'bg-orange-50 border-orange-400'
+                        : 'bg-white border-gray-200'
+                    }`}
+                  >
+                    <div className="flex items-center justify-between mb-4">
+                      <h3 className="text-lg font-semibold text-smu-blue">
+                        Week of {weekStart.toLocaleDateString('en-SG', { month: 'long', day: 'numeric' })} -{' '}
+                        {weekEnd.toLocaleDateString('en-SG', { month: 'long', day: 'numeric' })}
+                      </h3>
+                      {isVeryBusyWeek && (
+                        <span className="px-3 py-1 bg-red-500 text-white rounded-full text-xs font-bold flex items-center">
+                          <AlertTriangle className="w-4 h-4 mr-1" />
+                          🔥 HELL WEEK ({weekAssessments.length} assessments)
+                        </span>
+                      )}
+                      {isHellWeek && !isVeryBusyWeek && (
+                        <span className="px-3 py-1 bg-orange-500 text-white rounded-full text-xs font-bold flex items-center">
+                          <AlertTriangle className="w-4 h-4 mr-1" />
+                          ⚠️ Busy Week ({weekAssessments.length} assessments)
+                        </span>
+                      )}
+                      {!isHellWeek && (
+                        <span className="text-sm text-gray-600">{weekAssessments.length} assessment{weekAssessments.length > 1 ? 's' : ''}</span>
+                      )}
+                    </div>
                     <div className="space-y-3">
                       {weekAssessments.map((assessment, index) => (
                         <div

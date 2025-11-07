@@ -105,15 +105,32 @@ function CourseBrowser({ cart, addToCart, removeFromCart }) {
         </div>
       </div>
 
+      {/* Class Schedule Preview */}
+      <div className="mt-3 p-3 bg-indigo-50 rounded-lg border border-indigo-200">
+        <div className="text-xs text-indigo-700 font-semibold mb-2">⏰ Class Schedule</div>
+        <div className="space-y-1">
+          {course.schedule.map((s, i) => (
+            <div key={i} className="text-xs text-indigo-900">
+              <span className="font-semibold">{s.day}</span>: {s.time}
+            </div>
+          ))}
+        </div>
+      </div>
+
       {/* Assessment Summary */}
       <div className="mt-3 p-3 bg-blue-50 rounded-lg border border-blue-200">
-        <div className="text-xs text-blue-700 font-semibold mb-2">Assessments</div>
+        <div className="text-xs text-blue-700 font-semibold mb-2">📊 Workload Preview</div>
         <div className="flex flex-wrap gap-2">
           {course.assessments.map((assessment, i) => (
             <span key={i} className="text-xs bg-white text-blue-700 px-2 py-1 rounded border border-blue-300">
               {assessment.type} ({assessment.weight}%)
             </span>
           ))}
+        </div>
+        <div className="mt-2 text-xs text-blue-600">
+          {course.assessments.filter(a => a.type.toLowerCase().includes('quiz')).length} Quizzes •
+          {course.assessments.filter(a => a.type.toLowerCase().includes('exam')).length} Exams •
+          {course.assessments.filter(a => a.type.toLowerCase().includes('project')).length} Projects
         </div>
       </div>
 

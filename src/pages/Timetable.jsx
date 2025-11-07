@@ -50,6 +50,50 @@ function Timetable({ cart }) {
 
   const upcomingHolidays = publicHolidays.filter(ph => new Date(ph.date) > new Date());
 
+  // Detect time clashes
+  const detectClashes = () => {
+    const clashes = [];
+    const timeSlotMap = {};
+
+    events.forEach(event => {
+      const key = `${event.day}-${event.time}`;
+      if (!timeSlotMap[key]) {
+        timeSlotMap[key] = [];
+      }
+      timeSlotMap[key].push(event.course.id);
+    });
+
+    Object.entries(timeSlotMap).forEach(([key, courses]) => {
+      if (courses.length > 1) {
+        const [day, time] = key.split('-');
+        clashes.push({ day, time, courses });
+      }
+    });
+
+    return clashes;
+  };
+
+  const clashes = detectClashes();
+
+  // Calculate total workload
+  const getTotalWorkload = () => {
+    let quizzes = 0, exams = 0, projects = 0, assignments = 0;
+
+    cart.forEach(course => {
+      course.assessments.forEach(assessment => {
+        const type = assessment.type.toLowerCase();
+        if (type.includes('quiz')) quizzes++;
+        else if (type.includes('exam')) exams++;
+        else if (type.includes('project')) projects++;
+        else if (type.includes('assignment') || type.includes('lab')) assignments++;
+      });
+    });
+
+    return { quizzes, exams, projects, assignments };
+  };
+
+  const workload = getTotalWorkload();
+
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       {/* Header */}
@@ -71,14 +115,33 @@ function Timetable({ cart }) {
             </div>
           </div>
         </div>
+      ) : clashes.length > 0 ? (
+        <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
+          <div className="flex items-start">
+            <AlertCircle className="w-5 h-5 text-red-600 mt-0.5 mr-3 flex-shrink-0" />
+            <div className="flex-1">
+              <h3 className="font-semibold text-red-900 mb-1">⚠️ Time Clash Detected!</h3>
+              <p className="text-sm text-red-800 mb-2">
+                Some of your courses have overlapping schedules:
+              </p>
+              <ul className="list-disc list-inside text-sm text-red-800 space-y-1">
+                {clashes.map((clash, i) => (
+                  <li key={i}>
+                    <span className="font-semibold">{clash.day} {clash.time}</span>: {clash.courses.join(', ')}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </div>
       ) : (
         <div className="bg-green-50 border border-green-200 rounded-lg p-4 mb-6">
           <div className="flex items-start">
             <CalendarIcon className="w-5 h-5 text-green-600 mt-0.5 mr-3 flex-shrink-0" />
             <div>
-              <h3 className="font-semibold text-green-900 mb-1">Timetable Generated</h3>
+              <h3 className="font-semibold text-green-900 mb-1">✅ Timetable Generated</h3>
               <p className="text-sm text-green-800">
-                Your timetable has been auto-generated with {cart.length} courses. Check for time conflicts below.
+                Your timetable has been auto-generated with {cart.length} courses. No time conflicts detected!
               </p>
             </div>
           </div>
@@ -163,24 +226,58 @@ function Timetable({ cart }) {
         </table>
       </div>
 
-      {/* Weekly Summary */}
+      {/* Weekly Summary & Total Workload */}
       {cart.length > 0 && (
-        <div className="mt-6 bg-white rounded-lg shadow-md p-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">Weekly Summary</h3>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="bg-blue-50 p-4 rounded-lg">
-              <p className="text-2xl font-bold text-smu-blue">{cart.length}</p>
-              <p className="text-sm text-gray-600">Total Courses</p>
+        <div className="mt-6 space-y-6">
+          {/* Course & Credit Summary */}
+          <div className="bg-white rounded-lg shadow-md p-6">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">📚 Course Summary</h3>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="bg-blue-50 p-4 rounded-lg">
+                <p className="text-2xl font-bold text-smu-blue">{cart.length}</p>
+                <p className="text-sm text-gray-600">Total Courses</p>
+              </div>
+              <div className="bg-green-50 p-4 rounded-lg">
+                <p className="text-2xl font-bold text-green-600">
+                  {cart.reduce((sum, course) => sum + course.credits, 0).toFixed(1)}
+                </p>
+                <p className="text-sm text-gray-600">Total Credits</p>
+              </div>
+              <div className="bg-purple-50 p-4 rounded-lg">
+                <p className="text-2xl font-bold text-purple-600">{events.length}</p>
+                <p className="text-sm text-gray-600">Weekly Sessions</p>
+              </div>
             </div>
-            <div className="bg-green-50 p-4 rounded-lg">
-              <p className="text-2xl font-bold text-green-600">
-                {cart.reduce((sum, course) => sum + course.credits, 0).toFixed(1)}
+          </div>
+
+          {/* Total Workload Overview */}
+          <div className="bg-gradient-to-r from-orange-50 to-red-50 rounded-lg shadow-md p-6 border border-orange-200">
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">📊 Semester Workload Overview</h3>
+            <p className="text-sm text-gray-600 mb-4">
+              This semester you will have a total of:
+            </p>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <div className="bg-white p-4 rounded-lg text-center border border-orange-200">
+                <p className="text-3xl font-bold text-orange-600">{workload.quizzes}</p>
+                <p className="text-sm text-gray-600 mt-1">Quizzes</p>
+              </div>
+              <div className="bg-white p-4 rounded-lg text-center border border-red-200">
+                <p className="text-3xl font-bold text-red-600">{workload.exams}</p>
+                <p className="text-sm text-gray-600 mt-1">Exams</p>
+              </div>
+              <div className="bg-white p-4 rounded-lg text-center border border-purple-200">
+                <p className="text-3xl font-bold text-purple-600">{workload.projects}</p>
+                <p className="text-sm text-gray-600 mt-1">Projects</p>
+              </div>
+              <div className="bg-white p-4 rounded-lg text-center border border-blue-200">
+                <p className="text-3xl font-bold text-blue-600">{workload.assignments}</p>
+                <p className="text-sm text-gray-600 mt-1">Assignments</p>
+              </div>
+            </div>
+            <div className="mt-4 p-3 bg-white rounded-lg border border-orange-300">
+              <p className="text-sm text-orange-900">
+                <span className="font-semibold">💡 Tip:</span> Check the Assessment Timeline page to see when these assessments are due and identify potential "hell weeks"!
               </p>
-              <p className="text-sm text-gray-600">Total Credits</p>
-            </div>
-            <div className="bg-purple-50 p-4 rounded-lg">
-              <p className="text-2xl font-bold text-purple-600">{events.length}</p>
-              <p className="text-sm text-gray-600">Weekly Sessions</p>
             </div>
           </div>
         </div>
