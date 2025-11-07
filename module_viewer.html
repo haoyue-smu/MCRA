@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Module Management System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .filter-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 25px;
+            background: white;
+            color: #667eea;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        .filter-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        }
+
+        .filter-btn.active {
+            background: #667eea;
+            color: white;
+        }
+
+        .modules-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .module-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .module-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+        }
+
+        .module-header {
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 15px;
+            margin-bottom: 15px;
+        }
+
+        .module-code {
+            color: #667eea;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        .module-name {
+            color: #333;
+            font-size: 1.1em;
+            margin-top: 5px;
+        }
+
+        .su-badge {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 15px;
+            font-size: 0.85em;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        .su-yes {
+            background: #10b981;
+            color: white;
+        }
+
+        .su-no {
+            background: #ef4444;
+            color: white;
+        }
+
+        .section {
+            margin: 15px 0;
+        }
+
+        .section-title {
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 8px;
+            font-size: 0.95em;
+        }
+
+        .bidding-info {
+            background: #f3f4f6;
+            padding: 12px;
+            border-radius: 8px;
+            margin-top: 5px;
+        }
+
+        .bidding-row {
+            display: flex;
+            justify-content: space-between;
+            margin: 5px 0;
+            font-size: 0.9em;
+        }
+
+        .bidding-label {
+            color: #666;
+        }
+
+        .bidding-value {
+            font-weight: bold;
+            color: #333;
+        }
+
+        .assessment-item {
+            background: #f9fafb;
+            padding: 8px 12px;
+            margin: 5px 0;
+            border-radius: 6px;
+            border-left: 3px solid #667eea;
+            font-size: 0.9em;
+        }
+
+        .assessment-name {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .assessment-date {
+            color: #666;
+            font-size: 0.85em;
+        }
+
+        .assessment-weightage {
+            float: right;
+            background: #667eea;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 0.8em;
+        }
+
+        .summary-section {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .summary-title {
+            color: #667eea;
+            font-size: 1.5em;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        th {
+            background: #667eea;
+            color: white;
+            font-weight: 600;
+        }
+
+        tr:hover {
+            background: #f9fafb;
+        }
+
+        .credits-badge {
+            background: #fbbf24;
+            color: #78350f;
+            padding: 3px 10px;
+            border-radius: 10px;
+            font-size: 0.85em;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📚 Module Management System</h1>
+
+        <div class="filter-buttons">
+            <button class="filter-btn active" onclick="filterModules('all')">All Modules</button>
+            <button class="filter-btn" onclick="filterModules('su')">S/U Eligible</button>
+            <button class="filter-btn" onclick="filterModules('non-su')">Non S/U Eligible</button>
+            <button class="filter-btn" onclick="showBiddingSummary()">Bidding Summary</button>
+        </div>
+
+        <div id="bidding-summary" class="summary-section" style="display: none;">
+            <h2 class="summary-title">Bidding Summary (2024)</h2>
+            <table id="bidding-table">
+                <thead>
+                    <tr>
+                        <th>Module Code</th>
+                        <th>Module Name</th>
+                        <th>Min Points</th>
+                        <th>Max Points</th>
+                        <th>Average</th>
+                    </tr>
+                </thead>
+                <tbody id="bidding-tbody">
+                </tbody>
+            </table>
+        </div>
+
+        <div class="modules-grid" id="modules-container"></div>
+    </div>
+
+    <script>
+        let modulesData = [];
+
+        // Load modules data
+        fetch('modules_data.json')
+            .then(response => response.json())
+            .then(data => {
+                modulesData = data.modules;
+                displayModules(modulesData);
+                populateBiddingTable(modulesData);
+            })
+            .catch(error => {
+                console.error('Error loading modules:', error);
+                document.getElementById('modules-container').innerHTML =
+                    '<p style="color: white; text-align: center;">Error loading module data. Please ensure modules_data.json is in the same directory.</p>';
+            });
+
+        function displayModules(modules) {
+            const container = document.getElementById('modules-container');
+            container.innerHTML = '';
+
+            modules.forEach(module => {
+                const card = createModuleCard(module);
+                container.appendChild(card);
+            });
+        }
+
+        function createModuleCard(module) {
+            const card = document.createElement('div');
+            card.className = 'module-card';
+            card.dataset.su = module.su_eligible;
+
+            const suBadgeClass = module.su_eligible ? 'su-yes' : 'su-no';
+            const suBadgeText = module.su_eligible ? '✅ S/U Eligible' : '❌ Not S/U Eligible';
+
+            let quizzesHtml = '';
+            if (module.assessments.quizzes && module.assessments.quizzes.length > 0) {
+                quizzesHtml = '<div class="section"><div class="section-title">📝 Quizzes</div>';
+                module.assessments.quizzes.forEach(quiz => {
+                    quizzesHtml += `
+                        <div class="assessment-item">
+                            <span class="assessment-weightage">${quiz.weightage}%</span>
+                            <div class="assessment-name">${quiz.name}</div>
+                            <div class="assessment-date">${quiz.date}</div>
+                        </div>
+                    `;
+                });
+                quizzesHtml += '</div>';
+            }
+
+            let projectsHtml = '';
+            if (module.assessments.projects && module.assessments.projects.length > 0) {
+                projectsHtml = '<div class="section"><div class="section-title">💼 Projects</div>';
+                module.assessments.projects.forEach(project => {
+                    projectsHtml += `
+                        <div class="assessment-item">
+                            <span class="assessment-weightage">${project.weightage}%</span>
+                            <div class="assessment-name">${project.name}</div>
+                            <div class="assessment-date">Deadline: ${project.deadline}</div>
+                        </div>
+                    `;
+                });
+                projectsHtml += '</div>';
+            }
+
+            let examsHtml = '';
+            if (module.assessments.exams && module.assessments.exams.length > 0) {
+                examsHtml = '<div class="section"><div class="section-title">📖 Exams</div>';
+                module.assessments.exams.forEach(exam => {
+                    examsHtml += `
+                        <div class="assessment-item">
+                            <span class="assessment-weightage">${exam.weightage}%</span>
+                            <div class="assessment-name">${exam.name}</div>
+                            <div class="assessment-date">${exam.date}</div>
+                        </div>
+                    `;
+                });
+                examsHtml += '</div>';
+            }
+
+            card.innerHTML = `
+                <div class="module-header">
+                    <div class="module-code">${module.code}</div>
+                    <div class="module-name">${module.name}</div>
+                    <span class="credits-badge">${module.credits} Credits</span>
+                    <span class="su-badge ${suBadgeClass}">${suBadgeText}</span>
+                </div>
+
+                <div class="section">
+                    <div class="section-title">💰 Bidding Information (${module.bidding.year})</div>
+                    <div class="bidding-info">
+                        <div class="bidding-row">
+                            <span class="bidding-label">Range:</span>
+                            <span class="bidding-value">${module.bidding.min_points} - ${module.bidding.max_points} points</span>
+                        </div>
+                        <div class="bidding-row">
+                            <span class="bidding-label">Average:</span>
+                            <span class="bidding-value">${module.bidding.average} points</span>
+                        </div>
+                    </div>
+                </div>
+
+                ${quizzesHtml}
+                ${projectsHtml}
+                ${examsHtml}
+            `;
+
+            return card;
+        }
+
+        function filterModules(filter) {
+            const buttons = document.querySelectorAll('.filter-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+
+            document.getElementById('bidding-summary').style.display = 'none';
+            document.getElementById('modules-container').style.display = 'grid';
+
+            let filteredModules = modulesData;
+
+            if (filter === 'su') {
+                filteredModules = modulesData.filter(m => m.su_eligible === true);
+            } else if (filter === 'non-su') {
+                filteredModules = modulesData.filter(m => m.su_eligible === false);
+            }
+
+            displayModules(filteredModules);
+        }
+
+        function showBiddingSummary() {
+            const buttons = document.querySelectorAll('.filter-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+
+            document.getElementById('modules-container').style.display = 'none';
+            document.getElementById('bidding-summary').style.display = 'block';
+        }
+
+        function populateBiddingTable(modules) {
+            const tbody = document.getElementById('bidding-tbody');
+            tbody.innerHTML = '';
+
+            modules.forEach(module => {
+                const row = tbody.insertRow();
+                row.innerHTML = `
+                    <td><strong>${module.code}</strong></td>
+                    <td>${module.name}</td>
+                    <td>${module.bidding.min_points}</td>
+                    <td>${module.bidding.max_points}</td>
+                    <td><strong>${module.bidding.average}</strong></td>
+                `;
+            });
+        }
+    </script>
+</body>
+</html>

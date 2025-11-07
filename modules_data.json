@@ -1,0 +1,132 @@
+{
+  "modules": [
+    {
+      "code": "IS1108",
+      "name": "Intro to Programming",
+      "credits": 4,
+      "su_eligible": false,
+      "bidding": {
+        "min_points": 50,
+        "max_points": 250,
+        "average": 145,
+        "year": "2024"
+      },
+      "assessments": {
+        "quizzes": [
+          {"name": "Quiz 1", "date": "2025-02-15", "weightage": 10},
+          {"name": "Quiz 2", "date": "2025-03-20", "weightage": 10},
+          {"name": "Quiz 3", "date": "2025-04-10", "weightage": 10}
+        ],
+        "projects": [
+          {"name": "Mini Project", "deadline": "2025-03-01", "weightage": 20},
+          {"name": "Final Project", "deadline": "2025-04-20", "weightage": 20}
+        ],
+        "exams": [
+          {"name": "Final Exam", "date": "2025-05-05", "weightage": 30}
+        ]
+      }
+    },
+    {
+      "code": "IS2101",
+      "name": "Data Management",
+      "credits": 4,
+      "su_eligible": false,
+      "bidding": {
+        "min_points": 60,
+        "max_points": 280,
+        "average": 165,
+        "year": "2024"
+      },
+      "assessments": {
+        "quizzes": [
+          {"name": "Quiz 1", "date": "2025-02-20", "weightage": 15},
+          {"name": "Quiz 2", "date": "2025-03-25", "weightage": 15}
+        ],
+        "projects": [
+          {"name": "Database Design Project", "deadline": "2025-03-15", "weightage": 25},
+          {"name": "Implementation Project", "deadline": "2025-04-25", "weightage": 25}
+        ],
+        "exams": [
+          {"name": "Final Exam", "date": "2025-05-08", "weightage": 20}
+        ]
+      }
+    },
+    {
+      "code": "IS3103",
+      "name": "Business Process Analysis & Solutioning",
+      "credits": 4,
+      "su_eligible": false,
+      "bidding": {
+        "min_points": 80,
+        "max_points": 320,
+        "average": 195,
+        "year": "2024"
+      },
+      "assessments": {
+        "quizzes": [
+          {"name": "Quiz 1", "date": "2025-02-18", "weightage": 10},
+          {"name": "Quiz 2", "date": "2025-03-28", "weightage": 10},
+          {"name": "Quiz 3", "date": "2025-04-15", "weightage": 10}
+        ],
+        "projects": [
+          {"name": "Process Analysis Report", "deadline": "2025-03-10", "weightage": 30},
+          {"name": "Solution Design Project", "deadline": "2025-04-28", "weightage": 30}
+        ],
+        "exams": [
+          {"name": "Final Exam", "date": "2025-05-10", "weightage": 10}
+        ]
+      }
+    },
+    {
+      "code": "IS2102",
+      "name": "Object Oriented Programming",
+      "credits": 4,
+      "su_eligible": true,
+      "bidding": {
+        "min_points": 70,
+        "max_points": 290,
+        "average": 175,
+        "year": "2024"
+      },
+      "assessments": {
+        "quizzes": [
+          {"name": "Quiz 1", "date": "2025-02-22", "weightage": 12},
+          {"name": "Quiz 2", "date": "2025-03-30", "weightage": 12},
+          {"name": "Quiz 3", "date": "2025-04-18", "weightage": 12}
+        ],
+        "projects": [
+          {"name": "OOP Design Project", "deadline": "2025-03-12", "weightage": 24},
+          {"name": "Final Application Project", "deadline": "2025-04-30", "weightage": 24}
+        ],
+        "exams": [
+          {"name": "Final Exam", "date": "2025-05-12", "weightage": 16}
+        ]
+      }
+    },
+    {
+      "code": "IS3221",
+      "name": "Cloud Management and Engineering",
+      "credits": 4,
+      "su_eligible": true,
+      "bidding": {
+        "min_points": 90,
+        "max_points": 350,
+        "average": 210,
+        "year": "2024"
+      },
+      "assessments": {
+        "quizzes": [
+          {"name": "Quiz 1", "date": "2025-02-25", "weightage": 15},
+          {"name": "Quiz 2", "date": "2025-04-01", "weightage": 15}
+        ],
+        "projects": [
+          {"name": "Cloud Architecture Design", "deadline": "2025-03-18", "weightage": 25},
+          {"name": "Cloud Deployment Project", "deadline": "2025-05-02", "weightage": 25}
+        ],
+        "exams": [
+          {"name": "Final Exam", "date": "2025-05-15", "weightage": 20}
+        ]
+      }
+    }
+  ]
+}
