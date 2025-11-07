@@ -9,14 +9,14 @@ export const courses = [
     demand: 'High',
     demandCount: 156,
     capacity: 120,
-    suEligible: true,
+    suEligible: false,
     description: 'Fundamental programming concepts using Python',
     assessments: [
-      { type: 'Quiz', date: '2025-02-15', weight: 10 },
-      { type: 'Quiz', date: '2025-03-01', weight: 10 },
-      { type: 'Midterm', date: '2025-03-15', weight: 25 },
-      { type: 'Project', date: '2025-04-10', weight: 25 },
-      { type: 'Final', date: '2025-04-28', weight: 30 }
+      { type: 'Quiz 1', date: '2025-02-15', weight: 10, title: 'Variables & Data Types' },
+      { type: 'Quiz 2', date: '2025-03-01', weight: 10, title: 'Control Structures' },
+      { type: 'Midterm Exam', date: '2025-03-15', weight: 25, title: 'Written Exam' },
+      { type: 'Project', date: '2025-04-10', weight: 25, title: 'Python Application Development' },
+      { type: 'Final Exam', date: '2025-04-28', weight: 30, title: 'Comprehensive Exam' }
     ],
     schedule: [
       { day: 'Monday', time: '08:15-11:15', location: 'SOE/SCIS1 SR B1-1' },
@@ -25,8 +25,12 @@ export const courses = [
     prerequisites: [],
     bidHistory: [
       { term: '2024-25 T2', minBid: 45, avgBid: 78, maxBid: 120 },
-      { term: '2023-24 T3', minBid: 42, avgBid: 72, maxBid: 115 }
+      { term: '2024-25 T1', minBid: 42, avgBid: 75, maxBid: 118 },
+      { term: '2023-24 T3', minBid: 42, avgBid: 72, maxBid: 115 },
+      { term: '2023-24 T2', minBid: 40, avgBid: 70, maxBid: 110 }
     ],
+    yearlyAverage: 74,
+    bidRange: '40-120 e$',
     careerPaths: ['Software Developer', 'Data Analyst', 'System Analyst'],
     skills: ['Python', 'Problem Solving', 'Algorithmic Thinking'],
     afterClassRating: 4.2,
@@ -41,14 +45,14 @@ export const courses = [
     demand: 'Medium',
     demandCount: 98,
     capacity: 100,
-    suEligible: true,
+    suEligible: false,
     description: 'Database design, SQL, and data modeling',
     assessments: [
-      { type: 'Quiz', date: '2025-02-20', weight: 15 },
-      { type: 'Lab', date: '2025-03-05', weight: 20 },
-      { type: 'Midterm', date: '2025-03-20', weight: 25 },
-      { type: 'Project', date: '2025-04-15', weight: 20 },
-      { type: 'Final', date: '2025-05-01', weight: 20 }
+      { type: 'Quiz 1', date: '2025-02-20', weight: 15, title: 'SQL Basics & ER Modeling' },
+      { type: 'Lab Assignment', date: '2025-03-05', weight: 20, title: 'Database Design Project' },
+      { type: 'Midterm Exam', date: '2025-03-20', weight: 25, title: 'Written Exam' },
+      { type: 'Project', date: '2025-04-15', weight: 20, title: 'Database Implementation' },
+      { type: 'Final Exam', date: '2025-05-01', weight: 20, title: 'Comprehensive Exam' }
     ],
     schedule: [
       { day: 'Tuesday', time: '12:00-15:00', location: 'SCIS1 SR 3-1' },
@@ -57,8 +61,12 @@ export const courses = [
     prerequisites: ['IS111'],
     bidHistory: [
       { term: '2024-25 T2', minBid: 35, avgBid: 65, maxBid: 95 },
-      { term: '2023-24 T3', minBid: 30, avgBid: 60, maxBid: 90 }
+      { term: '2024-25 T1', minBid: 32, avgBid: 62, maxBid: 92 },
+      { term: '2023-24 T3', minBid: 30, avgBid: 60, maxBid: 90 },
+      { term: '2023-24 T2', minBid: 28, avgBid: 58, maxBid: 88 }
     ],
+    yearlyAverage: 61,
+    bidRange: '28-95 e$',
     careerPaths: ['Database Administrator', 'Data Engineer', 'Business Analyst'],
     skills: ['SQL', 'Database Design', 'Data Modeling'],
     afterClassRating: 4.5,
@@ -76,11 +84,11 @@ export const courses = [
     suEligible: false,
     description: 'Analyze and design business processes',
     assessments: [
-      { type: 'Quiz', date: '2025-02-18', weight: 10 },
-      { type: 'Quiz', date: '2025-03-08', weight: 10 },
-      { type: 'Group Project', date: '2025-03-25', weight: 30 },
-      { type: 'Midterm', date: '2025-03-22', weight: 20 },
-      { type: 'Final', date: '2025-05-03', weight: 30 }
+      { type: 'Quiz 1', date: '2025-02-18', weight: 10, title: 'Process Modeling Fundamentals' },
+      { type: 'Quiz 2', date: '2025-03-08', weight: 10, title: 'Requirements Engineering' },
+      { type: 'Group Project', date: '2025-03-25', weight: 30, title: 'Business Process Redesign' },
+      { type: 'Midterm Exam', date: '2025-03-22', weight: 20, title: 'Written Exam' },
+      { type: 'Final Exam', date: '2025-05-03', weight: 30, title: 'Comprehensive Exam' }
     ],
     schedule: [
       { day: 'Wednesday', time: '15:30-18:30', location: 'SCIS1 SR 2-4' }
@@ -88,8 +96,12 @@ export const courses = [
     prerequisites: ['IS111', 'IS112'],
     bidHistory: [
       { term: '2024-25 T2', minBid: 55, avgBid: 85, maxBid: 135 },
-      { term: '2023-24 T3', minBid: 50, avgBid: 80, maxBid: 130 }
+      { term: '2024-25 T1', minBid: 52, avgBid: 82, maxBid: 130 },
+      { term: '2023-24 T3', minBid: 50, avgBid: 80, maxBid: 130 },
+      { term: '2023-24 T2', minBid: 48, avgBid: 78, maxBid: 125 }
     ],
+    yearlyAverage: 81,
+    bidRange: '48-135 e$',
     careerPaths: ['Business Analyst', 'Process Consultant', 'Systems Analyst'],
     skills: ['Business Process Modeling', 'Requirements Analysis', 'Process Optimization'],
     afterClassRating: 4.0,
@@ -107,11 +119,11 @@ export const courses = [
     suEligible: true,
     description: 'Full-stack web development with modern frameworks',
     assessments: [
-      { type: 'Quiz', date: '2025-02-22', weight: 10 },
-      { type: 'Quiz', date: '2025-03-10', weight: 10 },
-      { type: 'Lab', date: '2025-03-18', weight: 15 },
-      { type: 'Project', date: '2025-04-12', weight: 35 },
-      { type: 'Final', date: '2025-04-30', weight: 30 }
+      { type: 'Quiz 1', date: '2025-02-22', weight: 10, title: 'HTML/CSS & JavaScript Basics' },
+      { type: 'Quiz 2', date: '2025-03-10', weight: 10, title: 'React Fundamentals' },
+      { type: 'Lab Assignment', date: '2025-03-18', weight: 15, title: 'Interactive Web Components' },
+      { type: 'Project', date: '2025-04-12', weight: 35, title: 'Full-Stack Web Application' },
+      { type: 'Final Exam', date: '2025-04-30', weight: 30, title: 'Practical Exam' }
     ],
     schedule: [
       { day: 'Monday', time: '15:30-18:30', location: 'SCIS1 Lab 1' },
@@ -120,8 +132,12 @@ export const courses = [
     prerequisites: ['IS111'],
     bidHistory: [
       { term: '2024-25 T2', minBid: 65, avgBid: 95, maxBid: 150 },
-      { term: '2023-24 T3', minBid: 60, avgBid: 90, maxBid: 145 }
+      { term: '2024-25 T1', minBid: 62, avgBid: 92, maxBid: 148 },
+      { term: '2023-24 T3', minBid: 60, avgBid: 90, maxBid: 145 },
+      { term: '2023-24 T2', minBid: 58, avgBid: 88, maxBid: 142 }
     ],
+    yearlyAverage: 91,
+    bidRange: '58-150 e$',
     careerPaths: ['Full-Stack Developer', 'Frontend Developer', 'Web Designer'],
     skills: ['JavaScript', 'React', 'Node.js', 'HTML/CSS'],
     afterClassRating: 4.7,
@@ -139,11 +155,11 @@ export const courses = [
     suEligible: true,
     description: 'Security principles, risk management, and compliance',
     assessments: [
-      { type: 'Quiz', date: '2025-02-25', weight: 15 },
-      { type: 'Case Study', date: '2025-03-12', weight: 20 },
-      { type: 'Midterm', date: '2025-03-28', weight: 25 },
-      { type: 'Group Project', date: '2025-04-18', weight: 20 },
-      { type: 'Final', date: '2025-05-05', weight: 20 }
+      { type: 'Quiz 1', date: '2025-02-25', weight: 15, title: 'Security Fundamentals' },
+      { type: 'Case Study', date: '2025-03-12', weight: 20, title: 'Security Breach Analysis' },
+      { type: 'Midterm Exam', date: '2025-03-28', weight: 25, title: 'Written Exam' },
+      { type: 'Group Project', date: '2025-04-18', weight: 20, title: 'Security Audit Report' },
+      { type: 'Final Exam', date: '2025-05-05', weight: 20, title: 'Comprehensive Exam' }
     ],
     schedule: [
       { day: 'Tuesday', time: '19:00-22:00', location: 'SCIS1 SR 3-2' }
@@ -151,8 +167,12 @@ export const courses = [
     prerequisites: ['IS210', 'IS216'],
     bidHistory: [
       { term: '2024-25 T2', minBid: 25, avgBid: 50, maxBid: 80 },
-      { term: '2023-24 T3', minBid: 22, avgBid: 48, maxBid: 75 }
+      { term: '2024-25 T1', minBid: 23, avgBid: 48, maxBid: 78 },
+      { term: '2023-24 T3', minBid: 22, avgBid: 48, maxBid: 75 },
+      { term: '2023-24 T2', minBid: 20, avgBid: 45, maxBid: 72 }
     ],
+    yearlyAverage: 48,
+    bidRange: '20-80 e$',
     careerPaths: ['Security Analyst', 'Risk Manager', 'Compliance Officer'],
     skills: ['Security Analysis', 'Risk Assessment', 'Compliance'],
     afterClassRating: 4.3,
@@ -170,11 +190,11 @@ export const courses = [
     suEligible: false,
     description: 'AI concepts, ML algorithms, and practical applications',
     assessments: [
-      { type: 'Quiz', date: '2025-02-28', weight: 10 },
-      { type: 'Quiz', date: '2025-03-14', weight: 10 },
-      { type: 'Assignment', date: '2025-03-30', weight: 20 },
-      { type: 'Project', date: '2025-04-20', weight: 30 },
-      { type: 'Final', date: '2025-05-08', weight: 30 }
+      { type: 'Quiz 1', date: '2025-02-28', weight: 10, title: 'ML Fundamentals' },
+      { type: 'Quiz 2', date: '2025-03-14', weight: 10, title: 'Neural Networks' },
+      { type: 'Assignment', date: '2025-03-30', weight: 20, title: 'Algorithm Implementation' },
+      { type: 'Project', date: '2025-04-20', weight: 30, title: 'ML Application Development' },
+      { type: 'Final Exam', date: '2025-05-08', weight: 30, title: 'Comprehensive Exam' }
     ],
     schedule: [
       { day: 'Friday', time: '15:30-18:30', location: 'SCIS1 SR 2-1' }
@@ -182,13 +202,89 @@ export const courses = [
     prerequisites: ['IS111', 'STAT151'],
     bidHistory: [
       { term: '2024-25 T2', minBid: 85, avgBid: 120, maxBid: 180 },
-      { term: '2023-24 T3', minBid: 80, avgBid: 115, maxBid: 175 }
+      { term: '2024-25 T1', minBid: 82, avgBid: 118, maxBid: 178 },
+      { term: '2023-24 T3', minBid: 80, avgBid: 115, maxBid: 175 },
+      { term: '2023-24 T2', minBid: 78, avgBid: 112, maxBid: 170 }
     ],
+    yearlyAverage: 116,
+    bidRange: '78-180 e$',
     careerPaths: ['ML Engineer', 'Data Scientist', 'AI Researcher'],
     skills: ['Python', 'Machine Learning', 'Deep Learning', 'TensorFlow'],
     afterClassRating: 4.8,
     workload: 'Very High',
     difficulty: 'Very Hard'
+  },
+  {
+    id: 'IS213',
+    name: 'Object Oriented Programming',
+    professor: 'Dr. Patricia Ng',
+    credits: 1.0,
+    demand: 'High',
+    demandCount: 165,
+    capacity: 130,
+    suEligible: true,
+    description: 'Advanced OOP concepts, design patterns, and Java programming',
+    assessments: [
+      { type: 'Quiz 1', date: '2025-02-17', weight: 12, title: 'OOP Principles' },
+      { type: 'Quiz 2', date: '2025-03-03', weight: 12, title: 'Design Patterns' },
+      { type: 'Lab Assignment', date: '2025-03-17', weight: 16, title: 'Java Programming' },
+      { type: 'Project', date: '2025-04-14', weight: 30, title: 'OOP Application Design' },
+      { type: 'Final Exam', date: '2025-05-02', weight: 30, title: 'Comprehensive Exam' }
+    ],
+    schedule: [
+      { day: 'Tuesday', time: '08:15-11:15', location: 'SCIS1 SR 2-2' },
+      { day: 'Thursday', time: '12:00-13:15', location: 'SCIS1 SR 2-2' }
+    ],
+    prerequisites: ['IS111'],
+    bidHistory: [
+      { term: '2024-25 T2', minBid: 52, avgBid: 82, maxBid: 125 },
+      { term: '2024-25 T1', minBid: 50, avgBid: 80, maxBid: 122 },
+      { term: '2023-24 T3', minBid: 48, avgBid: 78, maxBid: 120 },
+      { term: '2023-24 T2', minBid: 45, avgBid: 75, maxBid: 118 }
+    ],
+    yearlyAverage: 79,
+    bidRange: '45-125 e$',
+    careerPaths: ['Software Engineer', 'Backend Developer', 'Systems Architect'],
+    skills: ['Java', 'OOP Design', 'Design Patterns', 'Software Architecture'],
+    afterClassRating: 4.4,
+    workload: 'High',
+    difficulty: 'Medium'
+  },
+  {
+    id: 'IS442',
+    name: 'Cloud Management and Engineering',
+    professor: 'Prof. Michael Chen',
+    credits: 1.0,
+    demand: 'Very High',
+    demandCount: 178,
+    capacity: 90,
+    suEligible: true,
+    description: 'Cloud computing platforms, infrastructure management, and DevOps practices',
+    assessments: [
+      { type: 'Quiz 1', date: '2025-02-24', weight: 15, title: 'Cloud Fundamentals' },
+      { type: 'Quiz 2', date: '2025-03-10', weight: 15, title: 'AWS Services' },
+      { type: 'Lab Assignment', date: '2025-03-24', weight: 20, title: 'Cloud Deployment' },
+      { type: 'Group Project', date: '2025-04-21', weight: 25, title: 'Cloud Architecture Design' },
+      { type: 'Final Exam', date: '2025-05-06', weight: 25, title: 'Practical Exam' }
+    ],
+    schedule: [
+      { day: 'Wednesday', time: '12:00-15:00', location: 'SCIS1 Lab 2' },
+      { day: 'Friday', time: '08:15-09:30', location: 'SCIS1 SR 3-3' }
+    ],
+    prerequisites: ['IS210', 'IS216'],
+    bidHistory: [
+      { term: '2024-25 T2', minBid: 70, avgBid: 105, maxBid: 160 },
+      { term: '2024-25 T1', minBid: 68, avgBid: 102, maxBid: 155 },
+      { term: '2023-24 T3', minBid: 65, avgBid: 100, maxBid: 152 },
+      { term: '2023-24 T2', minBid: 62, avgBid: 98, maxBid: 150 }
+    ],
+    yearlyAverage: 101,
+    bidRange: '62-160 e$',
+    careerPaths: ['Cloud Engineer', 'DevOps Engineer', 'Solutions Architect'],
+    skills: ['AWS', 'Azure', 'Docker', 'Kubernetes', 'CI/CD'],
+    afterClassRating: 4.6,
+    workload: 'Very High',
+    difficulty: 'Hard'
   }
 ];
 
@@ -209,7 +305,7 @@ export const careerPaths = [
     title: 'Software Developer',
     description: 'Design, develop, and maintain software applications',
     requiredSkills: ['Python', 'JavaScript', 'Problem Solving', 'Data Structures'],
-    recommendedCourses: ['IS111', 'IS112', 'IS216', 'IS424'],
+    recommendedCourses: ['IS111', 'IS112', 'IS213', 'IS216', 'IS424'],
     averageSalary: '$4,500 - $7,000',
     jobOpenings: 234,
     growthRate: '+15%'
@@ -243,6 +339,16 @@ export const careerPaths = [
     averageSalary: '$4,500 - $7,500',
     jobOpenings: 142,
     growthRate: '+18%'
+  },
+  {
+    id: 'cloud-engineer',
+    title: 'Cloud Engineer',
+    description: 'Design and manage cloud infrastructure and services',
+    requiredSkills: ['AWS', 'Azure', 'Docker', 'Kubernetes', 'DevOps'],
+    recommendedCourses: ['IS111', 'IS213', 'IS216', 'IS442'],
+    averageSalary: '$5,500 - $9,000',
+    jobOpenings: 198,
+    growthRate: '+28%'
   }
 ];
 

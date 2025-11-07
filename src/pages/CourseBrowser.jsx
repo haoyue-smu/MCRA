@@ -91,6 +91,32 @@ function CourseBrowser({ cart, addToCart, removeFromCart }) {
         </div>
       </div>
 
+      {/* Bidding Information */}
+      <div className="mt-4 p-3 bg-purple-50 rounded-lg border border-purple-200">
+        <div className="flex items-center justify-between">
+          <div className="flex-1">
+            <div className="text-xs text-purple-700 font-semibold mb-1">Bidding Range (Past Year)</div>
+            <div className="text-sm font-bold text-purple-900">{course.bidRange}</div>
+          </div>
+          <div className="border-l border-purple-300 pl-3 ml-3">
+            <div className="text-xs text-purple-700 font-semibold mb-1">Yearly Avg</div>
+            <div className="text-sm font-bold text-purple-900">e$ {course.yearlyAverage}</div>
+          </div>
+        </div>
+      </div>
+
+      {/* Assessment Summary */}
+      <div className="mt-3 p-3 bg-blue-50 rounded-lg border border-blue-200">
+        <div className="text-xs text-blue-700 font-semibold mb-2">Assessments</div>
+        <div className="flex flex-wrap gap-2">
+          {course.assessments.map((assessment, i) => (
+            <span key={i} className="text-xs bg-white text-blue-700 px-2 py-1 rounded border border-blue-300">
+              {assessment.type} ({assessment.weight}%)
+            </span>
+          ))}
+        </div>
+      </div>
+
       <div className="mt-4 flex space-x-2">
         {isInCart(course.id) ? (
           <button
@@ -261,12 +287,48 @@ function CourseBrowser({ cart, addToCart, removeFromCart }) {
                 </div>
 
                 <div>
-                  <h3 className="font-semibold mb-2">Assessments</h3>
+                  <h3 className="font-semibold mb-2">Assessments & Deadlines</h3>
                   <div className="space-y-2">
                     {selectedCourse.assessments.map((a, i) => (
-                      <div key={i} className="flex justify-between items-center bg-gray-50 p-2 rounded">
-                        <span>{a.type}</span>
-                        <span className="text-sm text-gray-600">{a.date} ({a.weight}%)</span>
+                      <div key={i} className="bg-gray-50 p-3 rounded-lg border border-gray-200">
+                        <div className="flex justify-between items-start">
+                          <div className="flex-1">
+                            <div className="font-semibold text-gray-900">{a.type}</div>
+                            {a.title && <div className="text-sm text-gray-600 mt-1">{a.title}</div>}
+                          </div>
+                          <div className="text-right">
+                            <div className="text-sm font-semibold text-smu-blue">{a.weight}%</div>
+                            <div className="text-xs text-gray-600 mt-1">{new Date(a.date).toLocaleDateString('en-SG', { month: 'short', day: 'numeric' })}</div>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Bidding Information in Modal */}
+                <div className="bg-purple-50 rounded-lg p-4 border border-purple-200">
+                  <h3 className="font-semibold mb-3">Bidding Information</h3>
+                  <div className="grid grid-cols-2 gap-4 mb-3">
+                    <div>
+                      <div className="text-xs text-purple-700 font-semibold mb-1">Yearly Average</div>
+                      <div className="text-2xl font-bold text-purple-900">e$ {selectedCourse.yearlyAverage}</div>
+                    </div>
+                    <div>
+                      <div className="text-xs text-purple-700 font-semibold mb-1">Bidding Range</div>
+                      <div className="text-xl font-bold text-purple-900">{selectedCourse.bidRange}</div>
+                    </div>
+                  </div>
+                  <div className="text-xs text-purple-700 font-semibold mb-2">Historical Trends (Past Year)</div>
+                  <div className="space-y-1">
+                    {selectedCourse.bidHistory.map((history, i) => (
+                      <div key={i} className="flex justify-between text-sm bg-white p-2 rounded">
+                        <span className="text-gray-700">{history.term}</span>
+                        <span className="text-gray-600">
+                          Min: <span className="font-semibold text-green-600">{history.minBid}</span> |
+                          Avg: <span className="font-semibold text-blue-600"> {history.avgBid}</span> |
+                          Max: <span className="font-semibold text-red-600"> {history.maxBid}</span>
+                        </span>
                       </div>
                     ))}
                   </div>
