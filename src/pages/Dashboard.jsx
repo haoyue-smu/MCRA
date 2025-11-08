@@ -1,12 +1,15 @@
 import { Link } from 'react-router-dom';
+import { useState } from 'react';
 import {
   BookOpen, Calendar, TrendingUp, GitBranch,
   ClipboardList, Briefcase, Brain, ArrowRight, Star, AlertTriangle,
-  CheckCircle, XCircle, DollarSign, Award, Zap
+  CheckCircle, XCircle, DollarSign, Award, Zap, Trash2, GraduationCap, Target
 } from 'lucide-react';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
+import { studentProgress, programRequirements } from '../data/mockData';
 
-function Dashboard({ cart }) {
+function Dashboard({ cart, removeFromCart }) {
+  const [courseRatings, setCourseRatings] = useState({});
   const quickLinks = [
     {
       title: 'Course Browser',
@@ -78,6 +81,30 @@ function Dashboard({ cart }) {
     return cart.filter(c => c.suEligible).length;
   };
 
+  // Prepare credit distribution data for pie chart
+  const prepareCreditDistribution = () => {
+    return [
+      { name: 'Core Modules', value: studentProgress.creditsByType.core.completed, color: '#003D7C' },
+      { name: 'Major Electives', value: studentProgress.creditsByType.majorElective.completed, color: '#D4A76A' },
+      { name: 'Free Electives', value: studentProgress.creditsByType.freeElective.completed, color: '#10b981' },
+      { name: 'Remaining', value: studentProgress.totalCreditsRequired - studentProgress.creditsCompleted, color: '#e5e7eb' }
+    ];
+  };
+
+  const handleRateCourse = (courseId, rating) => {
+    setCourseRatings(prev => ({
+      ...prev,
+      [courseId]: rating
+    }));
+    // In a real app, this would save to backend
+    localStorage.setItem('courseRatings', JSON.stringify({
+      ...courseRatings,
+      [courseId]: rating
+    }));
+  };
+
+  const COLORS = ['#003D7C', '#D4A76A', '#10b981', '#e5e7eb'];
+
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       {/* Page Header */}
@@ -87,30 +114,30 @@ function Dashboard({ cart }) {
 
       {/* Status Bar */}
       <div className="status-bar">
-        <div className="flex items-center justify-between text-white">
-          <div className="flex items-center space-x-6">
+        <div className="flex flex-col md:flex-row items-start md:items-center justify-between text-white gap-4">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6 w-full md:w-auto">
             <div>
               <div className="text-sm font-medium opacity-90">Current Term</div>
-              <div className="text-2xl font-bold">Term 3 2024-25</div>
+              <div className="text-xl md:text-2xl font-bold">Term 3 2024-25</div>
             </div>
-            <div className="h-12 w-px bg-white opacity-30"></div>
+            <div className="hidden sm:block h-12 w-px bg-white opacity-30"></div>
             <div>
               <div className="text-sm font-medium opacity-90">Bidding Status</div>
-              <div className="text-2xl font-bold flex items-center">
+              <div className="text-xl md:text-2xl font-bold flex items-center">
                 <span className="inline-block w-3 h-3 bg-white rounded-full mr-2 animate-pulse"></span>
                 Open
               </div>
             </div>
           </div>
-          <div className="text-right">
+          <div className="text-left md:text-right w-full md:w-auto">
             <div className="text-sm font-medium opacity-90">Bidding Closes In</div>
-            <div className="text-xl font-bold">3 days 14 hours</div>
+            <div className="text-lg md:text-xl font-bold">3 days 14 hours</div>
           </div>
         </div>
       </div>
 
       {/* Cart Summary */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
         <div className="stat-card">
           <div className="stat-value text-smu-blue">{cart.length}</div>
           <div className="stat-label">Courses in Cart</div>
@@ -128,6 +155,178 @@ function Dashboard({ cart }) {
           <div className="stat-label">Total Assessments</div>
         </div>
       </div>
+
+      {/* Academic Progress Section */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+        {/* Credits Completed Tracker */}
+        <div className="bg-white rounded-lg shadow-md p-6">
+          <div className="flex items-center mb-4">
+            <GraduationCap className="w-6 h-6 text-smu-blue mr-2" />
+            <h3 className="text-lg font-semibold text-gray-900">Degree Progress</h3>
+          </div>
+          <div className="mb-4">
+            <div className="flex items-baseline justify-between mb-2">
+              <span className="text-3xl font-bold text-smu-blue">{studentProgress.creditsCompleted}</span>
+              <span className="text-lg text-gray-600">/ {studentProgress.totalCreditsRequired} credits</span>
+            </div>
+            <div className="w-full bg-gray-200 rounded-full h-3 mb-2">
+              <div
+                className="bg-gradient-to-r from-smu-blue to-blue-500 h-3 rounded-full transition-all"
+                style={{ width: `${(studentProgress.creditsCompleted / studentProgress.totalCreditsRequired) * 100}%` }}
+              />
+            </div>
+            <p className="text-sm text-gray-600">
+              {Math.round((studentProgress.creditsCompleted / studentProgress.totalCreditsRequired) * 100)}% Complete •
+              {studentProgress.totalCreditsRequired - studentProgress.creditsCompleted} credits remaining
+            </p>
+          </div>
+
+          {/* Credit Breakdown */}
+          <div className="space-y-2 mt-4">
+            <div className="flex items-center justify-between text-sm">
+              <div className="flex items-center">
+                <div className="w-3 h-3 bg-smu-blue rounded-full mr-2"></div>
+                <span className="text-gray-700">Core Modules</span>
+              </div>
+              <span className="font-semibold">
+                {studentProgress.creditsByType.core.completed}/{studentProgress.creditsByType.core.required}
+              </span>
+            </div>
+            <div className="flex items-center justify-between text-sm">
+              <div className="flex items-center">
+                <div className="w-3 h-3 bg-smu-gold rounded-full mr-2"></div>
+                <span className="text-gray-700">Major Electives</span>
+              </div>
+              <span className="font-semibold">
+                {studentProgress.creditsByType.majorElective.completed}/{studentProgress.creditsByType.majorElective.required}
+              </span>
+            </div>
+            <div className="flex items-center justify-between text-sm">
+              <div className="flex items-center">
+                <div className="w-3 h-3 bg-green-500 rounded-full mr-2"></div>
+                <span className="text-gray-700">Free Electives</span>
+              </div>
+              <span className="font-semibold">
+                {studentProgress.creditsByType.freeElective.completed}/{studentProgress.creditsByType.freeElective.required}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        {/* Credit Distribution Pie Chart */}
+        <div className="bg-white rounded-lg shadow-md p-6">
+          <div className="flex items-center mb-4">
+            <Target className="w-6 h-6 text-smu-blue mr-2" />
+            <h3 className="text-lg font-semibold text-gray-900">Credit Distribution</h3>
+          </div>
+          <ResponsiveContainer width="100%" height={200}>
+            <PieChart>
+              <Pie
+                data={prepareCreditDistribution()}
+                cx="50%"
+                cy="50%"
+                innerRadius={60}
+                outerRadius={80}
+                paddingAngle={2}
+                dataKey="value"
+              >
+                {prepareCreditDistribution().map((entry, index) => (
+                  <Cell key={`cell-${index}`} fill={COLORS[index]} />
+                ))}
+              </Pie>
+              <Tooltip />
+            </PieChart>
+          </ResponsiveContainer>
+          <div className="grid grid-cols-2 gap-2 mt-4 text-xs">
+            {prepareCreditDistribution().map((entry, index) => (
+              <div key={index} className="flex items-center">
+                <div className="w-3 h-3 rounded-full mr-2" style={{ backgroundColor: entry.color }}></div>
+                <span className="text-gray-700">{entry.name}: {entry.value}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Requirements Tracker */}
+      <div className="bg-white rounded-lg shadow-md p-6 mb-8">
+        <h3 className="text-lg font-semibold text-gray-900 mb-4">Program Requirements</h3>
+        <div className="space-y-4">
+          {programRequirements.map((req, index) => (
+            <div key={index} className="border-b border-gray-200 pb-4 last:border-0">
+              <div className="flex items-center justify-between mb-2">
+                <h4 className="font-semibold text-gray-900">{req.category}</h4>
+                <span className="text-sm text-gray-600">
+                  {req.completed}/{req.required} credits
+                </span>
+              </div>
+              <div className="w-full bg-gray-200 rounded-full h-2 mb-3">
+                <div
+                  className="bg-green-500 h-2 rounded-full"
+                  style={{ width: `${(req.completed / req.required) * 100}%` }}
+                />
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {req.modules.map((module, idx) => (
+                  <span
+                    key={idx}
+                    className={`text-xs px-2 py-1 rounded ${
+                      module.status === 'completed' ? 'bg-green-100 text-green-700' :
+                      module.status === 'in_cart' ? 'bg-blue-100 text-blue-700' :
+                      'bg-gray-100 text-gray-600'
+                    }`}
+                  >
+                    {module.id}
+                    {module.status === 'completed' && ' ✓'}
+                    {module.status === 'in_cart' && ' 🛒'}
+                  </span>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Current Semester - Rate Your Courses */}
+      {cart.length > 0 && (
+        <div className="bg-white rounded-lg shadow-md p-6 mb-8">
+          <h3 className="text-lg font-semibold text-gray-900 mb-2">Rate Your Current Courses</h3>
+          <p className="text-sm text-gray-600 mb-4">
+            Help fellow students by rating your courses! Your ratings contribute to the community.
+          </p>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {cart.map(course => (
+              <div key={course.id} className="border border-gray-200 rounded-lg p-4">
+                <h4 className="font-semibold text-gray-900 mb-1">{course.id}</h4>
+                <p className="text-sm text-gray-600 mb-3">{course.name}</p>
+                <div className="flex items-center justify-between">
+                  <span className="text-xs text-gray-500">Your rating:</span>
+                  <div className="flex gap-1">
+                    {[1, 2, 3, 4, 5].map((rating) => (
+                      <button
+                        key={rating}
+                        onClick={() => handleRateCourse(course.id, rating)}
+                        className="focus:outline-none"
+                      >
+                        <Star
+                          className={`w-5 h-5 ${
+                            courseRatings[course.id] >= rating
+                              ? 'text-yellow-500 fill-current'
+                              : 'text-gray-300'
+                          }`}
+                        />
+                      </button>
+                    ))}
+                  </div>
+                </div>
+                {courseRatings[course.id] && (
+                  <p className="text-xs text-green-600 mt-2">✓ Thanks for your feedback!</p>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Course Cards and Insights - Only show if cart has courses */}
       {cart.length > 0 ? (
@@ -201,6 +400,18 @@ function Dashboard({ cart }) {
                   <div className="pt-3 border-t border-gray-200">
                     <p className="text-xs text-gray-500">{course.professor}</p>
                   </div>
+
+                  {/* Remove Button */}
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      removeFromCart(course.id);
+                    }}
+                    className="mt-3 w-full btn-danger flex items-center justify-center text-sm"
+                  >
+                    <Trash2 className="w-4 h-4 mr-2" />
+                    Remove from Cart
+                  </button>
                 </div>
               ))}
             </div>

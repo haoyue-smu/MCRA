@@ -6,6 +6,7 @@ export const courses = [
     name: 'Introduction to Programming',
     professor: 'Dr. Lee Wei Ming',
     credits: 1.0,
+    moduleType: 'Core',
     demand: 'High',
     demandCount: 156,
     capacity: 120,
@@ -43,6 +44,7 @@ export const courses = [
     name: 'Data Management',
     professor: 'Prof. Sarah Tan',
     credits: 1.0,
+    moduleType: 'Core',
     demand: 'Medium',
     demandCount: 98,
     capacity: 100,
@@ -80,6 +82,7 @@ export const courses = [
     name: 'Business Process Analysis & Solutioning',
     professor: 'Dr. James Wong',
     credits: 1.0,
+    moduleType: 'Core',
     demand: 'High',
     demandCount: 142,
     capacity: 110,
@@ -116,6 +119,7 @@ export const courses = [
     name: 'Web Application Development I',
     professor: 'Dr. Chen Yixuan',
     credits: 1.0,
+    moduleType: 'Major Elective',
     demand: 'Very High',
     demandCount: 189,
     capacity: 120,
@@ -153,6 +157,7 @@ export const courses = [
     name: 'Information Security Management',
     professor: 'Prof. Kumar Raj',
     credits: 1.0,
+    moduleType: 'Major Elective',
     demand: 'Medium',
     demandCount: 75,
     capacity: 80,
@@ -189,6 +194,7 @@ export const courses = [
     name: 'Artificial Intelligence & Machine Learning',
     professor: 'Dr. Lim Mei Ling',
     credits: 1.0,
+    moduleType: 'Major Elective',
     demand: 'Very High',
     demandCount: 201,
     capacity: 100,
@@ -225,6 +231,7 @@ export const courses = [
     name: 'Object Oriented Programming',
     professor: 'Dr. Patricia Ng',
     credits: 1.0,
+    moduleType: 'Major Elective',
     demand: 'High',
     demandCount: 165,
     capacity: 130,
@@ -262,6 +269,7 @@ export const courses = [
     name: 'Cloud Management and Engineering',
     professor: 'Prof. Michael Chen',
     credits: 1.0,
+    moduleType: 'Free Elective',
     demand: 'Very High',
     demandCount: 178,
     capacity: 90,
@@ -390,3 +398,54 @@ export const suPolicy = {
     'Allow focus on major courses'
   ]
 };
+
+// Student Progress Data
+export const studentProgress = {
+  totalCreditsRequired: 120,
+  creditsCompleted: 90,
+  creditsByType: {
+    core: { completed: 30, required: 36 },
+    majorElective: { completed: 45, required: 48 },
+    freeElective: { completed: 15, required: 36 }
+  },
+  currentSemester: 'Term 3 2024-25',
+  yearLevel: 'Year 3'
+};
+
+// Program Requirements
+export const programRequirements = [
+  {
+    category: 'Core Modules',
+    required: 36,
+    completed: 30,
+    modules: [
+      { id: 'IS111', name: 'Introduction to Programming', status: 'completed' },
+      { id: 'IS112', name: 'Data Management', status: 'completed' },
+      { id: 'IS210', name: 'Business Process Analysis & Solutioning', status: 'in_cart' },
+      { id: 'IS214', name: 'Business Intelligence Systems', status: 'pending' },
+      { id: 'STAT151', name: 'Introduction to Statistics', status: 'completed' },
+      { id: 'COMM101', name: 'Communication & Pitching', status: 'completed' }
+    ]
+  },
+  {
+    category: 'Major Electives',
+    required: 48,
+    completed: 45,
+    modules: [
+      { id: 'IS216', name: 'Web Application Development I', status: 'in_cart' },
+      { id: 'IS213', name: 'Object Oriented Programming', status: 'pending' },
+      { id: 'IS424', name: 'Information Security Management', status: 'pending' },
+      { id: 'IS445', name: 'Artificial Intelligence & Machine Learning', status: 'pending' }
+    ]
+  },
+  {
+    category: 'Free Electives',
+    required: 36,
+    completed: 15,
+    modules: [
+      { id: 'IS442', name: 'Cloud Management and Engineering', status: 'pending' },
+      { id: 'ECON101', name: 'Introduction to Economics', status: 'completed' },
+      { id: 'MGMT101', name: 'Principles of Management', status: 'completed' }
+    ]
+  }
+];

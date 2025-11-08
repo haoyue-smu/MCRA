@@ -64,9 +64,9 @@ function App() {
         <Route path="/*" element={
           <ProtectedRoute>
             <Sidebar cart={cart} user={user} onLogout={handleLogout} />
-            <main className="ml-80 transition-all duration-300 pb-8">
+            <main className="ml-0 md:ml-80 transition-all duration-300 pb-8">
               <Routes>
-                <Route path="/" element={<Dashboard cart={cart} />} />
+                <Route path="/" element={<Dashboard cart={cart} removeFromCart={removeFromCart} />} />
                 <Route path="/courses" element={<CourseBrowser cart={cart} addToCart={addToCart} removeFromCart={removeFromCart} />} />
                 <Route path="/timetable" element={<Timetable cart={cart} />} />
                 <Route path="/bidding" element={<BiddingOptimizer cart={cart} />} />

@@ -10,6 +10,7 @@ function Sidebar({ cart, user, onLogout }) {
   const location = useLocation();
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [showCustomize, setShowCustomize] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   // Load saved preferences from localStorage
   const [visibleItems, setVisibleItems] = useState(() => {
@@ -51,10 +52,26 @@ function Sidebar({ cart, user, onLogout }) {
 
   return (
     <>
+      {/* Mobile Menu Button */}
+      <button
+        onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+        className="md:hidden fixed top-4 left-4 z-50 p-2 bg-smu-blue text-white rounded-lg shadow-lg"
+      >
+        {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+      </button>
+
+      {/* Mobile Overlay */}
+      {isMobileMenuOpen && (
+        <div
+          className="md:hidden fixed inset-0 bg-black bg-opacity-50 z-30"
+          onClick={() => setIsMobileMenuOpen(false)}
+        />
+      )}
+
       {/* Sidebar */}
       <div className={`fixed left-0 top-0 h-full bg-smu-blue text-white transition-all duration-300 z-40 ${
         isCollapsed ? 'w-20' : 'w-80'
-      }`}>
+      } ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0`}>
         {/* Header */}
         <div className="p-4 border-b border-blue-700 flex items-center justify-between">
           {!isCollapsed && (
@@ -93,6 +110,7 @@ function Sidebar({ cart, user, onLogout }) {
               <Link
                 key={item.path}
                 to={item.path}
+                onClick={() => setIsMobileMenuOpen(false)}
                 className={`flex items-center px-4 py-3 transition-colors ${
                   active
                     ? 'bg-blue-700 border-r-4 border-smu-gold'
