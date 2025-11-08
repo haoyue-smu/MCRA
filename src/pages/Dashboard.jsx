@@ -126,13 +126,13 @@ function Dashboard({ cart }) {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      {/* Simple Header */}
-      <div className="mb-6">
-        <h1 className="text-4xl font-bold text-smu-blue mb-4">My Dashboard</h1>
+      {/* Page Header */}
+      <div className="page-header">
+        <h1 className="page-title">My Dashboard</h1>
       </div>
 
-      {/* Prominent Status Bar */}
-      <div className="bg-gradient-to-r from-green-500 to-emerald-600 rounded-lg shadow-lg p-4 mb-8">
+      {/* Status Bar */}
+      <div className="status-bar">
         <div className="flex items-center justify-between text-white">
           <div className="flex items-center space-x-6">
             <div>
@@ -157,21 +157,21 @@ function Dashboard({ cart }) {
 
       {/* Cart Summary */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
-        <div className="bg-white rounded-lg shadow-md p-6">
-          <div className="text-3xl font-bold text-smu-blue mb-1">{cart.length}</div>
-          <div className="text-sm text-gray-600">Courses in Cart</div>
+        <div className="stat-card">
+          <div className="stat-value text-smu-blue">{cart.length}</div>
+          <div className="stat-label">Courses in Cart</div>
         </div>
-        <div className="bg-white rounded-lg shadow-md p-6">
-          <div className="text-3xl font-bold text-green-600 mb-1">{getSUEligibleCount()}</div>
-          <div className="text-sm text-gray-600">S/U Eligible</div>
+        <div className="stat-card">
+          <div className="stat-value text-green-600">{getSUEligibleCount()}</div>
+          <div className="stat-label">S/U Eligible</div>
         </div>
-        <div className="bg-white rounded-lg shadow-md p-6">
-          <div className="text-3xl font-bold text-purple-600 mb-1">e$ {getAverageBid()}</div>
-          <div className="text-sm text-gray-600">Avg Bid Needed</div>
+        <div className="stat-card">
+          <div className="stat-value text-purple-600">e$ {getAverageBid()}</div>
+          <div className="stat-label">Avg Bid Needed</div>
         </div>
-        <div className="bg-white rounded-lg shadow-md p-6">
-          <div className="text-3xl font-bold text-orange-600 mb-1">{getTotalAssessments()}</div>
-          <div className="text-sm text-gray-600">Total Assessments</div>
+        <div className="stat-card">
+          <div className="stat-value text-orange-600">{getTotalAssessments()}</div>
+          <div className="stat-label">Total Assessments</div>
         </div>
       </div>
 
@@ -181,9 +181,9 @@ function Dashboard({ cart }) {
           {/* Insightful Charts */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
             {/* Budget Allocation with Min/Avg/Max */}
-            <div className="bg-white rounded-lg shadow-md p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">💰 Bidding Budget Planning</h3>
-              <p className="text-xs text-gray-600 mb-4">
+            <div className="chart-card">
+              <h3 className="chart-title">💰 Bidding Budget Planning</h3>
+              <p className="chart-subtitle">
                 Plan your e$ allocation. Green = minimum safe bid, Yellow = average bid, Red = competitive bid
               </p>
               <ResponsiveContainer width="100%" height={280}>
@@ -207,9 +207,9 @@ function Dashboard({ cart }) {
             </div>
 
             {/* Workload Distribution Stacked */}
-            <div className="bg-white rounded-lg shadow-md p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">📚 Assessment Workload Breakdown</h3>
-              <p className="text-xs text-gray-600 mb-4">See how your assessments are distributed across courses</p>
+            <div className="chart-card">
+              <h3 className="chart-title">📚 Assessment Workload Breakdown</h3>
+              <p className="chart-subtitle">See how your assessments are distributed across courses</p>
               <ResponsiveContainer width="100%" height={280}>
                 <BarChart data={prepareWorkloadDistribution()}>
                   <CartesianGrid strokeDasharray="3 3" />
@@ -232,9 +232,9 @@ function Dashboard({ cart }) {
           </div>
 
           {/* Course Quality Overview */}
-          <div className="bg-white rounded-lg shadow-md p-6 mb-8">
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">⭐ Course Quality Analysis</h3>
-            <p className="text-xs text-gray-600 mb-4">
+          <div className="chart-card mb-8">
+            <h3 className="chart-title">⭐ Course Quality Analysis</h3>
+            <p className="chart-subtitle">
               Compare course ratings (1-5 stars) with difficulty level. Higher is more difficult.
             </p>
             <ResponsiveContainer width="100%" height={300}>
@@ -332,7 +332,7 @@ function Dashboard({ cart }) {
 
       {/* Quick Links */}
       <div>
-        <h2 className="text-2xl font-bold text-smu-blue mb-4">Quick Access</h2>
+        <h2 className="section-title">Quick Access</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {quickLinks.map((link) => {
             const Icon = link.icon;
@@ -340,7 +340,7 @@ function Dashboard({ cart }) {
               <Link
                 key={link.path}
                 to={link.path}
-                className="bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow p-6 group"
+                className="card-hover group"
               >
                 <div className="flex items-start justify-between mb-4">
                   <div className={`${link.color} p-3 rounded-lg`}>
