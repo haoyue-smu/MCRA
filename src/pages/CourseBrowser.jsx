@@ -40,20 +40,20 @@ function CourseBrowser({ cart, addToCart, removeFromCart }) {
 
   const CourseCard = ({ course }) => (
     <div
-      className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow p-6 cursor-pointer"
+      className="course-card p-6 cursor-pointer"
       onClick={() => setSelectedCourse(course)}
     >
-      <div className="flex items-start justify-between mb-3">
+      <div className="course-card-header flex items-start justify-between mb-3">
         <div className="flex-1">
           <div className="flex items-center space-x-2 mb-2">
             <h3 className="text-lg font-bold text-smu-blue">{course.id}</h3>
             {course.suEligible ? (
-              <span className="px-2 py-1 bg-green-100 text-green-700 text-xs font-semibold rounded-full flex items-center">
+              <span className="badge-animated px-2 py-1 bg-green-100 text-green-700 text-xs font-semibold rounded-full flex items-center">
                 <CheckCircle className="w-3 h-3 mr-1" />
                 S/U Eligible
               </span>
             ) : (
-              <span className="px-2 py-1 bg-red-100 text-red-700 text-xs font-semibold rounded-full flex items-center">
+              <span className="badge-animated px-2 py-1 bg-red-100 text-red-700 text-xs font-semibold rounded-full flex items-center">
                 <XCircle className="w-3 h-3 mr-1" />
                 No S/U
               </span>
@@ -141,7 +141,7 @@ function CourseBrowser({ cart, addToCart, removeFromCart }) {
               e.stopPropagation();
               removeFromCart(course.id);
             }}
-            className="flex-1 bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 transition-colors flex items-center justify-center"
+            className="btn-modern flex-1 bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 flex items-center justify-center"
           >
             <XCircle className="w-4 h-4 mr-2" />
             Remove from Cart
@@ -152,13 +152,13 @@ function CourseBrowser({ cart, addToCart, removeFromCart }) {
               e.stopPropagation();
               addToCart(course.id);
             }}
-            className="flex-1 bg-smu-blue text-white px-4 py-2 rounded-md hover:bg-blue-800 transition-colors flex items-center justify-center"
+            className="btn-modern btn-shimmer flex-1 text-white px-4 py-2 rounded-md flex items-center justify-center"
           >
             <ShoppingCart className="w-4 h-4 mr-2" />
             Add to Cart
           </button>
         )}
-        <button className="px-4 py-2 bg-smu-gold text-smu-blue rounded-md hover:bg-yellow-600 transition-colors flex items-center">
+        <button className="btn-modern px-4 py-2 bg-smu-gold text-smu-blue rounded-md hover:bg-yellow-600 flex items-center">
           <Mail className="w-4 h-4 mr-2" />
           Apply to Audit
         </button>
@@ -175,12 +175,12 @@ function CourseBrowser({ cart, addToCart, removeFromCart }) {
       </div>
 
       {/* S/U Policy Info Banner */}
-      <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+      <div className="alert-success">
         <div className="flex items-start">
-          <AlertCircle className="w-5 h-5 text-blue-600 mt-0.5 mr-3 flex-shrink-0" />
+          <AlertCircle className="w-5 h-5 text-green-600 mt-0.5 mr-3 flex-shrink-0" />
           <div>
-            <h3 className="font-semibold text-blue-900 mb-1">S/U Policy Reminder</h3>
-            <p className="text-sm text-blue-800">
+            <h3 className="font-semibold text-green-900 mb-1">S/U Policy Reminder</h3>
+            <p className="text-sm text-green-800">
               You can S/U up to 12 CUs. Core modules and final semester courses cannot be S/U-ed.
               Courses marked with a green badge are S/U eligible.
             </p>
@@ -198,7 +198,7 @@ function CourseBrowser({ cart, addToCart, removeFromCart }) {
               placeholder="Search courses, professors..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-smu-blue focus:border-transparent"
+              className="input-glow w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg"
             />
           </div>
           <button

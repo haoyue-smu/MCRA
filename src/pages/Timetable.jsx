@@ -104,7 +104,7 @@ function Timetable({ cart }) {
 
       {/* Info Banner */}
       {cart.length === 0 ? (
-        <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6">
+        <div className="alert-warning">
           <div className="flex items-start">
             <AlertCircle className="w-5 h-5 text-yellow-600 mt-0.5 mr-3 flex-shrink-0" />
             <div>
@@ -116,7 +116,7 @@ function Timetable({ cart }) {
           </div>
         </div>
       ) : clashes.length > 0 ? (
-        <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
+        <div className="alert-error">
           <div className="flex items-start">
             <AlertCircle className="w-5 h-5 text-red-600 mt-0.5 mr-3 flex-shrink-0" />
             <div className="flex-1">
@@ -135,7 +135,7 @@ function Timetable({ cart }) {
           </div>
         </div>
       ) : (
-        <div className="bg-green-50 border border-green-200 rounded-lg p-4 mb-6">
+        <div className="alert-success">
           <div className="flex items-start">
             <CalendarIcon className="w-5 h-5 text-green-600 mt-0.5 mr-3 flex-shrink-0" />
             <div>
@@ -170,11 +170,11 @@ function Timetable({ cart }) {
 
       {/* Course Legend */}
       {cart.length > 0 && (
-        <div className="mb-6">
+        <div className="mb-6 fade-in">
           <h3 className="text-lg font-semibold text-gray-900 mb-3">Courses</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
             {cart.map((course, index) => (
-              <div key={course.id} className={`p-3 rounded-lg border-2 ${getColorForCourse(index)}`}>
+              <div key={course.id} className={`card-hover-lift p-3 rounded-lg border-2 ${getColorForCourse(index)}`}>
                 <div className="font-semibold">{course.id}</div>
                 <div className="text-sm">{course.name}</div>
                 <div className="text-xs mt-1">{course.professor}</div>
@@ -228,22 +228,22 @@ function Timetable({ cart }) {
 
       {/* Weekly Summary & Total Workload */}
       {cart.length > 0 && (
-        <div className="mt-6 space-y-6">
+        <div className="mt-6 space-y-6 slide-up">
           {/* Course & Credit Summary */}
           <div className="bg-white rounded-lg shadow-md p-6">
             <h3 className="text-lg font-semibold text-gray-900 mb-4">📚 Course Summary</h3>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="bg-blue-50 p-4 rounded-lg">
+              <div className="stat-card bg-blue-50">
                 <p className="text-2xl font-bold text-smu-blue">{cart.length}</p>
                 <p className="text-sm text-gray-600">Total Courses</p>
               </div>
-              <div className="bg-green-50 p-4 rounded-lg">
+              <div className="stat-card bg-green-50">
                 <p className="text-2xl font-bold text-green-600">
                   {cart.reduce((sum, course) => sum + course.credits, 0).toFixed(1)}
                 </p>
                 <p className="text-sm text-gray-600">Total Credits</p>
               </div>
-              <div className="bg-purple-50 p-4 rounded-lg">
+              <div className="stat-card bg-purple-50">
                 <p className="text-2xl font-bold text-purple-600">{events.length}</p>
                 <p className="text-sm text-gray-600">Weekly Sessions</p>
               </div>

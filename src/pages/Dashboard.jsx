@@ -127,20 +127,20 @@ function Dashboard({ cart }) {
       </div>
 
       {/* Cart Summary */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
-        <div className="bg-white rounded-lg shadow-md p-6">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8 fade-in">
+        <div className="stat-card">
           <div className="text-3xl font-bold text-smu-blue mb-1">{cart.length}</div>
           <div className="text-sm text-gray-600">Courses in Cart</div>
         </div>
-        <div className="bg-white rounded-lg shadow-md p-6">
+        <div className="stat-card">
           <div className="text-3xl font-bold text-green-600 mb-1">{getSUEligibleCount()}</div>
           <div className="text-sm text-gray-600">S/U Eligible</div>
         </div>
-        <div className="bg-white rounded-lg shadow-md p-6">
+        <div className="stat-card">
           <div className="text-3xl font-bold text-purple-600 mb-1">e$ {getAverageBid()}</div>
           <div className="text-sm text-gray-600">Avg Bid Needed</div>
         </div>
-        <div className="bg-white rounded-lg shadow-md p-6">
+        <div className="stat-card">
           <div className="text-3xl font-bold text-orange-600 mb-1">{getTotalAssessments()}</div>
           <div className="text-sm text-gray-600">Total Assessments</div>
         </div>
@@ -150,9 +150,9 @@ function Dashboard({ cart }) {
       {cart.length > 0 ? (
         <>
           {/* Course Comparison Charts */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8 slide-up">
             {/* Bidding Comparison */}
-            <div className="bg-white rounded-lg shadow-md p-6">
+            <div className="chart-container bg-white rounded-lg shadow-md p-6">
               <h3 className="text-lg font-semibold text-gray-900 mb-4">💰 Bidding Comparison</h3>
               <ResponsiveContainer width="100%" height={250}>
                 <BarChart data={prepareBiddingComparisonData()}>
@@ -169,7 +169,7 @@ function Dashboard({ cart }) {
             </div>
 
             {/* Professor Ratings & Assessment Count */}
-            <div className="bg-white rounded-lg shadow-md p-6">
+            <div className="chart-container bg-white rounded-lg shadow-md p-6">
               <h3 className="text-lg font-semibold text-gray-900 mb-4">⭐ Ratings & Assessments</h3>
               <ResponsiveContainer width="100%" height={250}>
                 <BarChart data={prepareWorkloadData()}>
@@ -188,7 +188,7 @@ function Dashboard({ cart }) {
           </div>
 
           {/* Workload Radar Chart */}
-          <div className="bg-white rounded-lg shadow-md p-6 mb-8">
+          <div className="chart-container bg-white rounded-lg shadow-md p-6 mb-8">
             <h3 className="text-lg font-semibold text-gray-900 mb-4">📊 Course Workload & Difficulty Analysis</h3>
             <ResponsiveContainer width="100%" height={300}>
               <RadarChart data={prepareRadarData()}>
@@ -258,13 +258,13 @@ function Dashboard({ cart }) {
           </div>
         </>
       ) : (
-        <div className="bg-blue-50 border border-blue-200 rounded-lg p-8 mb-8 text-center">
-          <AlertTriangle className="w-12 h-12 text-blue-600 mx-auto mb-4" />
+        <div className="alert-warning text-center">
+          <AlertTriangle className="w-12 h-12 text-yellow-600 mx-auto mb-4" />
           <h3 className="text-lg font-semibold text-gray-900 mb-2">No Courses in Cart</h3>
           <p className="text-gray-600 mb-4">Add courses to see detailed comparisons, charts, and analytics</p>
           <Link
             to="/courses"
-            className="inline-block bg-smu-blue text-white px-6 py-2 rounded-md hover:bg-blue-800 transition-colors"
+            className="btn-modern btn-shimmer inline-block text-white px-6 py-2 rounded-md"
           >
             Browse Courses
           </Link>
@@ -281,7 +281,7 @@ function Dashboard({ cart }) {
               <Link
                 key={link.path}
                 to={link.path}
-                className="bg-white rounded-lg shadow-md hover:shadow-xl transition-shadow p-6 group"
+                className="card-hover-lift bg-white rounded-lg shadow-md p-6 group"
               >
                 <div className="flex items-start justify-between mb-4">
                   <div className={`${link.color} p-3 rounded-lg`}>

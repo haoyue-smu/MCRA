@@ -112,7 +112,7 @@ function AssessmentTimeline({ cart }) {
       </div>
 
       {cart.length === 0 ? (
-        <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+        <div className="alert-warning">
           <div className="flex items-start">
             <AlertTriangle className="w-5 h-5 text-yellow-600 mt-0.5 mr-3 flex-shrink-0" />
             <div>
@@ -126,8 +126,8 @@ function AssessmentTimeline({ cart }) {
       ) : (
         <>
           {/* Summary Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-            <div className="bg-white rounded-lg shadow-md p-4">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6 fade-in">
+            <div className="stat-card">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm text-gray-600">Total Assessments</p>
@@ -137,7 +137,7 @@ function AssessmentTimeline({ cart }) {
               </div>
             </div>
 
-            <div className="bg-white rounded-lg shadow-md p-4">
+            <div className="stat-card">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm text-gray-600">Upcoming (14 days)</p>
@@ -152,7 +152,7 @@ function AssessmentTimeline({ cart }) {
               </div>
             </div>
 
-            <div className="bg-white rounded-lg shadow-md p-4">
+            <div className="stat-card">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm text-gray-600">Urgent (7 days)</p>
@@ -167,7 +167,7 @@ function AssessmentTimeline({ cart }) {
               </div>
             </div>
 
-            <div className="bg-white rounded-lg shadow-md p-4">
+            <div className="stat-card">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm text-gray-600">Total Weight</p>
@@ -244,7 +244,7 @@ function AssessmentTimeline({ cart }) {
                       </div>
                       {urgency === 'urgent' && (
                         <div className="ml-4">
-                          <span className="px-3 py-1 bg-red-100 text-red-700 rounded-full text-xs font-semibold flex items-center">
+                          <span className="badge-pulse px-3 py-1 bg-red-100 text-red-700 rounded-full text-xs font-semibold flex items-center">
                             <AlertTriangle className="w-3 h-3 mr-1" />
                             URGENT
                           </span>
@@ -286,13 +286,13 @@ function AssessmentTimeline({ cart }) {
                         {weekEnd.toLocaleDateString('en-SG', { month: 'long', day: 'numeric' })}
                       </h3>
                       {isVeryBusyWeek && (
-                        <span className="px-3 py-1 bg-red-500 text-white rounded-full text-xs font-bold flex items-center">
+                        <span className="badge-glow px-3 py-1 bg-red-500 text-white rounded-full text-xs font-bold flex items-center">
                           <AlertTriangle className="w-4 h-4 mr-1" />
                           🔥 HELL WEEK ({weekAssessments.length} assessments)
                         </span>
                       )}
                       {isHellWeek && !isVeryBusyWeek && (
-                        <span className="px-3 py-1 bg-orange-500 text-white rounded-full text-xs font-bold flex items-center">
+                        <span className="badge-pulse px-3 py-1 bg-orange-500 text-white rounded-full text-xs font-bold flex items-center">
                           <AlertTriangle className="w-4 h-4 mr-1" />
                           ⚠️ Busy Week ({weekAssessments.length} assessments)
                         </span>

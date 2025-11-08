@@ -66,8 +66,8 @@ function BiddingOptimizer({ cart }) {
       </div>
 
       {/* Budget Overview */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-        <div className="bg-white rounded-lg shadow-md p-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6 fade-in">
+        <div className="stat-card">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-gray-600 mb-1">Total Budget</p>
@@ -77,7 +77,7 @@ function BiddingOptimizer({ cart }) {
           </div>
         </div>
 
-        <div className="bg-white rounded-lg shadow-md p-6">
+        <div className="stat-card">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-gray-600 mb-1">Allocated</p>
@@ -87,7 +87,7 @@ function BiddingOptimizer({ cart }) {
           </div>
         </div>
 
-        <div className="bg-white rounded-lg shadow-md p-6">
+        <div className="stat-card">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-gray-600 mb-1">Remaining</p>
@@ -102,7 +102,7 @@ function BiddingOptimizer({ cart }) {
 
       {/* Budget Warning */}
       {getRemainingBudget() < 0 && (
-        <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
+        <div className="alert-error">
           <div className="flex items-start">
             <AlertCircle className="w-5 h-5 text-red-600 mt-0.5 mr-3 flex-shrink-0" />
             <div>
@@ -116,7 +116,7 @@ function BiddingOptimizer({ cart }) {
       )}
 
       {cart.length === 0 ? (
-        <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+        <div className="alert-warning">
           <div className="flex items-start">
             <AlertCircle className="w-5 h-5 text-yellow-600 mt-0.5 mr-3 flex-shrink-0" />
             <div>
@@ -136,14 +136,14 @@ function BiddingOptimizer({ cart }) {
             const chartData = prepareBidHistoryChart(course);
 
             return (
-              <div key={course.id} className="bg-white rounded-lg shadow-md p-6">
+              <div key={course.id} className="card-hover-lift bg-white rounded-lg shadow-md p-6">
                 <div className="mb-4">
                   <div className="flex items-start justify-between mb-2">
                     <div>
                       <h3 className="text-xl font-bold text-smu-blue">{course.id} - {course.name}</h3>
                       <p className="text-sm text-gray-600">{course.professor}</p>
                     </div>
-                    <span className={`px-3 py-1 rounded-full text-sm font-semibold ${
+                    <span className={`badge-animated px-3 py-1 rounded-full text-sm font-semibold ${
                       course.demand === 'Very High' ? 'bg-red-100 text-red-700' :
                       course.demand === 'High' ? 'bg-orange-100 text-orange-700' :
                       'bg-yellow-100 text-yellow-700'
@@ -164,7 +164,7 @@ function BiddingOptimizer({ cart }) {
                         <label className="text-sm font-medium text-gray-700">Your Bid (e$)</label>
                         <button
                           onClick={() => handleBidChange(course.id, recommendedBid)}
-                          className="text-xs bg-smu-gold text-smu-blue px-2 py-1 rounded hover:bg-yellow-600 flex items-center"
+                          className="btn-modern text-xs bg-smu-gold text-smu-blue px-2 py-1 rounded hover:bg-yellow-600 flex items-center"
                         >
                           <Zap className="w-3 h-3 mr-1" />
                           Use Recommended
@@ -175,7 +175,7 @@ function BiddingOptimizer({ cart }) {
                         value={currentBid || ''}
                         onChange={(e) => handleBidChange(course.id, e.target.value)}
                         placeholder="Enter bid amount"
-                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-smu-blue focus:border-transparent"
+                        className="input-glow w-full px-4 py-2 border border-gray-300 rounded-lg"
                       />
                     </div>
 
