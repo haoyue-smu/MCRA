@@ -10,19 +10,19 @@ export const courses = [
     demand: 'High',
     demandCount: 156,
     capacity: 120,
-    subscribers: 189, // Number of students who subscribed to show interest
+    subscribers: 189,
     suEligible: false,
     description: 'Fundamental programming concepts using Python',
     assessments: [
+      { type: 'Class Participation', date: '2025-04-28', weight: 10, title: 'Attendance & Engagement' },
       { type: 'Quiz 1', date: '2025-02-15', weight: 10, title: 'Variables & Data Types' },
       { type: 'Quiz 2', date: '2025-03-01', weight: 10, title: 'Control Structures' },
       { type: 'Midterm Exam', date: '2025-03-15', weight: 25, title: 'Written Exam' },
-      { type: 'Project', date: '2025-04-10', weight: 25, title: 'Python Application Development' },
-      { type: 'Final Exam', date: '2025-04-28', weight: 30, title: 'Comprehensive Exam' }
+      { type: 'Project', date: '2025-04-10', weight: 30, title: 'Python Application Development' },
+      { type: 'Final Exam', date: '2025-04-28', weight: 15, title: 'Practical Coding Exam' }
     ],
     schedule: [
-      { day: 'Monday', time: '08:15-11:15', location: 'SOE/SCIS1 SR B1-1' },
-      { day: 'Thursday', time: '08:15-09:30', location: 'SOE/SCIS1 SR B1-1' }
+      { day: 'Monday', time: '08:15-11:15', location: 'SOE/SCIS1 SR B1-1' }
     ],
     prerequisites: [],
     bidHistory: [
@@ -37,7 +37,12 @@ export const courses = [
     skills: ['Python', 'Problem Solving', 'Algorithmic Thinking'],
     afterClassRating: 4.2,
     workload: 'High',
-    difficulty: 'Medium'
+    difficulty: 'Medium',
+    reviews: [
+      { rating: 4, comment: "Challenging but rewarding. Heavy workload but you learn a lot.", term: "2024-25 T1" },
+      { rating: 5, comment: "Professor Lee is very patient and explains concepts clearly.", term: "2023-24 T3" },
+      { rating: 3, comment: "Tough if you have no prior coding experience. Start early on projects!", term: "2024-25 T2" }
+    ]
   },
   {
     id: 'IS112',
@@ -52,15 +57,14 @@ export const courses = [
     suEligible: false,
     description: 'Database design, SQL, and data modeling',
     assessments: [
+      { type: 'Class Participation', date: '2025-05-01', weight: 10, title: 'Attendance & Engagement' },
       { type: 'Quiz 1', date: '2025-02-20', weight: 15, title: 'SQL Basics & ER Modeling' },
-      { type: 'Lab Assignment', date: '2025-03-05', weight: 20, title: 'Database Design Project' },
+      { type: 'Lab Assignment', date: '2025-03-05', weight: 15, title: 'Database Design Project' },
       { type: 'Midterm Exam', date: '2025-03-20', weight: 25, title: 'Written Exam' },
-      { type: 'Project', date: '2025-04-15', weight: 20, title: 'Database Implementation' },
-      { type: 'Final Exam', date: '2025-05-01', weight: 20, title: 'Comprehensive Exam' }
+      { type: 'Project', date: '2025-04-15', weight: 35, title: 'Database Implementation' }
     ],
     schedule: [
-      { day: 'Tuesday', time: '12:00-15:00', location: 'SCIS1 SR 3-1' },
-      { day: 'Friday', time: '12:00-13:15', location: 'SCIS1 SR 3-1' }
+      { day: 'Tuesday', time: '12:00-15:00', location: 'SCIS1 SR 3-1' }
     ],
     prerequisites: ['IS111'],
     bidHistory: [
@@ -75,7 +79,11 @@ export const courses = [
     skills: ['SQL', 'Database Design', 'Data Modeling'],
     afterClassRating: 4.5,
     workload: 'Medium',
-    difficulty: 'Medium'
+    difficulty: 'Medium',
+    reviews: [
+      { rating: 5, comment: "Prof Tan is amazing! Very practical course with real-world applications.", term: "2024-25 T1" },
+      { rating: 4, comment: "SQL can be tricky at first but the project really helps solidify concepts.", term: "2023-24 T3" }
+    ]
   },
   {
     id: 'IS210',
@@ -90,11 +98,11 @@ export const courses = [
     suEligible: false,
     description: 'Analyze and design business processes',
     assessments: [
+      { type: 'Class Participation', date: '2025-05-03', weight: 10, title: 'Attendance & Engagement' },
       { type: 'Quiz 1', date: '2025-02-18', weight: 10, title: 'Process Modeling Fundamentals' },
       { type: 'Quiz 2', date: '2025-03-08', weight: 10, title: 'Requirements Engineering' },
-      { type: 'Group Project', date: '2025-03-25', weight: 30, title: 'Business Process Redesign' },
-      { type: 'Midterm Exam', date: '2025-03-22', weight: 20, title: 'Written Exam' },
-      { type: 'Final Exam', date: '2025-05-03', weight: 30, title: 'Comprehensive Exam' }
+      { type: 'Midterm Exam', date: '2025-03-22', weight: 25, title: 'Written Exam' },
+      { type: 'Group Project', date: '2025-05-03', weight: 45, title: 'Business Process Redesign' }
     ],
     schedule: [
       { day: 'Wednesday', time: '15:30-18:30', location: 'SCIS1 SR 2-4' }
@@ -112,7 +120,12 @@ export const courses = [
     skills: ['Business Process Modeling', 'Requirements Analysis', 'Process Optimization'],
     afterClassRating: 4.0,
     workload: 'Very High',
-    difficulty: 'Hard'
+    difficulty: 'Hard',
+    reviews: [
+      { rating: 4, comment: "Dr. Wong makes complex concepts easy to understand. Group project is intensive but rewarding.", term: "2024-25 T1" },
+      { rating: 3, comment: "Heavy workload with lots of group work. Make sure you have good teammates.", term: "2023-24 T3" },
+      { rating: 5, comment: "Excellent course for learning real-world business process modeling. Very practical!", term: "2024-25 T2" }
+    ]
   },
   {
     id: 'IS216',
@@ -127,15 +140,15 @@ export const courses = [
     suEligible: true,
     description: 'Full-stack web development with modern frameworks',
     assessments: [
+      { type: 'Class Participation', date: '2025-04-30', weight: 10, title: 'Attendance & Engagement' },
       { type: 'Quiz 1', date: '2025-02-22', weight: 10, title: 'HTML/CSS & JavaScript Basics' },
       { type: 'Quiz 2', date: '2025-03-10', weight: 10, title: 'React Fundamentals' },
-      { type: 'Lab Assignment', date: '2025-03-18', weight: 15, title: 'Interactive Web Components' },
+      { type: 'Midterm Exam', date: '2025-03-18', weight: 20, title: 'Written Exam' },
       { type: 'Project', date: '2025-04-12', weight: 35, title: 'Full-Stack Web Application' },
-      { type: 'Final Exam', date: '2025-04-30', weight: 30, title: 'Practical Exam' }
+      { type: 'Final Exam', date: '2025-04-30', weight: 15, title: 'Practical Coding Exam' }
     ],
     schedule: [
-      { day: 'Monday', time: '15:30-18:30', location: 'SCIS1 Lab 1' },
-      { day: 'Thursday', time: '15:30-16:45', location: 'SCIS1 Lab 1' }
+      { day: 'Monday', time: '15:30-18:30', location: 'SCIS1 Lab 1' }
     ],
     prerequisites: ['IS111'],
     bidHistory: [
@@ -150,7 +163,12 @@ export const courses = [
     skills: ['JavaScript', 'React', 'Node.js', 'HTML/CSS'],
     afterClassRating: 4.7,
     workload: 'Very High',
-    difficulty: 'Hard'
+    difficulty: 'Hard',
+    reviews: [
+      { rating: 5, comment: "Best coding module I've taken! Dr. Chen is super helpful and the project is really fun.", term: "2024-25 T1" },
+      { rating: 5, comment: "Workload is intense but you'll build a real portfolio-worthy web app. Totally worth it!", term: "2023-24 T3" },
+      { rating: 4, comment: "Fast-paced but rewarding. Prior JavaScript knowledge definitely helps.", term: "2024-25 T2" }
+    ]
   },
   {
     id: 'IS424',
@@ -165,11 +183,11 @@ export const courses = [
     suEligible: true,
     description: 'Security principles, risk management, and compliance',
     assessments: [
+      { type: 'Class Participation', date: '2025-05-05', weight: 10, title: 'Attendance & Engagement' },
       { type: 'Quiz 1', date: '2025-02-25', weight: 15, title: 'Security Fundamentals' },
       { type: 'Case Study', date: '2025-03-12', weight: 20, title: 'Security Breach Analysis' },
-      { type: 'Midterm Exam', date: '2025-03-28', weight: 25, title: 'Written Exam' },
-      { type: 'Group Project', date: '2025-04-18', weight: 20, title: 'Security Audit Report' },
-      { type: 'Final Exam', date: '2025-05-05', weight: 20, title: 'Comprehensive Exam' }
+      { type: 'Midterm Exam', date: '2025-03-28', weight: 20, title: 'Written Exam' },
+      { type: 'Group Project', date: '2025-05-05', weight: 35, title: 'Security Audit Report' }
     ],
     schedule: [
       { day: 'Tuesday', time: '19:00-22:00', location: 'SCIS1 SR 3-2' }
@@ -187,7 +205,11 @@ export const courses = [
     skills: ['Security Analysis', 'Risk Assessment', 'Compliance'],
     afterClassRating: 4.3,
     workload: 'Medium',
-    difficulty: 'Medium'
+    difficulty: 'Medium',
+    reviews: [
+      { rating: 4, comment: "Prof Kumar brings real industry experience. Case studies are based on actual security breaches.", term: "2024-25 T1" },
+      { rating: 5, comment: "Very relevant in today's world. Great for those interested in cybersecurity careers.", term: "2023-24 T3" }
+    ]
   },
   {
     id: 'IS445',
@@ -202,11 +224,12 @@ export const courses = [
     subscribers: 245,
     description: 'AI concepts, ML algorithms, and practical applications',
     assessments: [
+      { type: 'Class Participation', date: '2025-05-08', weight: 10, title: 'Attendance & Engagement' },
       { type: 'Quiz 1', date: '2025-02-28', weight: 10, title: 'ML Fundamentals' },
       { type: 'Quiz 2', date: '2025-03-14', weight: 10, title: 'Neural Networks' },
       { type: 'Assignment', date: '2025-03-30', weight: 20, title: 'Algorithm Implementation' },
       { type: 'Project', date: '2025-04-20', weight: 30, title: 'ML Application Development' },
-      { type: 'Final Exam', date: '2025-05-08', weight: 30, title: 'Comprehensive Exam' }
+      { type: 'Final Exam', date: '2025-05-08', weight: 20, title: 'Comprehensive Exam' }
     ],
     schedule: [
       { day: 'Friday', time: '15:30-18:30', location: 'SCIS1 SR 2-1' }
@@ -224,7 +247,12 @@ export const courses = [
     skills: ['Python', 'Machine Learning', 'Deep Learning', 'TensorFlow'],
     afterClassRating: 4.8,
     workload: 'Very High',
-    difficulty: 'Very Hard'
+    difficulty: 'Very Hard',
+    reviews: [
+      { rating: 5, comment: "Amazing professor! Dr. Lim makes complex ML concepts understandable. Challenging but life-changing.", term: "2024-25 T1" },
+      { rating: 4, comment: "Very tough module but you'll learn so much. Strong Python and statistics background is a must.", term: "2023-24 T3" },
+      { rating: 5, comment: "Best elective I've taken. Workload is heavy but the project is incredibly rewarding.", term: "2024-25 T2" }
+    ]
   },
   {
     id: 'IS213',
@@ -239,15 +267,15 @@ export const courses = [
     description: 'Advanced OOP concepts, design patterns, and Java programming',
     subscribers: 198,
     assessments: [
+      { type: 'Class Participation', date: '2025-05-02', weight: 10, title: 'Attendance & Engagement' },
       { type: 'Quiz 1', date: '2025-02-17', weight: 12, title: 'OOP Principles' },
-      { type: 'Quiz 2', date: '2025-03-03', weight: 12, title: 'Design Patterns' },
-      { type: 'Lab Assignment', date: '2025-03-17', weight: 16, title: 'Java Programming' },
+      { type: 'Quiz 2', date: '2025-03-03', weight: 13, title: 'Design Patterns' },
+      { type: 'Midterm Exam', date: '2025-03-17', weight: 20, title: 'Written Exam' },
       { type: 'Project', date: '2025-04-14', weight: 30, title: 'OOP Application Design' },
-      { type: 'Final Exam', date: '2025-05-02', weight: 30, title: 'Comprehensive Exam' }
+      { type: 'Final Exam', date: '2025-05-02', weight: 15, title: 'Practical Exam' }
     ],
     schedule: [
-      { day: 'Tuesday', time: '08:15-11:15', location: 'SCIS1 SR 2-2' },
-      { day: 'Thursday', time: '12:00-13:15', location: 'SCIS1 SR 2-2' }
+      { day: 'Tuesday', time: '08:15-11:15', location: 'SCIS1 SR 2-2' }
     ],
     prerequisites: ['IS111'],
     bidHistory: [
@@ -262,7 +290,12 @@ export const courses = [
     skills: ['Java', 'OOP Design', 'Design Patterns', 'Software Architecture'],
     afterClassRating: 4.4,
     workload: 'High',
-    difficulty: 'Medium'
+    difficulty: 'Medium',
+    reviews: [
+      { rating: 4, comment: "Dr. Ng is very knowledgeable. The design patterns section is especially useful for software engineering.", term: "2024-25 T1" },
+      { rating: 5, comment: "Great course for building a strong foundation in Java and OOP. Project is practical and fun!", term: "2023-24 T3" },
+      { rating: 4, comment: "Manageable workload with clear expectations. Good follow-up to IS111.", term: "2024-25 T2" }
+    ]
   },
   {
     id: 'IS442',
@@ -277,15 +310,14 @@ export const courses = [
     description: 'Cloud computing platforms, infrastructure management, and DevOps practices',
     subscribers: 203,
     assessments: [
-      { type: 'Quiz 1', date: '2025-02-24', weight: 15, title: 'Cloud Fundamentals' },
-      { type: 'Quiz 2', date: '2025-03-10', weight: 15, title: 'AWS Services' },
+      { type: 'Class Participation', date: '2025-05-06', weight: 10, title: 'Attendance & Engagement' },
+      { type: 'Quiz 1', date: '2025-02-24', weight: 15, title: 'Cloud Fundamentals & AWS Services' },
       { type: 'Lab Assignment', date: '2025-03-24', weight: 20, title: 'Cloud Deployment' },
-      { type: 'Group Project', date: '2025-04-21', weight: 25, title: 'Cloud Architecture Design' },
-      { type: 'Final Exam', date: '2025-05-06', weight: 25, title: 'Practical Exam' }
+      { type: 'Group Project', date: '2025-04-21', weight: 35, title: 'Cloud Architecture Design' },
+      { type: 'Final Exam', date: '2025-05-06', weight: 20, title: 'Practical Exam' }
     ],
     schedule: [
-      { day: 'Wednesday', time: '12:00-15:00', location: 'SCIS1 Lab 2' },
-      { day: 'Friday', time: '08:15-09:30', location: 'SCIS1 SR 3-3' }
+      { day: 'Wednesday', time: '12:00-15:00', location: 'SCIS1 Lab 2' }
     ],
     prerequisites: ['IS210', 'IS216'],
     bidHistory: [
@@ -300,7 +332,12 @@ export const courses = [
     skills: ['AWS', 'Azure', 'Docker', 'Kubernetes', 'CI/CD'],
     afterClassRating: 4.6,
     workload: 'Very High',
-    difficulty: 'Hard'
+    difficulty: 'Hard',
+    reviews: [
+      { rating: 5, comment: "Hands-on labs with AWS are fantastic. Prof Chen has tons of industry experience to share.", term: "2024-25 T1" },
+      { rating: 5, comment: "One of the most practical courses. You'll be job-ready for cloud engineering roles after this.", term: "2023-24 T3" },
+      { rating: 4, comment: "Heavy workload but the skills you gain are in high demand. Definitely worth taking!", term: "2024-25 T2" }
+    ]
   },
   {
     id: 'IS214',
@@ -315,15 +352,14 @@ export const courses = [
     suEligible: false,
     description: 'Data warehousing, ETL processes, and business analytics',
     assessments: [
+      { type: 'Class Participation', date: '2025-04-28', weight: 10, title: 'Attendance & Engagement' },
       { type: 'Quiz 1', date: '2025-02-19', weight: 15, title: 'Data Warehousing Concepts' },
       { type: 'Lab Assignment', date: '2025-03-06', weight: 20, title: 'ETL Design' },
-      { type: 'Midterm Exam', date: '2025-03-21', weight: 25, title: 'Written Exam' },
-      { type: 'Project', date: '2025-04-16', weight: 20, title: 'BI Dashboard Development' },
-      { type: 'Final Exam', date: '2025-04-28', weight: 20, title: 'Comprehensive Exam' }
+      { type: 'Midterm Exam', date: '2025-03-21', weight: 20, title: 'Written Exam' },
+      { type: 'Project', date: '2025-04-28', weight: 35, title: 'BI Dashboard Development' }
     ],
     schedule: [
-      { day: 'Monday', time: '12:00-15:00', location: 'SCIS1 SR 2-3' },
-      { day: 'Wednesday', time: '08:15-09:30', location: 'SCIS1 SR 2-3' }
+      { day: 'Monday', time: '12:00-15:00', location: 'SCIS1 SR 2-3' }
     ],
     prerequisites: ['IS112'],
     bidHistory: [
@@ -338,7 +374,12 @@ export const courses = [
     skills: ['SQL', 'ETL', 'Data Visualization', 'Business Analytics'],
     afterClassRating: 4.1,
     workload: 'High',
-    difficulty: 'Medium'
+    difficulty: 'Medium',
+    reviews: [
+      { rating: 4, comment: "Very practical course. Dashboard project lets you use Tableau/Power BI which looks great on resume.", term: "2024-25 T1" },
+      { rating: 4, comment: "Dr. Lim explains ETL processes clearly. Good course for aspiring data analysts.", term: "2023-24 T3" },
+      { rating: 3, comment: "Content is useful but can be dry at times. Project saves the module.", term: "2024-25 T2" }
+    ]
   },
   {
     id: 'IS428',
@@ -353,15 +394,14 @@ export const courses = [
     suEligible: true,
     description: 'Enterprise architecture frameworks, solution design, and IT strategy',
     assessments: [
+      { type: 'Class Participation', date: '2025-04-28', weight: 10, title: 'Attendance & Engagement' },
       { type: 'Quiz 1', date: '2025-02-26', weight: 15, title: 'Architecture Frameworks' },
       { type: 'Case Study', date: '2025-03-13', weight: 20, title: 'Enterprise Architecture Analysis' },
       { type: 'Midterm Exam', date: '2025-03-27', weight: 25, title: 'Written Exam' },
-      { type: 'Group Project', date: '2025-04-17', weight: 20, title: 'Solution Architecture Design' },
-      { type: 'Final Exam', date: '2025-04-28', weight: 20, title: 'Comprehensive Exam' }
+      { type: 'Group Project', date: '2025-04-28', weight: 30, title: 'Solution Architecture Design' }
     ],
     schedule: [
-      { day: 'Monday', time: '12:00-15:00', location: 'SCIS1 SR 3-4' },
-      { day: 'Thursday', time: '15:30-16:45', location: 'SCIS1 SR 3-4' }
+      { day: 'Monday', time: '12:00-15:00', location: 'SCIS1 SR 3-4' }
     ],
     prerequisites: ['IS210', 'IS213'],
     bidHistory: [
@@ -376,7 +416,11 @@ export const courses = [
     skills: ['Architecture Design', 'System Integration', 'IT Strategy'],
     afterClassRating: 4.2,
     workload: 'Medium',
-    difficulty: 'Medium'
+    difficulty: 'Medium',
+    reviews: [
+      { rating: 4, comment: "Good for understanding how large-scale systems are designed. Prof Tan has great consulting stories.", term: "2024-25 T1" },
+      { rating: 4, comment: "More conceptual than hands-on. Case studies help make the frameworks more concrete.", term: "2023-24 T3" }
+    ]
   },
   {
     id: 'IS315',
@@ -391,15 +435,15 @@ export const courses = [
     suEligible: true,
     description: 'Native and cross-platform mobile app development for iOS and Android',
     assessments: [
+      { type: 'Class Participation', date: '2025-05-01', weight: 10, title: 'Attendance & Engagement' },
       { type: 'Quiz 1', date: '2025-02-21', weight: 10, title: 'Mobile UI/UX Fundamentals' },
       { type: 'Quiz 2', date: '2025-03-07', weight: 10, title: 'React Native Basics' },
       { type: 'Lab Assignment', date: '2025-03-19', weight: 15, title: 'Mobile Components' },
-      { type: 'Project', date: '2025-04-11', weight: 35, title: 'Full Mobile Application' },
-      { type: 'Final Exam', date: '2025-05-01', weight: 30, title: 'Practical Exam' }
+      { type: 'Project', date: '2025-04-11', weight: 40, title: 'Full Mobile Application' },
+      { type: 'Final Exam', date: '2025-05-01', weight: 15, title: 'Practical Exam' }
     ],
     schedule: [
-      { day: 'Tuesday', time: '15:30-18:30', location: 'SCIS1 Lab 3' },
-      { day: 'Friday', time: '12:00-13:15', location: 'SCIS1 Lab 3' }
+      { day: 'Tuesday', time: '15:30-18:30', location: 'SCIS1 Lab 3' }
     ],
     prerequisites: ['IS111', 'IS216'],
     bidHistory: [
@@ -414,7 +458,12 @@ export const courses = [
     skills: ['React Native', 'Swift', 'Kotlin', 'Mobile UI/UX'],
     afterClassRating: 4.7,
     workload: 'Very High',
-    difficulty: 'Hard'
+    difficulty: 'Hard',
+    reviews: [
+      { rating: 5, comment: "Dr. Koh is fantastic! You'll build an actual mobile app that you can publish to app stores.", term: "2024-25 T1" },
+      { rating: 5, comment: "Amazing hands-on experience. If you like IS216, you'll love this course!", term: "2023-24 T3" },
+      { rating: 4, comment: "Very practical and industry-relevant. Workload is heavy but you learn so much.", term: "2024-25 T2" }
+    ]
   }
 ];
 

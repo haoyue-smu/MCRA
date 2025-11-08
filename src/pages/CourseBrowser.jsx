@@ -204,209 +204,147 @@ function CourseBrowser({ cart, addToCart, removeFromCart }) {
         </div>
       </div>
 
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-4">
-        <div className="flex flex-col">
+      <div className="flex items-center gap-4 mt-3 text-sm">
+        <div className="flex items-center">
+          <span className="text-2xl mr-1">{getDemandEmoji(course.demand)}</span>
           <span className="text-xs text-gray-500">Demand</span>
-          <span className={`text-sm font-semibold px-2 py-1 rounded ${getDemandColor(course.demand)} flex items-center justify-between`}>
-            <span>{course.demand}</span>
-            <span className="ml-1">{getDemandEmoji(course.demand)}</span>
-          </span>
         </div>
-        <div className="flex flex-col">
-          <span className="text-xs text-gray-500">Subscribers</span>
-          <div className="flex flex-col">
-            <span className="text-sm font-semibold text-gray-900 flex items-center">
-              <Bell className="w-3 h-3 mr-1 text-blue-500" />
-              {subscriberCounts[course.id]}
+        <div className="flex items-center">
+          <Bell className="w-4 h-4 mr-1 text-blue-500" />
+          <span className="font-semibold text-gray-900">{subscriberCounts[course.id]}</span>
+          {trend !== 0 && (
+            <span className={`ml-1 text-xs ${trend > 0 ? 'text-red-600' : 'text-green-600'}`}>
+              {trend > 0 ? '⬆️' : '⬇️'}{Math.abs(trend)}
             </span>
-            {trend !== 0 && (
-              <span className={`text-xs flex items-center ${trend > 0 ? 'text-red-600' : 'text-green-600'}`}>
-                {trend > 0 ? <ArrowUp className="w-3 h-3 mr-0.5" /> : <TrendingDown className="w-3 h-3 mr-0.5" />}
-                {Math.abs(trend)} this week
-              </span>
-            )}
-          </div>
+          )}
         </div>
-        <div className="flex flex-col">
-          <span className="text-xs text-gray-500">Rating</span>
-          <div className="flex items-center">
-            <Star className="w-4 h-4 text-yellow-500 fill-current" />
-            <span className="text-sm font-semibold text-gray-900 ml-1">{course.afterClassRating}</span>
-          </div>
+        <div className="flex items-center">
+          <Star className="w-4 h-4 text-yellow-500 fill-current mr-1" />
+          <span className="font-semibold text-gray-900">{course.afterClassRating}</span>
         </div>
-        <div className="flex flex-col">
-          <span className="text-xs text-gray-500">Workload</span>
-          <span className="text-sm font-semibold text-gray-900">{course.workload}</span>
+        <div className="text-xs text-gray-600">
+          {course.workload}
         </div>
       </div>
 
       {/* Bidding Information */}
-      <div className="mt-4 p-3 bg-purple-50 rounded-lg border border-purple-200">
-        <div className="grid grid-cols-2 gap-3 mb-2">
+      <div className="mt-3 p-3 bg-purple-50 rounded-lg border border-purple-200">
+        <div className="flex items-center justify-between mb-2">
           <div>
-            <div className="text-xs text-purple-700 font-semibold mb-1">Historical Range</div>
-            <div className="text-sm font-bold text-purple-900">{course.bidRange}</div>
+            <span className="text-xs text-purple-700">Avg Bid: </span>
+            <span className="text-lg font-bold text-purple-900">e$ {course.yearlyAverage}</span>
           </div>
-          <div>
-            <div className="text-xs text-purple-700 font-semibold mb-1">Yearly Avg</div>
-            <div className="text-sm font-bold text-purple-900">e$ {course.yearlyAverage}</div>
+          <div className="text-right">
+            <div className="text-xs text-purple-700">Predicted</div>
+            <div className="text-sm font-bold text-purple-900">{predictedBid}</div>
           </div>
         </div>
-        <div className="pt-2 border-t border-purple-300">
-          <div className="text-xs text-purple-700 font-semibold mb-1 flex items-center">
-            <TrendingUp className="w-3 h-3 mr-1" />
-            Predicted Bid (Current Demand)
-          </div>
-          <div className="text-sm font-bold text-purple-900">{predictedBid}</div>
-        </div>
-        <div className="mt-2 text-xs text-purple-700">
-          Success Rate: <strong className="text-purple-900">{Math.round(successRate.medium)}%</strong> @ e$ {Math.round(successRate.avgBid * 1.05)} | <strong className="text-purple-900">{Math.round(successRate.high)}%</strong> @ e$ {Math.round(successRate.avgBid * 1.15)}+
+        <div className="text-xs text-purple-700">
+          💡 {Math.round(successRate.high)}% success @ e$ {Math.round(successRate.avgBid * 1.15)}+
         </div>
       </div>
 
-      {/* Class Schedule Preview */}
-      <div className={`mt-3 p-3 rounded-lg border ${scheduleClashes.length > 0 ? 'bg-red-50 border-red-300' : 'bg-indigo-50 border-indigo-200'}`}>
-        <div className={`text-xs font-semibold mb-2 flex items-center ${scheduleClashes.length > 0 ? 'text-red-700' : 'text-indigo-700'}`}>
-          ⏰ Class Schedule
-          {scheduleClashes.length > 0 && (
-            <span className="ml-2 flex items-center text-red-600">
-              <AlertCircle className="w-3 h-3 mr-1" />
-              Clash Detected!
-            </span>
-          )}
-        </div>
-        <div className="space-y-1">
-          {course.schedule.map((s, i) => {
-            const clash = scheduleClashes.find(c => c.day === s.day && c.time === s.time);
-            return (
-              <div key={i} className={`text-xs ${clash ? 'text-red-900 font-semibold' : 'text-indigo-900'}`}>
-                <span className="font-semibold">{s.day}</span>: {s.time}
-                {clash && (
-                  <span className="ml-2 text-red-600 bg-red-100 px-1.5 py-0.5 rounded text-xs">
-                    ⚠️ Clash with {clash.conflictWith}
-                  </span>
-                )}
-              </div>
-            );
-          })}
-        </div>
+      {/* Class Schedule */}
+      <div className={`mt-3 p-2 rounded border ${scheduleClashes.length > 0 ? 'bg-red-50 border-red-300' : 'bg-gray-50 border-gray-200'}`}>
+        {course.schedule.map((s, i) => {
+          const clash = scheduleClashes.find(c => c.day === s.day && c.time === s.time);
+          return (
+            <div key={i} className="text-sm">
+              {clash && <span className="text-red-600 font-bold mr-1">⚠️</span>}
+              <span className="font-semibold">{s.day}</span> {s.time}
+              {clash && (
+                <span className="ml-2 text-xs text-red-600">
+                  (Clash with {clash.conflictWith})
+                </span>
+              )}
+            </div>
+          );
+        })}
       </div>
 
       {/* Assessment Summary */}
-      <div className="mt-3 p-3 bg-blue-50 rounded-lg border border-blue-200">
-        <div className="text-xs text-blue-700 font-semibold mb-2">📊 Workload Preview</div>
-
-        {/* Visual Stacked Bar */}
-        <div className="mb-2">
-          <div className="flex h-6 rounded-full overflow-hidden border border-blue-300">
-            {course.assessments.map((assessment, i) => {
-              const colors = [
-                'bg-blue-500',
-                'bg-purple-500',
-                'bg-pink-500',
-                'bg-indigo-500',
-                'bg-cyan-500'
-              ];
-              return (
-                <div
-                  key={i}
-                  className={`${colors[i % colors.length]} flex items-center justify-center text-white text-xs font-bold transition-all hover:opacity-80`}
-                  style={{ width: `${assessment.weight}%` }}
-                  title={`${assessment.type}: ${assessment.weight}%`}
-                >
-                  {assessment.weight >= 15 && `${assessment.weight}%`}
-                </div>
-              );
-            })}
-          </div>
-        </div>
-
-        <div className="flex flex-wrap gap-2">
-          {course.assessments.map((assessment, i) => (
-            <span key={i} className="text-xs bg-white text-blue-700 px-2 py-1 rounded border border-blue-300">
-              {assessment.type} ({assessment.weight}%)
-            </span>
-          ))}
-        </div>
-        <div className="mt-2 text-xs text-blue-600">
-          {course.assessments.filter(a => a.type.toLowerCase().includes('quiz')).length} Quizzes •
-          {course.assessments.filter(a => a.type.toLowerCase().includes('exam')).length} Exams •
-          {course.assessments.filter(a => a.type.toLowerCase().includes('project')).length} Projects
-        </div>
+      <div className="mt-3 text-xs text-gray-600">
+        {course.assessments.filter(a => a.type.toLowerCase().includes('quiz')).length} Quizzes • {course.assessments.filter(a => a.type.toLowerCase().includes('exam') && !a.type.toLowerCase().includes('midterm')).length > 0 ? 'Midterm + Final' : 'Midterm'} • {course.assessments.filter(a => a.type.toLowerCase().includes('project')).length} Project{course.assessments.filter(a => a.type.toLowerCase().includes('project')).length > 1 ? 's' : ''}
       </div>
 
-      <div className="mt-4 space-y-2">
-        <div className="flex space-x-2">
-          {isInCart(course.id) ? (
+      {/* Student Reviews */}
+      {course.reviews && course.reviews.length > 0 && (
+        <div className="mt-3 p-3 bg-yellow-50 rounded-lg border border-yellow-200">
+          <div className="text-xs font-semibold text-yellow-900 mb-2">💬 What Students Say:</div>
+          <div className="space-y-2">
+            {course.reviews.slice(0, 2).map((review, i) => (
+              <div key={i} className="text-xs">
+                <div className="flex items-center mb-1">
+                  {[...Array(5)].map((_, idx) => (
+                    <Star key={idx} className={`w-3 h-3 ${idx < review.rating ? 'text-yellow-500 fill-current' : 'text-gray-300'}`} />
+                  ))}
+                  <span className="ml-2 text-gray-500">• {review.term}</span>
+                </div>
+                <p className="text-gray-700 italic">"{review.comment}"</p>
+              </div>
+            ))}
+          </div>
+          {course.reviews.length > 2 && (
             <button
               onClick={(e) => {
                 e.stopPropagation();
-                removeFromCart(course.id);
+                setSelectedCourse(course);
               }}
-              className="btn-danger flex-1 flex items-center justify-center"
+              className="text-xs text-yellow-700 underline mt-2 hover:text-yellow-900"
             >
-              <XCircle className="w-4 h-4 mr-2" />
-              Remove from Cart
-            </button>
-          ) : (
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                addToCart(course.id);
-              }}
-              className="btn-primary flex-1 flex items-center justify-center"
-            >
-              <ShoppingCart className="w-4 h-4 mr-2" />
-              Add to Cart
+              View all {course.reviews.length} reviews →
             </button>
           )}
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              toggleWishlist(course.id);
-            }}
-            className={`${
-              isInWishlist(course.id) ? 'bg-pink-100 text-pink-700 border-pink-300' : 'btn-secondary'
-            } flex items-center px-3 border`}
-            title="Save for Later"
-          >
-            <Heart className={`w-4 h-4 ${isInWishlist(course.id) ? 'fill-current' : ''}`} />
-          </button>
         </div>
-        <div className="flex space-x-2">
+      )}
+
+      <div className="mt-4 flex space-x-2">
+        {isInCart(course.id) ? (
           <button
             onClick={(e) => {
               e.stopPropagation();
-              setSelectedCourse(course);
-              addToRecentlyViewed(course);
+              removeFromCart(course.id);
             }}
-            className="btn-secondary flex-1 flex items-center justify-center text-sm"
+            className="btn-danger flex-1 flex items-center justify-center"
           >
-            <Eye className="w-4 h-4 mr-2" />
-            View Full Details
+            <XCircle className="w-4 h-4 mr-2" />
+            Remove
           </button>
+        ) : (
           <button
             onClick={(e) => {
               e.stopPropagation();
-              toggleSubscription(course.id);
+              addToCart(course.id);
             }}
-            className={`${
-              isSubscribed(course.id) ? 'btn-secondary' : 'btn-success'
-            } flex items-center flex-1 text-sm justify-center`}
+            className="btn-primary flex-1 flex items-center justify-center"
           >
-            {isSubscribed(course.id) ? (
-              <>
-                <BellOff className="w-4 h-4 mr-2" />
-                Unsubscribe
-              </>
-            ) : (
-              <>
-                <Bell className="w-4 h-4 mr-2" />
-                Subscribe
-              </>
-            )}
+            <ShoppingCart className="w-4 h-4 mr-2" />
+            Add to Cart
           </button>
-        </div>
+        )}
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            toggleWishlist(course.id);
+          }}
+          className={`${
+            isInWishlist(course.id) ? 'bg-pink-500 text-white hover:bg-pink-600' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+          } flex items-center px-4 rounded-md transition-colors`}
+          title={isInWishlist(course.id) ? "Remove from interested" : "Mark as interested"}
+        >
+          <Heart className={`w-4 h-4 ${isInWishlist(course.id) ? 'fill-current' : ''}`} />
+        </button>
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            setSelectedCourse(course);
+            addToRecentlyViewed(course);
+          }}
+          className="bg-gray-100 text-gray-600 hover:bg-gray-200 flex items-center px-4 rounded-md transition-colors"
+          title="View details"
+        >
+          <Eye className="w-4 h-4" />
+        </button>
       </div>
     </div>
     );
