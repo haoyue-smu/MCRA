@@ -174,6 +174,8 @@ function Dashboard({ cart, removeFromCart }) {
 
   const checkTimeClashes = () => {
     const clashes = [];
+
+    // Check for class time conflicts (same day + exact same time)
     for (let i = 0; i < cart.length; i++) {
       for (let j = i + 1; j < cart.length; j++) {
         const course1 = cart[i];
@@ -181,18 +183,41 @@ function Dashboard({ cart, removeFromCart }) {
 
         for (const schedule1 of course1.schedule) {
           for (const schedule2 of course2.schedule) {
-            if (schedule1.day === schedule2.day) {
-              // Simplified clash detection
+            if (schedule1.day === schedule2.day && schedule1.time === schedule2.time) {
               clashes.push({
+                type: 'class',
                 course1: course1.id,
                 course2: course2.id,
-                day: schedule1.day
+                day: schedule1.day,
+                time: schedule1.time
               });
             }
           }
         }
       }
     }
+
+    // Check for exam conflicts (same exam date)
+    for (let i = 0; i < cart.length; i++) {
+      for (let j = i + 1; j < cart.length; j++) {
+        const course1 = cart[i];
+        const course2 = cart[j];
+
+        // Get final exams for both courses
+        const exam1 = course1.assessments.find(a => a.type.toLowerCase().includes('final exam'));
+        const exam2 = course2.assessments.find(a => a.type.toLowerCase().includes('final exam'));
+
+        if (exam1 && exam2 && exam1.date === exam2.date) {
+          clashes.push({
+            type: 'exam',
+            course1: course1.id,
+            course2: course2.id,
+            examDate: exam1.date
+          });
+        }
+      }
+    }
+
     return clashes;
   };
 
@@ -255,7 +280,15 @@ function Dashboard({ cart, removeFromCart }) {
                     <div className="space-y-2">
                       {timeClashes.map((clash, idx) => (
                         <div key={idx} className="text-sm text-red-900">
-                          <strong>{clash.course1}</strong> and <strong>{clash.course2}</strong> both have classes on <strong>{clash.day}</strong>
+                          {clash.type === 'class' ? (
+                            <>
+                              <strong>{clash.course1}</strong> and <strong>{clash.course2}</strong> have the same class time: <strong>{clash.day} {clash.time}</strong>
+                            </>
+                          ) : (
+                            <>
+                              <strong>{clash.course1}</strong> and <strong>{clash.course2}</strong> have exams on the same date: <strong>{new Date(clash.examDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</strong>
+                            </>
+                          )}
                         </div>
                       ))}
                     </div>
@@ -300,24 +333,6 @@ function Dashboard({ cart, removeFromCart }) {
           </div>
         </div>
       )}
-
-      {/* Bidding Health Check Banner */}
-      <div className={`${biddingHealth.bgColor} ${biddingHealth.borderColor} border-2 rounded-lg p-4 mb-6`}>
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-3">
-            <div className={`bg-gradient-to-r ${biddingHealth.color} p-2 rounded-lg`}>
-              <HealthIcon className="w-6 h-6 text-white" />
-            </div>
-            <div>
-              <h3 className={`font-bold text-lg ${biddingHealth.textColor}`}>{biddingHealth.title}</h3>
-              <p className={`text-sm ${biddingHealth.textColor} opacity-90`}>{biddingHealth.message}</p>
-            </div>
-          </div>
-          {biddingHealth.status === 'ready' && (
-            <CheckCircle className="w-8 h-8 text-green-600" />
-          )}
-        </div>
-      </div>
 
       {/* Status Bar */}
       <div className="status-bar">
@@ -595,212 +610,6 @@ function Dashboard({ cart, removeFromCart }) {
               <p className="text-xs text-gray-500 mt-2">
                 Red dashed line shows average budget per course (e$ {Math.round(STUDENT_BUDGET / cart.length)} each)
               </p>
-            </div>
-          </div>
-
-          {/* Quick Insights */}
-          <div className="mb-8">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">Quick Insights</h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {/* Clash Alert */}
-              {(() => {
-                const clashes = checkTimeClashes();
-                return (
-                  <div className={`bg-gradient-to-br ${clashes.length > 0 ? 'from-red-50 to-red-100 border-red-200' : 'from-green-50 to-green-100 border-green-200'} rounded-lg p-4 border`}>
-                    <div className="flex items-center mb-2">
-                      <Clock className={`w-5 h-5 ${clashes.length > 0 ? 'text-red-600' : 'text-green-600'} mr-2`} />
-                      <h4 className={`font-semibold ${clashes.length > 0 ? 'text-red-900' : 'text-green-900'}`}>Schedule Check</h4>
-                    </div>
-                    <p className={`text-2xl font-bold ${clashes.length > 0 ? 'text-red-900' : 'text-green-900'} mb-1`}>
-                      {clashes.length > 0 ? `⚠️ ${clashes.length}` : '✅ 0'}
-                    </p>
-                    <p className={`text-sm ${clashes.length > 0 ? 'text-red-700' : 'text-green-700'}`}>
-                      {clashes.length > 0 ? 'schedule conflicts' : 'No conflicts!'}
-                    </p>
-                  </div>
-                );
-              })()}
-
-              {/* Prerequisite Check */}
-              {(() => {
-                const missing = checkPrerequisites();
-                return (
-                  <div className={`bg-gradient-to-br ${missing.length > 0 ? 'from-yellow-50 to-yellow-100 border-yellow-200' : 'from-green-50 to-green-100 border-green-200'} rounded-lg p-4 border`}>
-                    <div className="flex items-center mb-2">
-                      <GitBranch className={`w-5 h-5 ${missing.length > 0 ? 'text-yellow-600' : 'text-green-600'} mr-2`} />
-                      <h4 className={`font-semibold ${missing.length > 0 ? 'text-yellow-900' : 'text-green-900'}`}>Prerequisites</h4>
-                    </div>
-                    <p className={`text-2xl font-bold ${missing.length > 0 ? 'text-yellow-900' : 'text-green-900'} mb-1`}>
-                      {missing.length > 0 ? `⚠️ ${missing.length}` : '✅ All Met'}
-                    </p>
-                    <p className={`text-sm ${missing.length > 0 ? 'text-yellow-700' : 'text-green-700'}`}>
-                      {missing.length > 0 ? 'courses missing prereqs' : 'Ready to go!'}
-                    </p>
-                  </div>
-                );
-              })()}
-
-              {/* Highest Bid */}
-              <div className="bg-gradient-to-br from-purple-50 to-purple-100 rounded-lg p-4 border border-purple-200">
-                <div className="flex items-center mb-2">
-                  <TrendingUp className="w-5 h-5 text-purple-600 mr-2" />
-                  <h4 className="font-semibold text-purple-900">Highest Bid</h4>
-                </div>
-                <p className="text-2xl font-bold text-purple-900 mb-1">
-                  {cart.reduce((max, c) => c.yearlyAverage > max.yearlyAverage ? c : max).id}
-                </p>
-                <p className="text-sm text-purple-700">
-                  e$ {cart.reduce((max, c) => c.yearlyAverage > max.yearlyAverage ? c : max).yearlyAverage} avg
-                </p>
-              </div>
-
-              {/* Best Rated */}
-              <div className="bg-gradient-to-br from-green-50 to-green-100 rounded-lg p-4 border border-green-200">
-                <div className="flex items-center mb-2">
-                  <Award className="w-5 h-5 text-green-600 mr-2" />
-                  <h4 className="font-semibold text-green-900">Best Rated</h4>
-                </div>
-                <p className="text-2xl font-bold text-green-900 mb-1">
-                  {cart.reduce((max, c) => c.afterClassRating > max.afterClassRating ? c : max).id}
-                </p>
-                <p className="text-sm text-green-700">
-                  {cart.reduce((max, c) => c.afterClassRating > max.afterClassRating ? c : max).afterClassRating} / 5.0 stars
-                </p>
-              </div>
-
-              {/* Total Workload */}
-              <div className="bg-gradient-to-br from-orange-50 to-orange-100 rounded-lg p-4 border border-orange-200">
-                <div className="flex items-center mb-2">
-                  <Zap className="w-5 h-5 text-orange-600 mr-2" />
-                  <h4 className="font-semibold text-orange-900">Total Workload</h4>
-                </div>
-                <p className="text-2xl font-bold text-orange-900 mb-1">
-                  {getTotalAssessments()} assessments
-                </p>
-                <p className="text-sm text-orange-700">
-                  {cart.filter(c => c.workload === 'Very High' || c.workload === 'High').length} high workload courses
-                </p>
-              </div>
-            </div>
-          </div>
-
-          {/* Assessment Calendar Preview */}
-          <div className="mb-8">
-            <div className="bg-white rounded-lg shadow-md p-6">
-              <div className="flex items-center justify-between mb-4">
-                <div className="flex items-center">
-                  <Calendar className="w-6 h-6 text-smu-blue mr-2" />
-                  <h3 className="text-lg font-semibold text-gray-900">Assessment Calendar</h3>
-                </div>
-                <Link to="/assessments" className="text-sm text-smu-blue hover:underline flex items-center">
-                  View Full Calendar <ArrowRight className="w-4 h-4 ml-1" />
-                </Link>
-              </div>
-
-              {/* Month Header */}
-              <div className="text-center mb-4">
-                <h4 className="text-xl font-bold text-gray-900">
-                  {new Date().toLocaleString('en-US', { month: 'long', year: 'numeric' })}
-                </h4>
-              </div>
-
-              <div className="grid grid-cols-7 gap-1">
-                {/* Calendar header */}
-                {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (
-                  <div key={day} className="text-center text-sm font-bold text-gray-700 p-2 bg-gray-100 rounded">
-                    {day}
-                  </div>
-                ))}
-
-                {/* Calendar days */}
-                {(() => {
-                  const today = new Date();
-                  const year = today.getFullYear();
-                  const month = today.getMonth();
-                  const firstDay = new Date(year, month, 1);
-                  const lastDay = new Date(year, month + 1, 0);
-                  const startingDayOfWeek = firstDay.getDay(); // 0 = Sunday
-                  const monthLength = lastDay.getDate();
-
-                  // Get all assessment dates from cart
-                  const assessmentDates = new Map();
-                  cart.forEach(course => {
-                    course.assessments.forEach(assessment => {
-                      const assessmentDate = new Date(assessment.date);
-                      if (assessmentDate.getMonth() === month && assessmentDate.getFullYear() === year) {
-                        const dateKey = assessmentDate.getDate();
-                        if (!assessmentDates.has(dateKey)) {
-                          assessmentDates.set(dateKey, []);
-                        }
-                        assessmentDates.get(dateKey).push({
-                          course: course.id,
-                          type: assessment.type
-                        });
-                      }
-                    });
-                  });
-
-                  const calendarCells = [];
-
-                  // Empty cells before the first day
-                  for (let i = 0; i < startingDayOfWeek; i++) {
-                    calendarCells.push(
-                      <div key={`empty-${i}`} className="p-2 bg-gray-50 rounded"></div>
-                    );
-                  }
-
-                  // Days of the month
-                  for (let day = 1; day <= monthLength; day++) {
-                    const isToday = day === today.getDate() && month === today.getMonth() && year === today.getFullYear();
-                    const hasAssessments = assessmentDates.has(day);
-                    const assessmentCount = hasAssessments ? assessmentDates.get(day).length : 0;
-                    const dayOfWeek = (startingDayOfWeek + day - 1) % 7;
-                    const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
-
-                    calendarCells.push(
-                      <div
-                        key={day}
-                        className={`p-2 min-h-[3rem] rounded border transition-all ${
-                          hasAssessments
-                            ? 'bg-red-50 border-red-400 border-2 cursor-pointer hover:bg-red-100'
-                            : isToday
-                            ? 'bg-blue-100 border-blue-500 border-2'
-                            : isWeekend
-                            ? 'bg-gray-50 border-gray-200'
-                            : 'bg-white border-gray-200'
-                        }`}
-                      >
-                        <div className={`text-sm font-semibold text-center ${
-                          hasAssessments ? 'text-red-800' : isToday ? 'text-blue-800' : isWeekend ? 'text-gray-400' : 'text-gray-700'
-                        }`}>
-                          {day}
-                        </div>
-                        {hasAssessments && (
-                          <div className="text-xs text-center mt-1">
-                            <span className="inline-block bg-red-600 text-white rounded-full px-1.5 py-0.5 font-bold">
-                              {assessmentCount}
-                            </span>
-                          </div>
-                        )}
-                      </div>
-                    );
-                  }
-
-                  return calendarCells;
-                })()}
-              </div>
-
-              {/* Legend */}
-              <div className="mt-4 flex flex-wrap items-center gap-4 text-xs text-gray-600">
-                <div className="flex items-center">
-                  <div className="w-4 h-4 bg-blue-100 border-2 border-blue-500 rounded mr-2"></div>
-                  <span>Today</span>
-                </div>
-                <div className="flex items-center">
-                  <div className="w-4 h-4 bg-red-50 border-2 border-red-400 rounded mr-2"></div>
-                  <span>Assessment due</span>
-                </div>
-              </div>
             </div>
           </div>
         </>

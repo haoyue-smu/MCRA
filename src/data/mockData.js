@@ -301,13 +301,130 @@ export const courses = [
     afterClassRating: 4.6,
     workload: 'Very High',
     difficulty: 'Hard'
+  },
+  {
+    id: 'IS214',
+    name: 'Business Intelligence Systems',
+    professor: 'Dr. Andrew Lim',
+    credits: 1.0,
+    moduleType: 'Core',
+    demand: 'High',
+    demandCount: 135,
+    capacity: 120,
+    subscribers: 158,
+    suEligible: false,
+    description: 'Data warehousing, ETL processes, and business analytics',
+    assessments: [
+      { type: 'Quiz 1', date: '2025-02-19', weight: 15, title: 'Data Warehousing Concepts' },
+      { type: 'Lab Assignment', date: '2025-03-06', weight: 20, title: 'ETL Design' },
+      { type: 'Midterm Exam', date: '2025-03-21', weight: 25, title: 'Written Exam' },
+      { type: 'Project', date: '2025-04-16', weight: 20, title: 'BI Dashboard Development' },
+      { type: 'Final Exam', date: '2025-04-28', weight: 20, title: 'Comprehensive Exam' }
+    ],
+    schedule: [
+      { day: 'Monday', time: '12:00-15:00', location: 'SCIS1 SR 2-3' },
+      { day: 'Wednesday', time: '08:15-09:30', location: 'SCIS1 SR 2-3' }
+    ],
+    prerequisites: ['IS112'],
+    bidHistory: [
+      { term: '2024-25 T2', minBid: 23, avgBid: 33, maxBid: 45 },
+      { term: '2024-25 T1', minBid: 22, avgBid: 32, maxBid: 44 },
+      { term: '2023-24 T3', minBid: 22, avgBid: 31, maxBid: 43 },
+      { term: '2023-24 T2', minBid: 21, avgBid: 30, maxBid: 42 }
+    ],
+    yearlyAverage: 32,
+    bidRange: '21-45 e$',
+    careerPaths: ['BI Developer', 'Data Analyst', 'Analytics Consultant'],
+    skills: ['SQL', 'ETL', 'Data Visualization', 'Business Analytics'],
+    afterClassRating: 4.1,
+    workload: 'High',
+    difficulty: 'Medium'
+  },
+  {
+    id: 'IS428',
+    name: 'IT Solution Architecture',
+    professor: 'Prof. David Tan',
+    credits: 1.0,
+    moduleType: 'Major Elective',
+    demand: 'Medium',
+    demandCount: 92,
+    capacity: 100,
+    subscribers: 107,
+    suEligible: true,
+    description: 'Enterprise architecture frameworks, solution design, and IT strategy',
+    assessments: [
+      { type: 'Quiz 1', date: '2025-02-26', weight: 15, title: 'Architecture Frameworks' },
+      { type: 'Case Study', date: '2025-03-13', weight: 20, title: 'Enterprise Architecture Analysis' },
+      { type: 'Midterm Exam', date: '2025-03-27', weight: 25, title: 'Written Exam' },
+      { type: 'Group Project', date: '2025-04-17', weight: 20, title: 'Solution Architecture Design' },
+      { type: 'Final Exam', date: '2025-04-28', weight: 20, title: 'Comprehensive Exam' }
+    ],
+    schedule: [
+      { day: 'Monday', time: '12:00-15:00', location: 'SCIS1 SR 3-4' },
+      { day: 'Thursday', time: '15:30-16:45', location: 'SCIS1 SR 3-4' }
+    ],
+    prerequisites: ['IS210', 'IS213'],
+    bidHistory: [
+      { term: '2024-25 T2', minBid: 21, avgBid: 29, maxBid: 40 },
+      { term: '2024-25 T1', minBid: 20, avgBid: 28, maxBid: 39 },
+      { term: '2023-24 T3', minBid: 20, avgBid: 27, maxBid: 38 },
+      { term: '2023-24 T2', minBid: 20, avgBid: 26, maxBid: 37 }
+    ],
+    yearlyAverage: 28,
+    bidRange: '20-40 e$',
+    careerPaths: ['Solution Architect', 'Enterprise Architect', 'IT Consultant'],
+    skills: ['Architecture Design', 'System Integration', 'IT Strategy'],
+    afterClassRating: 4.2,
+    workload: 'Medium',
+    difficulty: 'Medium'
+  },
+  {
+    id: 'IS315',
+    name: 'Mobile Application Development',
+    professor: 'Dr. Rachel Koh',
+    credits: 1.0,
+    moduleType: 'Major Elective',
+    demand: 'Very High',
+    demandCount: 187,
+    capacity: 110,
+    subscribers: 221,
+    suEligible: true,
+    description: 'Native and cross-platform mobile app development for iOS and Android',
+    assessments: [
+      { type: 'Quiz 1', date: '2025-02-21', weight: 10, title: 'Mobile UI/UX Fundamentals' },
+      { type: 'Quiz 2', date: '2025-03-07', weight: 10, title: 'React Native Basics' },
+      { type: 'Lab Assignment', date: '2025-03-19', weight: 15, title: 'Mobile Components' },
+      { type: 'Project', date: '2025-04-11', weight: 35, title: 'Full Mobile Application' },
+      { type: 'Final Exam', date: '2025-05-01', weight: 30, title: 'Practical Exam' }
+    ],
+    schedule: [
+      { day: 'Tuesday', time: '15:30-18:30', location: 'SCIS1 Lab 3' },
+      { day: 'Friday', time: '12:00-13:15', location: 'SCIS1 Lab 3' }
+    ],
+    prerequisites: ['IS111', 'IS216'],
+    bidHistory: [
+      { term: '2024-25 T2', minBid: 27, avgBid: 40, maxBid: 50 },
+      { term: '2024-25 T1', minBid: 26, avgBid: 39, maxBid: 50 },
+      { term: '2023-24 T3', minBid: 25, avgBid: 38, maxBid: 50 },
+      { term: '2023-24 T2', minBid: 24, avgBid: 37, maxBid: 50 }
+    ],
+    yearlyAverage: 39,
+    bidRange: '24-50 e$',
+    careerPaths: ['Mobile Developer', 'iOS Developer', 'Android Developer'],
+    skills: ['React Native', 'Swift', 'Kotlin', 'Mobile UI/UX'],
+    afterClassRating: 4.7,
+    workload: 'Very High',
+    difficulty: 'Hard'
   }
 ];
 
 // Default cart with sample courses shown on login
+// Setup to demonstrate:
+// - IS214 and IS428 have same exam date (2025-04-28) AND same class time (Monday 12:00-15:00)
+// - IS428 has missing prerequisites (requires IS210 and IS213, which student hasn't completed)
 export const studentCart = [
-  courses.find(c => c.id === 'IS111'),
-  courses.find(c => c.id === 'IS112'),
+  courses.find(c => c.id === 'IS214'),
+  courses.find(c => c.id === 'IS428'),
   courses.find(c => c.id === 'IS216')
 ].filter(Boolean); // Filter out any undefined values
 
