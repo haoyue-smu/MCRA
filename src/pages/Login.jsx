@@ -10,9 +10,9 @@ function Login({ onLogin }) {
   const handleGmailLogin = (e) => {
     e.preventDefault();
 
-    // Validate Gmail domain
-    if (!email.endsWith('@mail.smu.edu.sg') && !email.endsWith('@smu.edu.sg')) {
-      setError('Please use your SMU email address (@mail.smu.edu.sg or @smu.edu.sg)');
+    // Validate SMU email domain - only @smu.edu.sg allowed
+    if (!email.endsWith('@smu.edu.sg')) {
+      setError('Please use your SMU email address (@smu.edu.sg)');
       return;
     }
 
@@ -31,7 +31,7 @@ function Login({ onLogin }) {
   const handleGoogleSignIn = () => {
     // In a real app, this would trigger Google OAuth
     // For now, we'll simulate it
-    const mockEmail = 'john.tan.2023@mail.smu.edu.sg';
+    const mockEmail = 'john.tan.2023@smu.edu.sg';
     const user = {
       email: mockEmail,
       name: 'John Tan',
@@ -48,22 +48,9 @@ function Login({ onLogin }) {
       <div className="max-w-md w-full">
         {/* Logo & Header */}
         <div className="text-center mb-8">
-          <div className="inline-block bg-white p-4 rounded-full mb-4">
-            <img
-              src="https://upload.wikimedia.org/wikipedia/en/thumb/e/e5/Singapore_Management_University_logo.svg/1200px-Singapore_Management_University_logo.svg.png"
-              alt="SMU Logo"
-              className="w-16 h-16 object-contain"
-              onError={(e) => {
-                e.target.style.display = 'none';
-                e.target.nextSibling.style.display = 'block';
-              }}
-            />
-            <div style={{ display: 'none' }} className="w-16 h-16 bg-smu-blue rounded-full flex items-center justify-center text-2xl font-bold text-white">
-              SMU
-            </div>
-          </div>
-          <h1 className="text-3xl font-bold text-white mb-2">SCIS Smart Planner</h1>
-          <p className="text-blue-100">Sign in with your SMU account</p>
+          <h1 className="text-5xl font-bold text-white mb-3">SCIS Smart Planner</h1>
+          <p className="text-lg text-blue-100">Singapore Management University</p>
+          <p className="text-blue-200 mt-1">Sign in with your SMU account</p>
         </div>
 
         {/* Login Card */}
@@ -113,7 +100,7 @@ function Login({ onLogin }) {
                     setEmail(e.target.value);
                     setError('');
                   }}
-                  placeholder="your.name@mail.smu.edu.sg"
+                  placeholder="your.name@smu.edu.sg"
                   className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-smu-blue focus:border-transparent"
                   required
                 />
