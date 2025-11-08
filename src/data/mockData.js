@@ -25,13 +25,13 @@ export const courses = [
     ],
     prerequisites: [],
     bidHistory: [
-      { term: '2024-25 T2', minBid: 45, avgBid: 78, maxBid: 120 },
-      { term: '2024-25 T1', minBid: 42, avgBid: 75, maxBid: 118 },
-      { term: '2023-24 T3', minBid: 42, avgBid: 72, maxBid: 115 },
-      { term: '2023-24 T2', minBid: 40, avgBid: 70, maxBid: 110 }
+      { term: '2024-25 T2', minBid: 22, avgBid: 35, maxBid: 48 },
+      { term: '2024-25 T1', minBid: 21, avgBid: 34, maxBid: 47 },
+      { term: '2023-24 T3', minBid: 21, avgBid: 33, maxBid: 46 },
+      { term: '2023-24 T2', minBid: 20, avgBid: 32, maxBid: 45 }
     ],
-    yearlyAverage: 74,
-    bidRange: '40-120 e$',
+    yearlyAverage: 34,
+    bidRange: '20-48 e$',
     careerPaths: ['Software Developer', 'Data Analyst', 'System Analyst'],
     skills: ['Python', 'Problem Solving', 'Algorithmic Thinking'],
     afterClassRating: 4.2,
@@ -62,13 +62,13 @@ export const courses = [
     ],
     prerequisites: ['IS111'],
     bidHistory: [
-      { term: '2024-25 T2', minBid: 35, avgBid: 65, maxBid: 95 },
-      { term: '2024-25 T1', minBid: 32, avgBid: 62, maxBid: 92 },
-      { term: '2023-24 T3', minBid: 30, avgBid: 60, maxBid: 90 },
-      { term: '2023-24 T2', minBid: 28, avgBid: 58, maxBid: 88 }
+      { term: '2024-25 T2', minBid: 20, avgBid: 30, maxBid: 42 },
+      { term: '2024-25 T1', minBid: 20, avgBid: 29, maxBid: 41 },
+      { term: '2023-24 T3', minBid: 20, avgBid: 28, maxBid: 40 },
+      { term: '2023-24 T2', minBid: 20, avgBid: 27, maxBid: 39 }
     ],
-    yearlyAverage: 61,
-    bidRange: '28-95 e$',
+    yearlyAverage: 29,
+    bidRange: '20-42 e$',
     careerPaths: ['Database Administrator', 'Data Engineer', 'Business Analyst'],
     skills: ['SQL', 'Database Design', 'Data Modeling'],
     afterClassRating: 4.5,
@@ -98,13 +98,13 @@ export const courses = [
     ],
     prerequisites: ['IS111', 'IS112'],
     bidHistory: [
-      { term: '2024-25 T2', minBid: 55, avgBid: 85, maxBid: 135 },
-      { term: '2024-25 T1', minBid: 52, avgBid: 82, maxBid: 130 },
-      { term: '2023-24 T3', minBid: 50, avgBid: 80, maxBid: 130 },
-      { term: '2023-24 T2', minBid: 48, avgBid: 78, maxBid: 125 }
+      { term: '2024-25 T2', minBid: 25, avgBid: 38, maxBid: 50 },
+      { term: '2024-25 T1', minBid: 24, avgBid: 37, maxBid: 49 },
+      { term: '2023-24 T3', minBid: 24, avgBid: 36, maxBid: 48 },
+      { term: '2023-24 T2', minBid: 23, avgBid: 35, maxBid: 47 }
     ],
-    yearlyAverage: 81,
-    bidRange: '48-135 e$',
+    yearlyAverage: 37,
+    bidRange: '23-50 e$',
     careerPaths: ['Business Analyst', 'Process Consultant', 'Systems Analyst'],
     skills: ['Business Process Modeling', 'Requirements Analysis', 'Process Optimization'],
     afterClassRating: 4.0,
@@ -135,13 +135,13 @@ export const courses = [
     ],
     prerequisites: ['IS111'],
     bidHistory: [
-      { term: '2024-25 T2', minBid: 65, avgBid: 95, maxBid: 150 },
-      { term: '2024-25 T1', minBid: 62, avgBid: 92, maxBid: 148 },
-      { term: '2023-24 T3', minBid: 60, avgBid: 90, maxBid: 145 },
-      { term: '2023-24 T2', minBid: 58, avgBid: 88, maxBid: 142 }
+      { term: '2024-25 T2', minBid: 28, avgBid: 42, maxBid: 50 },
+      { term: '2024-25 T1', minBid: 27, avgBid: 41, maxBid: 50 },
+      { term: '2023-24 T3', minBid: 26, avgBid: 40, maxBid: 50 },
+      { term: '2023-24 T2', minBid: 25, avgBid: 39, maxBid: 50 }
     ],
-    yearlyAverage: 91,
-    bidRange: '58-150 e$',
+    yearlyAverage: 41,
+    bidRange: '25-50 e$',
     careerPaths: ['Full-Stack Developer', 'Frontend Developer', 'Web Designer'],
     skills: ['JavaScript', 'React', 'Node.js', 'HTML/CSS'],
     afterClassRating: 4.7,
@@ -171,13 +171,13 @@ export const courses = [
     ],
     prerequisites: ['IS210', 'IS216'],
     bidHistory: [
-      { term: '2024-25 T2', minBid: 25, avgBid: 50, maxBid: 80 },
-      { term: '2024-25 T1', minBid: 23, avgBid: 48, maxBid: 78 },
-      { term: '2023-24 T3', minBid: 22, avgBid: 48, maxBid: 75 },
-      { term: '2023-24 T2', minBid: 20, avgBid: 45, maxBid: 72 }
+      { term: '2024-25 T2', minBid: 20, avgBid: 28, maxBid: 38 },
+      { term: '2024-25 T1', minBid: 20, avgBid: 27, maxBid: 37 },
+      { term: '2023-24 T3', minBid: 20, avgBid: 27, maxBid: 36 },
+      { term: '2023-24 T2', minBid: 20, avgBid: 26, maxBid: 35 }
     ],
-    yearlyAverage: 48,
-    bidRange: '20-80 e$',
+    yearlyAverage: 27,
+    bidRange: '20-38 e$',
     careerPaths: ['Security Analyst', 'Risk Manager', 'Compliance Officer'],
     skills: ['Security Analysis', 'Risk Assessment', 'Compliance'],
     afterClassRating: 4.3,
@@ -207,13 +207,13 @@ export const courses = [
     ],
     prerequisites: ['IS111', 'STAT151'],
     bidHistory: [
-      { term: '2024-25 T2', minBid: 85, avgBid: 120, maxBid: 180 },
-      { term: '2024-25 T1', minBid: 82, avgBid: 118, maxBid: 178 },
-      { term: '2023-24 T3', minBid: 80, avgBid: 115, maxBid: 175 },
-      { term: '2023-24 T2', minBid: 78, avgBid: 112, maxBid: 170 }
+      { term: '2024-25 T2', minBid: 32, avgBid: 45, maxBid: 50 },
+      { term: '2024-25 T1', minBid: 31, avgBid: 44, maxBid: 50 },
+      { term: '2023-24 T3', minBid: 30, avgBid: 43, maxBid: 50 },
+      { term: '2023-24 T2', minBid: 29, avgBid: 42, maxBid: 50 }
     ],
-    yearlyAverage: 116,
-    bidRange: '78-180 e$',
+    yearlyAverage: 44,
+    bidRange: '29-50 e$',
     careerPaths: ['ML Engineer', 'Data Scientist', 'AI Researcher'],
     skills: ['Python', 'Machine Learning', 'Deep Learning', 'TensorFlow'],
     afterClassRating: 4.8,
@@ -244,13 +244,13 @@ export const courses = [
     ],
     prerequisites: ['IS111'],
     bidHistory: [
-      { term: '2024-25 T2', minBid: 52, avgBid: 82, maxBid: 125 },
-      { term: '2024-25 T1', minBid: 50, avgBid: 80, maxBid: 122 },
-      { term: '2023-24 T3', minBid: 48, avgBid: 78, maxBid: 120 },
-      { term: '2023-24 T2', minBid: 45, avgBid: 75, maxBid: 118 }
+      { term: '2024-25 T2', minBid: 24, avgBid: 37, maxBid: 48 },
+      { term: '2024-25 T1', minBid: 23, avgBid: 36, maxBid: 47 },
+      { term: '2023-24 T3', minBid: 23, avgBid: 35, maxBid: 46 },
+      { term: '2023-24 T2', minBid: 22, avgBid: 34, maxBid: 45 }
     ],
-    yearlyAverage: 79,
-    bidRange: '45-125 e$',
+    yearlyAverage: 36,
+    bidRange: '22-48 e$',
     careerPaths: ['Software Engineer', 'Backend Developer', 'Systems Architect'],
     skills: ['Java', 'OOP Design', 'Design Patterns', 'Software Architecture'],
     afterClassRating: 4.4,
@@ -281,13 +281,13 @@ export const courses = [
     ],
     prerequisites: ['IS210', 'IS216'],
     bidHistory: [
-      { term: '2024-25 T2', minBid: 70, avgBid: 105, maxBid: 160 },
-      { term: '2024-25 T1', minBid: 68, avgBid: 102, maxBid: 155 },
-      { term: '2023-24 T3', minBid: 65, avgBid: 100, maxBid: 152 },
-      { term: '2023-24 T2', minBid: 62, avgBid: 98, maxBid: 150 }
+      { term: '2024-25 T2', minBid: 30, avgBid: 43, maxBid: 50 },
+      { term: '2024-25 T1', minBid: 29, avgBid: 42, maxBid: 50 },
+      { term: '2023-24 T3', minBid: 28, avgBid: 41, maxBid: 50 },
+      { term: '2023-24 T2', minBid: 27, avgBid: 40, maxBid: 50 }
     ],
-    yearlyAverage: 101,
-    bidRange: '62-160 e$',
+    yearlyAverage: 42,
+    bidRange: '27-50 e$',
     careerPaths: ['Cloud Engineer', 'DevOps Engineer', 'Solutions Architect'],
     skills: ['AWS', 'Azure', 'Docker', 'Kubernetes', 'CI/CD'],
     afterClassRating: 4.6,
@@ -296,7 +296,12 @@ export const courses = [
   }
 ];
 
-export const studentCart = [];
+// Default cart with sample courses shown on login
+export const studentCart = [
+  courses.find(c => c.id === 'IS111'),
+  courses.find(c => c.id === 'IS112'),
+  courses.find(c => c.id === 'IS216')
+].filter(Boolean); // Filter out any undefined values
 
 export const studentTimetable = [];
 

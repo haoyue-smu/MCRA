@@ -1,9 +1,10 @@
 import { Link } from 'react-router-dom';
 import {
   BookOpen, Calendar, TrendingUp, GitBranch,
-  ClipboardList, Briefcase, Brain, ArrowRight, Star, AlertTriangle
+  ClipboardList, Briefcase, Brain, ArrowRight, Star, AlertTriangle,
+  CheckCircle, XCircle, DollarSign, Award, Zap
 } from 'lucide-react';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
 function Dashboard({ cart }) {
   const quickLinks = [
@@ -58,54 +59,7 @@ function Dashboard({ cart }) {
     }
   ];
 
-  // Prepare chart data for courses in cart
-
-  // 1. Total e$ Budget Breakdown
-  const prepareBudgetAllocation = () => {
-    return cart.map(course => ({
-      name: course.id,
-      'Min Bid': course.bidHistory[0]?.minBid || 0,
-      'Avg Bid': course.yearlyAverage,
-      'Max Bid': course.bidHistory[0]?.maxBid || 0,
-      demand: course.demand
-    }));
-  };
-
-  // 2. Workload Distribution
-  const prepareWorkloadDistribution = () => {
-    return cart.map(course => {
-      const quizzes = course.assessments.filter(a => a.type.toLowerCase().includes('quiz')).length;
-      const exams = course.assessments.filter(a => a.type.toLowerCase().includes('exam')).length;
-      const projects = course.assessments.filter(a => a.type.toLowerCase().includes('project')).length;
-      const assignments = course.assessments.length - quizzes - exams - projects;
-
-      return {
-        code: course.id,
-        Quizzes: quizzes,
-        Exams: exams,
-        Projects: projects,
-        'Other': assignments
-      };
-    });
-  };
-
-  // 3. Course Rating vs Difficulty
-  const prepareRatingDifficulty = () => {
-    const difficultyScore = {
-      'Easy': 1,
-      'Medium': 2,
-      'Hard': 3,
-      'Very Hard': 4
-    };
-
-    return cart.map(course => ({
-      name: course.id,
-      rating: course.afterClassRating,
-      difficulty: difficultyScore[course.difficulty] || 2,
-      workload: course.workload
-    }));
-  };
-
+  // Helper functions for dashboard stats
   const getTotalAssessments = () => {
     let total = 0;
     cart.forEach(course => {
@@ -175,144 +129,147 @@ function Dashboard({ cart }) {
         </div>
       </div>
 
-      {/* Charts - Only show if cart has courses */}
+      {/* Course Cards and Insights - Only show if cart has courses */}
       {cart.length > 0 ? (
         <>
-          {/* Insightful Charts */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-            {/* Budget Allocation with Min/Avg/Max */}
-            <div className="chart-card">
-              <h3 className="chart-title">💰 Bidding Budget Planning</h3>
-              <p className="chart-subtitle">
-                Plan your e$ allocation. Green = minimum safe bid, Yellow = average bid, Red = competitive bid
+          {/* Course Cards - Visual and Scannable */}
+          <div className="mb-8">
+            <h2 className="section-title">Your Selected Courses</h2>
+            <p className="text-gray-600 mb-4">Quick overview of all courses in your cart</p>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {cart.map(course => (
+                <div key={course.id} className="bg-white rounded-lg shadow-md border border-gray-200 p-5 hover:shadow-lg transition-shadow">
+                  {/* Course Header */}
+                  <div className="flex items-start justify-between mb-3">
+                    <div>
+                      <h3 className="text-xl font-bold text-smu-blue mb-1">{course.id}</h3>
+                      <p className="text-sm text-gray-600 line-clamp-1">{course.name}</p>
+                    </div>
+                    <div className="flex items-center">
+                      <Star className="w-4 h-4 text-yellow-500 fill-current mr-1" />
+                      <span className="text-sm font-bold text-gray-900">{course.afterClassRating}</span>
+                    </div>
+                  </div>
+
+                  {/* Key Metrics */}
+                  <div className="space-y-2 mb-4">
+                    {/* Bid Info - Most Important */}
+                    <div className="flex items-center justify-between p-2 bg-purple-50 rounded">
+                      <div className="flex items-center text-purple-700">
+                        <DollarSign className="w-4 h-4 mr-1" />
+                        <span className="text-xs font-medium">Avg Bid</span>
+                      </div>
+                      <span className="text-sm font-bold text-purple-900">e$ {course.yearlyAverage}</span>
+                    </div>
+
+                    {/* S/U Eligibility */}
+                    <div className="flex items-center justify-between p-2 bg-gray-50 rounded">
+                      <span className="text-xs font-medium text-gray-700">S/U Eligible</span>
+                      {course.suEligible ? (
+                        <span className="flex items-center text-green-600 text-xs font-semibold">
+                          <CheckCircle className="w-4 h-4 mr-1" />Yes
+                        </span>
+                      ) : (
+                        <span className="flex items-center text-red-600 text-xs font-semibold">
+                          <XCircle className="w-4 h-4 mr-1" />No
+                        </span>
+                      )}
+                    </div>
+
+                    {/* Workload */}
+                    <div className="flex items-center justify-between p-2 bg-gray-50 rounded">
+                      <span className="text-xs font-medium text-gray-700">Workload</span>
+                      <span className={`text-xs font-semibold px-2 py-0.5 rounded ${
+                        course.workload === 'Very High' ? 'bg-red-100 text-red-700' :
+                        course.workload === 'High' ? 'bg-orange-100 text-orange-700' :
+                        'bg-yellow-100 text-yellow-700'
+                      }`}>
+                        {course.workload}
+                      </span>
+                    </div>
+
+                    {/* Assessment Count */}
+                    <div className="flex items-center justify-between p-2 bg-gray-50 rounded">
+                      <span className="text-xs font-medium text-gray-700">Assessments</span>
+                      <span className="text-xs font-semibold text-gray-900">
+                        {course.assessments.length} items
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Professor */}
+                  <div className="pt-3 border-t border-gray-200">
+                    <p className="text-xs text-gray-500">{course.professor}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Simple Bidding Comparison Chart */}
+          <div className="mb-8">
+            <div className="bg-white rounded-lg shadow-md p-6">
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">Bidding Comparison</h3>
+              <p className="text-sm text-gray-600 mb-4">
+                Compare average bids needed for each course. Budget total: <strong>e$ {cart.reduce((sum, c) => sum + c.yearlyAverage, 0)}</strong>
               </p>
-              <ResponsiveContainer width="100%" height={280}>
-                <BarChart data={prepareBudgetAllocation()}>
+              <ResponsiveContainer width="100%" height={200}>
+                <BarChart data={cart.map(c => ({ name: c.id, bid: c.yearlyAverage }))}>
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis dataKey="name" />
                   <YAxis label={{ value: 'e$', angle: -90, position: 'insideLeft' }} />
                   <Tooltip />
-                  <Legend />
-                  <Bar dataKey="Min Bid" fill="#10b981" name="Min (Safe)" />
-                  <Bar dataKey="Avg Bid" fill="#f59e0b" name="Average" />
-                  <Bar dataKey="Max Bid" fill="#ef4444" name="Max (Competitive)" />
+                  <Bar dataKey="bid" fill="#7c3aed" name="Avg Bid" />
                 </BarChart>
               </ResponsiveContainer>
-              <div className="mt-3 p-3 bg-blue-50 rounded-lg">
-                <p className="text-xs text-blue-800">
-                  <strong>Total Budget Needed:</strong> e${cart.reduce((sum, c) => sum + c.yearlyAverage, 0)} (avg) •
-                  Max: e${cart.reduce((sum, c) => sum + (c.bidHistory[0]?.maxBid || 0), 0)}
-                </p>
-              </div>
-            </div>
-
-            {/* Workload Distribution Stacked */}
-            <div className="chart-card">
-              <h3 className="chart-title">📚 Assessment Workload Breakdown</h3>
-              <p className="chart-subtitle">See how your assessments are distributed across courses</p>
-              <ResponsiveContainer width="100%" height={280}>
-                <BarChart data={prepareWorkloadDistribution()}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="code" />
-                  <YAxis label={{ value: 'Count', angle: -90, position: 'insideLeft' }} />
-                  <Tooltip />
-                  <Legend />
-                  <Bar dataKey="Quizzes" stackId="a" fill="#3b82f6" />
-                  <Bar dataKey="Exams" stackId="a" fill="#ef4444" />
-                  <Bar dataKey="Projects" stackId="a" fill="#8b5cf6" />
-                  <Bar dataKey="Other" stackId="a" fill="#6b7280" />
-                </BarChart>
-              </ResponsiveContainer>
-              <div className="mt-3 p-3 bg-orange-50 rounded-lg">
-                <p className="text-xs text-orange-800">
-                  <strong>Total Assessments:</strong> {getTotalAssessments()} across {cart.length} courses
-                </p>
-              </div>
             </div>
           </div>
 
-          {/* Course Quality Overview */}
-          <div className="chart-card mb-8">
-            <h3 className="chart-title">⭐ Course Quality Analysis</h3>
-            <p className="chart-subtitle">
-              Compare course ratings (1-5 stars) with difficulty level. Higher is more difficult.
-            </p>
-            <ResponsiveContainer width="100%" height={300}>
-              <BarChart data={prepareRatingDifficulty()} layout="horizontal">
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="name" />
-                <YAxis yAxisId="left" label={{ value: 'Rating (out of 5)', angle: -90, position: 'insideLeft' }} domain={[0, 5]} />
-                <YAxis yAxisId="right" orientation="right" label={{ value: 'Difficulty', angle: 90, position: 'insideRight' }} domain={[0, 4]} />
-                <Tooltip />
-                <Legend />
-                <Bar yAxisId="left" dataKey="rating" fill="#10b981" name="Student Rating" />
-                <Bar yAxisId="right" dataKey="difficulty" fill="#ef4444" name="Difficulty Level" />
-              </BarChart>
-            </ResponsiveContainer>
-            <div className="mt-3 grid grid-cols-2 gap-3">
-              <div className="p-3 bg-green-50 rounded-lg">
-                <p className="text-xs text-green-800">
-                  <strong>Avg Rating:</strong> {(cart.reduce((sum, c) => sum + c.afterClassRating, 0) / cart.length).toFixed(1)} / 5.0
+          {/* Quick Insights */}
+          <div className="mb-8">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">Quick Insights</h3>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {/* Highest Bid */}
+              <div className="bg-gradient-to-br from-purple-50 to-purple-100 rounded-lg p-4 border border-purple-200">
+                <div className="flex items-center mb-2">
+                  <TrendingUp className="w-5 h-5 text-purple-600 mr-2" />
+                  <h4 className="font-semibold text-purple-900">Highest Bid</h4>
+                </div>
+                <p className="text-2xl font-bold text-purple-900 mb-1">
+                  {cart.reduce((max, c) => c.yearlyAverage > max.yearlyAverage ? c : max).id}
+                </p>
+                <p className="text-sm text-purple-700">
+                  e$ {cart.reduce((max, c) => c.yearlyAverage > max.yearlyAverage ? c : max).yearlyAverage} avg
                 </p>
               </div>
-              <div className="p-3 bg-red-50 rounded-lg">
-                <p className="text-xs text-red-800">
-                  <strong>High Workload:</strong> {cart.filter(c => c.workload === 'High' || c.workload === 'Very High').length} courses
-                </p>
-              </div>
-            </div>
-          </div>
 
-          {/* Course Details Table */}
-          <div className="bg-white rounded-lg shadow-md p-6 mb-8">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">📚 Your Course Overview</h3>
-            <div className="overflow-x-auto">
-              <table className="min-w-full divide-y divide-gray-200">
-                <thead className="bg-gray-50">
-                  <tr>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Course</th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Professor</th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">S/U</th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Workload</th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Rating</th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Avg Bid</th>
-                  </tr>
-                </thead>
-                <tbody className="bg-white divide-y divide-gray-200">
-                  {cart.map(course => (
-                    <tr key={course.id} className="hover:bg-gray-50">
-                      <td className="px-4 py-3 whitespace-nowrap">
-                        <div className="font-semibold text-gray-900">{course.id}</div>
-                        <div className="text-sm text-gray-500">{course.name}</div>
-                      </td>
-                      <td className="px-4 py-3 text-sm text-gray-700">{course.professor}</td>
-                      <td className="px-4 py-3">
-                        {course.suEligible ? (
-                          <span className="px-2 py-1 bg-green-100 text-green-700 text-xs font-semibold rounded">Yes</span>
-                        ) : (
-                          <span className="px-2 py-1 bg-red-100 text-red-700 text-xs font-semibold rounded">No</span>
-                        )}
-                      </td>
-                      <td className="px-4 py-3 text-sm">
-                        <span className={`px-2 py-1 rounded text-xs font-semibold ${
-                          course.workload === 'Very High' ? 'bg-red-100 text-red-700' :
-                          course.workload === 'High' ? 'bg-orange-100 text-orange-700' :
-                          'bg-yellow-100 text-yellow-700'
-                        }`}>
-                          {course.workload}
-                        </span>
-                      </td>
-                      <td className="px-4 py-3">
-                        <div className="flex items-center">
-                          <Star className="w-4 h-4 text-yellow-500 fill-current mr-1" />
-                          <span className="text-sm font-semibold">{course.afterClassRating}</span>
-                        </div>
-                      </td>
-                      <td className="px-4 py-3 text-sm font-semibold text-purple-600">e$ {course.yearlyAverage}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+              {/* Best Rated */}
+              <div className="bg-gradient-to-br from-green-50 to-green-100 rounded-lg p-4 border border-green-200">
+                <div className="flex items-center mb-2">
+                  <Award className="w-5 h-5 text-green-600 mr-2" />
+                  <h4 className="font-semibold text-green-900">Best Rated</h4>
+                </div>
+                <p className="text-2xl font-bold text-green-900 mb-1">
+                  {cart.reduce((max, c) => c.afterClassRating > max.afterClassRating ? c : max).id}
+                </p>
+                <p className="text-sm text-green-700">
+                  {cart.reduce((max, c) => c.afterClassRating > max.afterClassRating ? c : max).afterClassRating} / 5.0 stars
+                </p>
+              </div>
+
+              {/* Total Workload */}
+              <div className="bg-gradient-to-br from-orange-50 to-orange-100 rounded-lg p-4 border border-orange-200">
+                <div className="flex items-center mb-2">
+                  <Zap className="w-5 h-5 text-orange-600 mr-2" />
+                  <h4 className="font-semibold text-orange-900">Total Workload</h4>
+                </div>
+                <p className="text-2xl font-bold text-orange-900 mb-1">
+                  {getTotalAssessments()} assessments
+                </p>
+                <p className="text-sm text-orange-700">
+                  {cart.filter(c => c.workload === 'Very High' || c.workload === 'High').length} high workload courses
+                </p>
+              </div>
             </div>
           </div>
         </>

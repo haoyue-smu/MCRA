@@ -17,6 +17,20 @@ function CourseBrowser({ cart, addToCart, removeFromCart }) {
     return saved ? JSON.parse(saved) : [];
   });
 
+  // Track real-time subscriber counts
+  const [subscriberCounts, setSubscriberCounts] = useState(() => {
+    const saved = localStorage.getItem('subscriberCounts');
+    if (saved) {
+      return JSON.parse(saved);
+    }
+    // Initialize with course data
+    const initialCounts = {};
+    courses.forEach(course => {
+      initialCounts[course.id] = course.subscribers;
+    });
+    return initialCounts;
+  });
+
   const filteredCourses = courses.filter(course => {
     const matchesSearch = course.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          course.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -36,12 +50,23 @@ function CourseBrowser({ cart, addToCart, removeFromCart }) {
   const isSubscribed = (courseId) => subscriptions.includes(courseId);
 
   const toggleSubscription = (courseId) => {
-    const newSubscriptions = isSubscribed(courseId)
+    const isCurrentlySubscribed = isSubscribed(courseId);
+    const newSubscriptions = isCurrentlySubscribed
       ? subscriptions.filter(id => id !== courseId)
       : [...subscriptions, courseId];
 
     setSubscriptions(newSubscriptions);
     localStorage.setItem('courseSubscriptions', JSON.stringify(newSubscriptions));
+
+    // Update subscriber count in real-time
+    const newCounts = {
+      ...subscriberCounts,
+      [courseId]: isCurrentlySubscribed
+        ? subscriberCounts[courseId] - 1
+        : subscriberCounts[courseId] + 1
+    };
+    setSubscriberCounts(newCounts);
+    localStorage.setItem('subscriberCounts', JSON.stringify(newCounts));
   };
 
   const getDemandColor = (demand) => {
@@ -91,7 +116,7 @@ function CourseBrowser({ cart, addToCart, removeFromCart }) {
           <span className="text-xs text-gray-500">Subscribers</span>
           <span className="text-sm font-semibold text-gray-900 flex items-center">
             <Bell className="w-3 h-3 mr-1 text-blue-500" />
-            {course.subscribers}
+            {subscriberCounts[course.id]}
           </span>
         </div>
         <div className="flex flex-col">

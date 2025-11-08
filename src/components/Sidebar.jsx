@@ -53,7 +53,7 @@ function Sidebar({ cart, user, onLogout }) {
     <>
       {/* Sidebar */}
       <div className={`fixed left-0 top-0 h-full bg-smu-blue text-white transition-all duration-300 z-40 ${
-        isCollapsed ? 'w-16' : 'w-64'
+        isCollapsed ? 'w-20' : 'w-80'
       }`}>
         {/* Header */}
         <div className="p-4 border-b border-blue-700 flex items-center justify-between">
