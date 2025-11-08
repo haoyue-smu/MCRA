@@ -59,44 +59,50 @@ function Dashboard({ cart }) {
   ];
 
   // Prepare chart data for courses in cart
-  const prepareWorkloadData = () => {
-    return cart.map(course => ({
-      code: course.id,
-      rating: course.afterClassRating,
-      avgBid: course.yearlyAverage,
-      quizzes: course.assessments.filter(a => a.type.toLowerCase().includes('quiz')).length,
-      exams: course.assessments.filter(a => a.type.toLowerCase().includes('exam')).length
-    }));
-  };
 
-  const prepareBiddingComparisonData = () => {
+  // 1. Total e$ Budget Breakdown
+  const prepareBudgetAllocation = () => {
     return cart.map(course => ({
       name: course.id,
-      'Yearly Avg': course.yearlyAverage,
-      'Recommended': Math.round(course.yearlyAverage * 1.1)
+      'Min Bid': course.bidHistory[0]?.minBid || 0,
+      'Avg Bid': course.yearlyAverage,
+      'Max Bid': course.bidHistory[0]?.maxBid || 0,
+      demand: course.demand
     }));
   };
 
-  const prepareRadarData = () => {
-    // Convert workload and difficulty to numeric scores
-    const workloadScore = {
-      'Low': 2,
-      'Medium': 4,
-      'High': 6,
-      'Very High': 8
-    };
+  // 2. Workload Distribution
+  const prepareWorkloadDistribution = () => {
+    return cart.map(course => {
+      const quizzes = course.assessments.filter(a => a.type.toLowerCase().includes('quiz')).length;
+      const exams = course.assessments.filter(a => a.type.toLowerCase().includes('exam')).length;
+      const projects = course.assessments.filter(a => a.type.toLowerCase().includes('project')).length;
+      const assignments = course.assessments.length - quizzes - exams - projects;
+
+      return {
+        code: course.id,
+        Quizzes: quizzes,
+        Exams: exams,
+        Projects: projects,
+        'Other': assignments
+      };
+    });
+  };
+
+  // 3. Course Rating vs Difficulty
+  const prepareRatingDifficulty = () => {
     const difficultyScore = {
-      'Easy': 2,
-      'Medium': 5,
-      'Hard': 7,
-      'Very Hard': 9
+      'Easy': 1,
+      'Medium': 2,
+      'Hard': 3,
+      'Very Hard': 4
     };
 
     return cart.map(course => ({
-      course: course.id,
-      Workload: workloadScore[course.workload] || 5,
-      Difficulty: difficultyScore[course.difficulty] || 5,
-      Rating: course.afterClassRating * 2
+      name: course.id,
+      rating: course.afterClassRating,
+      difficulty: difficultyScore[course.difficulty] || 2,
+      workload: course.workload
     }));
   };
 
@@ -121,9 +127,32 @@ function Dashboard({ cart }) {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       {/* Simple Header */}
-      <div className="mb-8">
-        <h1 className="text-4xl font-bold text-smu-blue mb-2">My Dashboard</h1>
-        <p className="text-gray-600">Term 3 2024-25 • Bidding Status: Open</p>
+      <div className="mb-6">
+        <h1 className="text-4xl font-bold text-smu-blue mb-4">My Dashboard</h1>
+      </div>
+
+      {/* Prominent Status Bar */}
+      <div className="bg-gradient-to-r from-green-500 to-emerald-600 rounded-lg shadow-lg p-4 mb-8">
+        <div className="flex items-center justify-between text-white">
+          <div className="flex items-center space-x-6">
+            <div>
+              <div className="text-sm font-medium opacity-90">Current Term</div>
+              <div className="text-2xl font-bold">Term 3 2024-25</div>
+            </div>
+            <div className="h-12 w-px bg-white opacity-30"></div>
+            <div>
+              <div className="text-sm font-medium opacity-90">Bidding Status</div>
+              <div className="text-2xl font-bold flex items-center">
+                <span className="inline-block w-3 h-3 bg-white rounded-full mr-2 animate-pulse"></span>
+                Open
+              </div>
+            </div>
+          </div>
+          <div className="text-right">
+            <div className="text-sm font-medium opacity-90">Bidding Closes In</div>
+            <div className="text-xl font-bold">3 days 14 hours</div>
+          </div>
+        </div>
       </div>
 
       {/* Cart Summary */}
@@ -149,59 +178,89 @@ function Dashboard({ cart }) {
       {/* Charts - Only show if cart has courses */}
       {cart.length > 0 ? (
         <>
-          {/* Course Comparison Charts */}
+          {/* Insightful Charts */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-            {/* Bidding Comparison */}
+            {/* Budget Allocation with Min/Avg/Max */}
             <div className="bg-white rounded-lg shadow-md p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">💰 Bidding Comparison</h3>
-              <ResponsiveContainer width="100%" height={250}>
-                <BarChart data={prepareBiddingComparisonData()}>
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">💰 Bidding Budget Planning</h3>
+              <p className="text-xs text-gray-600 mb-4">
+                Plan your e$ allocation. Green = minimum safe bid, Yellow = average bid, Red = competitive bid
+              </p>
+              <ResponsiveContainer width="100%" height={280}>
+                <BarChart data={prepareBudgetAllocation()}>
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis dataKey="name" />
                   <YAxis label={{ value: 'e$', angle: -90, position: 'insideLeft' }} />
                   <Tooltip />
                   <Legend />
-                  <Bar dataKey="Yearly Avg" fill="#8b5cf6" />
-                  <Bar dataKey="Recommended" fill="#d4a76a" />
+                  <Bar dataKey="Min Bid" fill="#10b981" name="Min (Safe)" />
+                  <Bar dataKey="Avg Bid" fill="#f59e0b" name="Average" />
+                  <Bar dataKey="Max Bid" fill="#ef4444" name="Max (Competitive)" />
                 </BarChart>
               </ResponsiveContainer>
-              <p className="text-xs text-gray-500 mt-2">Gold bars show recommended bidding amount (+10%)</p>
+              <div className="mt-3 p-3 bg-blue-50 rounded-lg">
+                <p className="text-xs text-blue-800">
+                  <strong>Total Budget Needed:</strong> e${cart.reduce((sum, c) => sum + c.yearlyAverage, 0)} (avg) •
+                  Max: e${cart.reduce((sum, c) => sum + (c.bidHistory[0]?.maxBid || 0), 0)}
+                </p>
+              </div>
             </div>
 
-            {/* Professor Ratings & Assessment Count */}
+            {/* Workload Distribution Stacked */}
             <div className="bg-white rounded-lg shadow-md p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">⭐ Ratings & Assessments</h3>
-              <ResponsiveContainer width="100%" height={250}>
-                <BarChart data={prepareWorkloadData()}>
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">📚 Assessment Workload Breakdown</h3>
+              <p className="text-xs text-gray-600 mb-4">See how your assessments are distributed across courses</p>
+              <ResponsiveContainer width="100%" height={280}>
+                <BarChart data={prepareWorkloadDistribution()}>
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis dataKey="code" />
-                  <YAxis yAxisId="left" />
-                  <YAxis yAxisId="right" orientation="right" />
+                  <YAxis label={{ value: 'Count', angle: -90, position: 'insideLeft' }} />
                   <Tooltip />
                   <Legend />
-                  <Bar yAxisId="left" dataKey="rating" fill="#10b981" name="Rating (out of 5)" />
-                  <Bar yAxisId="right" dataKey="quizzes" fill="#f59e0b" name="Quizzes" />
-                  <Bar yAxisId="right" dataKey="exams" fill="#ef4444" name="Exams" />
+                  <Bar dataKey="Quizzes" stackId="a" fill="#3b82f6" />
+                  <Bar dataKey="Exams" stackId="a" fill="#ef4444" />
+                  <Bar dataKey="Projects" stackId="a" fill="#8b5cf6" />
+                  <Bar dataKey="Other" stackId="a" fill="#6b7280" />
                 </BarChart>
               </ResponsiveContainer>
+              <div className="mt-3 p-3 bg-orange-50 rounded-lg">
+                <p className="text-xs text-orange-800">
+                  <strong>Total Assessments:</strong> {getTotalAssessments()} across {cart.length} courses
+                </p>
+              </div>
             </div>
           </div>
 
-          {/* Workload Radar Chart */}
+          {/* Course Quality Overview */}
           <div className="bg-white rounded-lg shadow-md p-6 mb-8">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">📊 Course Workload & Difficulty Analysis</h3>
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">⭐ Course Quality Analysis</h3>
+            <p className="text-xs text-gray-600 mb-4">
+              Compare course ratings (1-5 stars) with difficulty level. Higher is more difficult.
+            </p>
             <ResponsiveContainer width="100%" height={300}>
-              <RadarChart data={prepareRadarData()}>
-                <PolarGrid />
-                <PolarAngleAxis dataKey="course" />
-                <PolarRadiusAxis angle={90} domain={[0, 10]} />
-                <Radar name="Workload" dataKey="Workload" stroke="#8b5cf6" fill="#8b5cf6" fillOpacity={0.6} />
-                <Radar name="Difficulty" dataKey="Difficulty" stroke="#ef4444" fill="#ef4444" fillOpacity={0.6} />
-                <Radar name="Rating x2" dataKey="Rating" stroke="#10b981" fill="#10b981" fillOpacity={0.6} />
+              <BarChart data={prepareRatingDifficulty()} layout="horizontal">
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="name" />
+                <YAxis yAxisId="left" label={{ value: 'Rating (out of 5)', angle: -90, position: 'insideLeft' }} domain={[0, 5]} />
+                <YAxis yAxisId="right" orientation="right" label={{ value: 'Difficulty', angle: 90, position: 'insideRight' }} domain={[0, 4]} />
+                <Tooltip />
                 <Legend />
-              </RadarChart>
+                <Bar yAxisId="left" dataKey="rating" fill="#10b981" name="Student Rating" />
+                <Bar yAxisId="right" dataKey="difficulty" fill="#ef4444" name="Difficulty Level" />
+              </BarChart>
             </ResponsiveContainer>
-            <p className="text-xs text-gray-500 mt-2 text-center">Compare workload, difficulty, and ratings across your selected courses</p>
+            <div className="mt-3 grid grid-cols-2 gap-3">
+              <div className="p-3 bg-green-50 rounded-lg">
+                <p className="text-xs text-green-800">
+                  <strong>Avg Rating:</strong> {(cart.reduce((sum, c) => sum + c.afterClassRating, 0) / cart.length).toFixed(1)} / 5.0
+                </p>
+              </div>
+              <div className="p-3 bg-red-50 rounded-lg">
+                <p className="text-xs text-red-800">
+                  <strong>High Workload:</strong> {cart.filter(c => c.workload === 'High' || c.workload === 'Very High').length} courses
+                </p>
+              </div>
+            </div>
           </div>
 
           {/* Course Details Table */}

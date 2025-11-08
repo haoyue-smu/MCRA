@@ -9,6 +9,7 @@ export const courses = [
     demand: 'High',
     demandCount: 156,
     capacity: 120,
+    subscribers: 189, // Number of students who subscribed to show interest
     suEligible: false,
     description: 'Fundamental programming concepts using Python',
     assessments: [
@@ -45,6 +46,7 @@ export const courses = [
     demand: 'Medium',
     demandCount: 98,
     capacity: 100,
+    subscribers: 112,
     suEligible: false,
     description: 'Database design, SQL, and data modeling',
     assessments: [
@@ -81,6 +83,7 @@ export const courses = [
     demand: 'High',
     demandCount: 142,
     capacity: 110,
+    subscribers: 167,
     suEligible: false,
     description: 'Analyze and design business processes',
     assessments: [
@@ -116,6 +119,7 @@ export const courses = [
     demand: 'Very High',
     demandCount: 189,
     capacity: 120,
+    subscribers: 215,
     suEligible: true,
     description: 'Full-stack web development with modern frameworks',
     assessments: [
@@ -152,6 +156,7 @@ export const courses = [
     demand: 'Medium',
     demandCount: 75,
     capacity: 80,
+    subscribers: 89,
     suEligible: true,
     description: 'Security principles, risk management, and compliance',
     assessments: [
@@ -188,6 +193,7 @@ export const courses = [
     demandCount: 201,
     capacity: 100,
     suEligible: false,
+    subscribers: 245,
     description: 'AI concepts, ML algorithms, and practical applications',
     assessments: [
       { type: 'Quiz 1', date: '2025-02-28', weight: 10, title: 'ML Fundamentals' },
@@ -224,6 +230,7 @@ export const courses = [
     capacity: 130,
     suEligible: true,
     description: 'Advanced OOP concepts, design patterns, and Java programming',
+    subscribers: 198,
     assessments: [
       { type: 'Quiz 1', date: '2025-02-17', weight: 12, title: 'OOP Principles' },
       { type: 'Quiz 2', date: '2025-03-03', weight: 12, title: 'Design Patterns' },
@@ -260,6 +267,7 @@ export const courses = [
     capacity: 90,
     suEligible: true,
     description: 'Cloud computing platforms, infrastructure management, and DevOps practices',
+    subscribers: 203,
     assessments: [
       { type: 'Quiz 1', date: '2025-02-24', weight: 15, title: 'Cloud Fundamentals' },
       { type: 'Quiz 2', date: '2025-03-10', weight: 15, title: 'AWS Services' },

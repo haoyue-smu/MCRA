@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import {
   Search, Filter, Star, TrendingUp, CheckCircle, XCircle,
-  ShoppingCart, BookOpen, Users, Mail, AlertCircle
+  ShoppingCart, BookOpen, Users, Bell, BellOff, AlertCircle
 } from 'lucide-react';
 import { courses } from '../data/mockData';
 
@@ -12,6 +12,10 @@ function CourseBrowser({ cart, addToCart, removeFromCart }) {
   const [filterProfessor, setFilterProfessor] = useState('');
   const [selectedCourse, setSelectedCourse] = useState(null);
   const [showFilters, setShowFilters] = useState(false);
+  const [subscriptions, setSubscriptions] = useState(() => {
+    const saved = localStorage.getItem('courseSubscriptions');
+    return saved ? JSON.parse(saved) : [];
+  });
 
   const filteredCourses = courses.filter(course => {
     const matchesSearch = course.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -28,6 +32,17 @@ function CourseBrowser({ cart, addToCart, removeFromCart }) {
   });
 
   const isInCart = (courseId) => cart.some(c => c.id === courseId);
+
+  const isSubscribed = (courseId) => subscriptions.includes(courseId);
+
+  const toggleSubscription = (courseId) => {
+    const newSubscriptions = isSubscribed(courseId)
+      ? subscriptions.filter(id => id !== courseId)
+      : [...subscriptions, courseId];
+
+    setSubscriptions(newSubscriptions);
+    localStorage.setItem('courseSubscriptions', JSON.stringify(newSubscriptions));
+  };
 
   const getDemandColor = (demand) => {
     switch(demand) {
@@ -73,9 +88,10 @@ function CourseBrowser({ cart, addToCart, removeFromCart }) {
           </span>
         </div>
         <div className="flex flex-col">
-          <span className="text-xs text-gray-500">Interest</span>
-          <span className="text-sm font-semibold text-gray-900">
-            {course.demandCount}/{course.capacity}
+          <span className="text-xs text-gray-500">Subscribers</span>
+          <span className="text-sm font-semibold text-gray-900 flex items-center">
+            <Bell className="w-3 h-3 mr-1 text-blue-500" />
+            {course.subscribers}
           </span>
         </div>
         <div className="flex flex-col">
@@ -158,9 +174,28 @@ function CourseBrowser({ cart, addToCart, removeFromCart }) {
             Add to Cart
           </button>
         )}
-        <button className="px-4 py-2 bg-smu-gold text-smu-blue rounded-md hover:bg-yellow-600 transition-colors flex items-center">
-          <Mail className="w-4 h-4 mr-2" />
-          Apply to Audit
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            toggleSubscription(course.id);
+          }}
+          className={`px-4 py-2 rounded-md transition-colors flex items-center ${
+            isSubscribed(course.id)
+              ? 'bg-gray-500 text-white hover:bg-gray-600'
+              : 'bg-blue-500 text-white hover:bg-blue-600'
+          }`}
+        >
+          {isSubscribed(course.id) ? (
+            <>
+              <BellOff className="w-4 h-4 mr-2" />
+              Unsubscribe
+            </>
+          ) : (
+            <>
+              <Bell className="w-4 h-4 mr-2" />
+              Subscribe
+            </>
+          )}
         </button>
       </div>
     </div>

@@ -1,0 +1,213 @@
+import { useState } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import {
+  Home, BookOpen, Calendar, TrendingUp, GitBranch,
+  ClipboardList, Briefcase, Brain, Menu, X, Settings, ChevronLeft, ChevronRight, LogOut, User
+} from 'lucide-react';
+
+function Sidebar({ cart, user, onLogout }) {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [isCollapsed, setIsCollapsed] = useState(false);
+  const [showCustomize, setShowCustomize] = useState(false);
+
+  // Load saved preferences from localStorage
+  const [visibleItems, setVisibleItems] = useState(() => {
+    const saved = localStorage.getItem('sidebarPreferences');
+    return saved ? JSON.parse(saved) : {
+      home: true,
+      courses: true,
+      timetable: true,
+      assessments: true,
+      bidding: true,
+      prerequisites: true,
+      career: true,
+      ai: true
+    };
+  });
+
+  const navItems = [
+    { path: '/', icon: Home, label: 'Dashboard', key: 'home' },
+    { path: '/courses', icon: BookOpen, label: 'Courses', key: 'courses' },
+    { path: '/timetable', icon: Calendar, label: 'Timetable', key: 'timetable' },
+    { path: '/assessments', icon: ClipboardList, label: 'Assessments', key: 'assessments' },
+    { path: '/bidding', icon: TrendingUp, label: 'Bidding Optimizer', key: 'bidding' },
+    { path: '/prerequisites', icon: GitBranch, label: 'Prerequisites', key: 'prerequisites' },
+    { path: '/career', icon: Briefcase, label: 'Career Pathways', key: 'career' },
+    { path: '/ai-recommender', icon: Brain, label: 'AI Recommender', key: 'ai' }
+  ];
+
+  const visibleNavItems = navItems.filter(item => visibleItems[item.key]);
+
+  const toggleVisibility = (key) => {
+    const newVisibility = { ...visibleItems, [key]: !visibleItems[key] };
+    setVisibleItems(newVisibility);
+    localStorage.setItem('sidebarPreferences', JSON.stringify(newVisibility));
+  };
+
+  const isActive = (path) => {
+    return location.pathname === path;
+  };
+
+  return (
+    <>
+      {/* Sidebar */}
+      <div className={`fixed left-0 top-0 h-full bg-smu-blue text-white transition-all duration-300 z-40 ${
+        isCollapsed ? 'w-16' : 'w-64'
+      }`}>
+        {/* Header */}
+        <div className="p-4 border-b border-blue-700 flex items-center justify-between">
+          {!isCollapsed && (
+            <div>
+              <h1 className="text-xl font-bold text-smu-gold">SCIS Smart Planner</h1>
+              <p className="text-xs text-blue-200">SMU Course Planning</p>
+            </div>
+          )}
+          <button
+            onClick={() => setIsCollapsed(!isCollapsed)}
+            className="p-2 hover:bg-blue-700 rounded-lg transition-colors ml-auto"
+          >
+            {isCollapsed ? <ChevronRight className="w-5 h-5" /> : <ChevronLeft className="w-5 h-5" />}
+          </button>
+        </div>
+
+        {/* Cart Count Badge */}
+        {!isCollapsed && cart.length > 0 && (
+          <div className="px-4 py-3 bg-blue-700 border-b border-blue-600">
+            <div className="flex items-center justify-between">
+              <span className="text-sm">Courses in Cart</span>
+              <span className="bg-smu-gold text-smu-blue px-2 py-1 rounded-full text-xs font-bold">
+                {cart.length}
+              </span>
+            </div>
+          </div>
+        )}
+
+        {/* Navigation Items */}
+        <nav className="py-4 flex-1 overflow-y-auto">
+          {visibleNavItems.map((item) => {
+            const Icon = item.icon;
+            const active = isActive(item.path);
+
+            return (
+              <Link
+                key={item.path}
+                to={item.path}
+                className={`flex items-center px-4 py-3 transition-colors ${
+                  active
+                    ? 'bg-blue-700 border-r-4 border-smu-gold'
+                    : 'hover:bg-blue-700'
+                }`}
+                title={isCollapsed ? item.label : ''}
+              >
+                <Icon className={`w-5 h-5 ${active ? 'text-smu-gold' : ''}`} />
+                {!isCollapsed && (
+                  <span className={`ml-3 ${active ? 'font-semibold text-smu-gold' : ''}`}>
+                    {item.label}
+                  </span>
+                )}
+              </Link>
+            );
+          })}
+        </nav>
+
+        {/* User Section & Actions */}
+        <div className="border-t border-blue-700 p-4 space-y-2">
+          {/* User Info */}
+          {user && !isCollapsed && (
+            <div className="px-4 py-2 bg-blue-700 rounded-lg mb-2">
+              <div className="flex items-center">
+                <div className="w-8 h-8 bg-smu-gold rounded-full flex items-center justify-center text-smu-blue font-bold mr-3">
+                  {user.name.charAt(0)}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-medium text-white truncate">{user.name}</p>
+                  <p className="text-xs text-blue-200 truncate">{user.email}</p>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Customize Button */}
+          <button
+            onClick={() => setShowCustomize(!showCustomize)}
+            className="flex items-center w-full px-4 py-2 hover:bg-blue-700 rounded-lg transition-colors"
+          >
+            <Settings className="w-5 h-5" />
+            {!isCollapsed && <span className="ml-3">Customize Sidebar</span>}
+          </button>
+
+          {/* Logout Button */}
+          {user && (
+            <button
+              onClick={() => {
+                onLogout();
+                navigate('/login');
+              }}
+              className="flex items-center w-full px-4 py-2 hover:bg-red-600 rounded-lg transition-colors text-red-200 hover:text-white"
+            >
+              <LogOut className="w-5 h-5" />
+              {!isCollapsed && <span className="ml-3">Sign Out</span>}
+            </button>
+          )}
+        </div>
+      </div>
+
+      {/* Customization Modal */}
+      {showCustomize && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg shadow-xl max-w-md w-full mx-4">
+            <div className="p-6 border-b border-gray-200">
+              <div className="flex items-center justify-between">
+                <h3 className="text-xl font-bold text-gray-900">Customize Sidebar</h3>
+                <button
+                  onClick={() => setShowCustomize(false)}
+                  className="text-gray-400 hover:text-gray-600"
+                >
+                  <X className="w-6 h-6" />
+                </button>
+              </div>
+              <p className="text-sm text-gray-600 mt-2">
+                Show or hide items in your sidebar navigation
+              </p>
+            </div>
+
+            <div className="p-6 space-y-3">
+              {navItems.map((item) => {
+                const Icon = item.icon;
+                return (
+                  <label
+                    key={item.key}
+                    className="flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 cursor-pointer"
+                  >
+                    <div className="flex items-center">
+                      <Icon className="w-5 h-5 text-smu-blue mr-3" />
+                      <span className="text-gray-900">{item.label}</span>
+                    </div>
+                    <input
+                      type="checkbox"
+                      checked={visibleItems[item.key]}
+                      onChange={() => toggleVisibility(item.key)}
+                      className="w-5 h-5 text-smu-blue rounded focus:ring-2 focus:ring-smu-blue"
+                    />
+                  </label>
+                );
+              })}
+            </div>
+
+            <div className="p-6 border-t border-gray-200 bg-gray-50 rounded-b-lg">
+              <button
+                onClick={() => setShowCustomize(false)}
+                className="w-full bg-smu-blue text-white px-4 py-2 rounded-lg hover:bg-blue-800 transition-colors"
+              >
+                Done
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
+  );
+}
+
+export default Sidebar;

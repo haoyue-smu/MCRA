@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
-import { Routes, Route } from 'react-router-dom';
-import Navbar from './components/Navbar';
+import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
+import Sidebar from './components/Sidebar';
+import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import CourseBrowser from './pages/CourseBrowser';
 import Timetable from './pages/Timetable';
@@ -13,23 +14,23 @@ import { courses, studentCart as initialCart } from './data/mockData';
 
 function App() {
   const [cart, setCart] = useState(initialCart);
-  const [sessionActive, setSessionActive] = useState(true);
-  const [sessionTimer, setSessionTimer] = useState(1800); // 30 minutes
+  const [user, setUser] = useState(null);
 
-  // Session keep-alive functionality
+  // Check for saved user session
   useEffect(() => {
-    const interval = setInterval(() => {
-      if (sessionActive && sessionTimer > 0) {
-        setSessionTimer(prev => prev - 1);
-      }
-    }, 1000);
+    const savedUser = localStorage.getItem('user');
+    if (savedUser) {
+      setUser(JSON.parse(savedUser));
+    }
+  }, []);
 
-    return () => clearInterval(interval);
-  }, [sessionActive, sessionTimer]);
+  const handleLogin = (userData) => {
+    setUser(userData);
+  };
 
-  const keepSessionAlive = () => {
-    setSessionTimer(1800);
-    setSessionActive(true);
+  const handleLogout = () => {
+    localStorage.removeItem('user');
+    setUser(null);
   };
 
   const addToCart = (courseId) => {
@@ -43,28 +44,41 @@ function App() {
     setCart(cart.filter(c => c.id !== courseId));
   };
 
-  const formatTime = (seconds) => {
-    const mins = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${mins}:${secs.toString().padStart(2, '0')}`;
+  // Protected Route wrapper
+  const ProtectedRoute = ({ children }) => {
+    if (!user) {
+      return <Navigate to="/login" replace />;
+    }
+    return children;
   };
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <Navbar cart={cart} sessionTimer={formatTime(sessionTimer)} onKeepAlive={keepSessionAlive} />
+      <Routes>
+        {/* Login Route */}
+        <Route path="/login" element={
+          user ? <Navigate to="/" replace /> : <Login onLogin={handleLogin} />
+        } />
 
-      <main className="pb-8">
-        <Routes>
-          <Route path="/" element={<Dashboard cart={cart} />} />
-          <Route path="/courses" element={<CourseBrowser cart={cart} addToCart={addToCart} removeFromCart={removeFromCart} />} />
-          <Route path="/timetable" element={<Timetable cart={cart} />} />
-          <Route path="/bidding" element={<BiddingOptimizer cart={cart} />} />
-          <Route path="/prerequisites" element={<PrerequisiteVisualizer />} />
-          <Route path="/assessments" element={<AssessmentTimeline cart={cart} />} />
-          <Route path="/career" element={<CareerPathway cart={cart} />} />
-          <Route path="/ai-recommender" element={<AIRecommender cart={cart} addToCart={addToCart} />} />
-        </Routes>
-      </main>
+        {/* Protected Routes */}
+        <Route path="/*" element={
+          <ProtectedRoute>
+            <Sidebar cart={cart} user={user} onLogout={handleLogout} />
+            <main className="ml-64 transition-all duration-300 pb-8">
+              <Routes>
+                <Route path="/" element={<Dashboard cart={cart} />} />
+                <Route path="/courses" element={<CourseBrowser cart={cart} addToCart={addToCart} removeFromCart={removeFromCart} />} />
+                <Route path="/timetable" element={<Timetable cart={cart} />} />
+                <Route path="/bidding" element={<BiddingOptimizer cart={cart} />} />
+                <Route path="/prerequisites" element={<PrerequisiteVisualizer />} />
+                <Route path="/assessments" element={<AssessmentTimeline cart={cart} />} />
+                <Route path="/career" element={<CareerPathway cart={cart} />} />
+                <Route path="/ai-recommender" element={<AIRecommender cart={cart} addToCart={addToCart} />} />
+              </Routes>
+            </main>
+          </ProtectedRoute>
+        } />
+      </Routes>
     </div>
   );
 }
