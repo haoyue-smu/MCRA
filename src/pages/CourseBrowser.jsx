@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   Search, Filter, Star, TrendingUp, CheckCircle, XCircle,
-  ShoppingCart, BookOpen, Users, Bell, BellOff, AlertCircle
+  ShoppingCart, BookOpen, Users, Bell, BellOff, AlertCircle,
+  Heart, Eye, TrendingDown, ArrowUp, Flame
 } from 'lucide-react';
 import { courses } from '../data/mockData';
 
@@ -14,6 +15,14 @@ function CourseBrowser({ cart, addToCart, removeFromCart }) {
   const [showFilters, setShowFilters] = useState(false);
   const [subscriptions, setSubscriptions] = useState(() => {
     const saved = localStorage.getItem('courseSubscriptions');
+    return saved ? JSON.parse(saved) : [];
+  });
+  const [wishlist, setWishlist] = useState(() => {
+    const saved = localStorage.getItem('courseWishlist');
+    return saved ? JSON.parse(saved) : [];
+  });
+  const [recentlyViewed, setRecentlyViewed] = useState(() => {
+    const saved = localStorage.getItem('recentlyViewedCourses');
     return saved ? JSON.parse(saved) : [];
   });
 
@@ -78,10 +87,100 @@ function CourseBrowser({ cart, addToCart, removeFromCart }) {
     }
   };
 
-  const CourseCard = ({ course }) => (
+  const getDemandEmoji = (demand) => {
+    switch(demand) {
+      case 'Very High': return '🔥🔥🔥';
+      case 'High': return '🔥🔥';
+      case 'Medium': return '🔥';
+      default: return '✅';
+    }
+  };
+
+  const getPredictedBid = (course) => {
+    // Calculate predicted bid based on demand and historical data
+    const baseBid = course.yearlyAverage;
+    const subscriberRatio = subscriberCounts[course.id] / course.capacity;
+
+    if (subscriberRatio > 1.8) {
+      return `e$ ${Math.round(baseBid * 1.15)}-${Math.round(baseBid * 1.25)}`;
+    } else if (subscriberRatio > 1.4) {
+      return `e$ ${Math.round(baseBid * 1.05)}-${Math.round(baseBid * 1.15)}`;
+    } else if (subscriberRatio > 1.0) {
+      return `e$ ${baseBid}-${Math.round(baseBid * 1.10)}`;
+    } else {
+      return `e$ ${Math.round(baseBid * 0.9)}-${baseBid}`;
+    }
+  };
+
+  const getSubscriberTrend = (courseId) => {
+    // Simulate weekly trend (in a real app, this would come from backend)
+    const baseSubscribers = courses.find(c => c.id === courseId)?.subscribers || 0;
+    const currentSubscribers = subscriberCounts[courseId];
+    const change = currentSubscribers - baseSubscribers;
+    return change;
+  };
+
+  const isInWishlist = (courseId) => wishlist.includes(courseId);
+
+  const toggleWishlist = (courseId) => {
+    const newWishlist = isInWishlist(courseId)
+      ? wishlist.filter(id => id !== courseId)
+      : [...wishlist, courseId];
+
+    setWishlist(newWishlist);
+    localStorage.setItem('courseWishlist', JSON.stringify(newWishlist));
+  };
+
+  const addToRecentlyViewed = (course) => {
+    const filtered = recentlyViewed.filter(c => c.id !== course.id);
+    const updated = [course, ...filtered].slice(0, 5); // Keep only 5 most recent
+    setRecentlyViewed(updated);
+    localStorage.setItem('recentlyViewedCourses', JSON.stringify(updated));
+  };
+
+  const checkScheduleClash = (course) => {
+    const clashes = [];
+    cart.forEach(cartCourse => {
+      course.schedule.forEach(schedule1 => {
+        cartCourse.schedule.forEach(schedule2 => {
+          if (schedule1.day === schedule2.day && schedule1.time === schedule2.time) {
+            clashes.push({
+              day: schedule1.day,
+              time: schedule1.time,
+              conflictWith: cartCourse.id
+            });
+          }
+        });
+      });
+    });
+    return clashes;
+  };
+
+  const getBiddingSuccessRate = (course) => {
+    // Simulate success rate based on bid amount
+    // In a real app, this would come from historical data
+    const avgBid = course.yearlyAverage;
+    return {
+      low: Math.max(30, Math.min(50, 100 - (subscriberCounts[course.id] / course.capacity) * 50)),
+      medium: Math.max(60, Math.min(85, 100 - (subscriberCounts[course.id] / course.capacity) * 30)),
+      high: Math.max(90, Math.min(98, 100 - (subscriberCounts[course.id] / course.capacity) * 10)),
+      avgBid: avgBid
+    };
+  };
+
+  const CourseCard = ({ course }) => {
+    const scheduleClashes = checkScheduleClash(course);
+    const successRate = getBiddingSuccessRate(course);
+    const trend = getSubscriberTrend(course.id);
+    const predictedBid = getPredictedBid(course);
+
+    return (
     <div
       className="course-card"
-      onClick={() => setSelectedCourse(course)}
+      onClick={() => {
+        setSelectedCourse(course);
+        addToRecentlyViewed(course);
+      }}
     >
       <div className="flex items-start justify-between mb-3">
         <div className="flex-1">
@@ -108,16 +207,25 @@ function CourseBrowser({ cart, addToCart, removeFromCart }) {
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-4">
         <div className="flex flex-col">
           <span className="text-xs text-gray-500">Demand</span>
-          <span className={`text-sm font-semibold px-2 py-1 rounded ${getDemandColor(course.demand)}`}>
-            {course.demand}
+          <span className={`text-sm font-semibold px-2 py-1 rounded ${getDemandColor(course.demand)} flex items-center justify-between`}>
+            <span>{course.demand}</span>
+            <span className="ml-1">{getDemandEmoji(course.demand)}</span>
           </span>
         </div>
         <div className="flex flex-col">
           <span className="text-xs text-gray-500">Subscribers</span>
-          <span className="text-sm font-semibold text-gray-900 flex items-center">
-            <Bell className="w-3 h-3 mr-1 text-blue-500" />
-            {subscriberCounts[course.id]}
-          </span>
+          <div className="flex flex-col">
+            <span className="text-sm font-semibold text-gray-900 flex items-center">
+              <Bell className="w-3 h-3 mr-1 text-blue-500" />
+              {subscriberCounts[course.id]}
+            </span>
+            {trend !== 0 && (
+              <span className={`text-xs flex items-center ${trend > 0 ? 'text-red-600' : 'text-green-600'}`}>
+                {trend > 0 ? <ArrowUp className="w-3 h-3 mr-0.5" /> : <TrendingDown className="w-3 h-3 mr-0.5" />}
+                {Math.abs(trend)} this week
+              </span>
+            )}
+          </div>
         </div>
         <div className="flex flex-col">
           <span className="text-xs text-gray-500">Rating</span>
@@ -134,33 +242,85 @@ function CourseBrowser({ cart, addToCart, removeFromCart }) {
 
       {/* Bidding Information */}
       <div className="mt-4 p-3 bg-purple-50 rounded-lg border border-purple-200">
-        <div className="flex items-center justify-between">
-          <div className="flex-1">
-            <div className="text-xs text-purple-700 font-semibold mb-1">Bidding Range (Past Year)</div>
+        <div className="grid grid-cols-2 gap-3 mb-2">
+          <div>
+            <div className="text-xs text-purple-700 font-semibold mb-1">Historical Range</div>
             <div className="text-sm font-bold text-purple-900">{course.bidRange}</div>
           </div>
-          <div className="border-l border-purple-300 pl-3 ml-3">
+          <div>
             <div className="text-xs text-purple-700 font-semibold mb-1">Yearly Avg</div>
             <div className="text-sm font-bold text-purple-900">e$ {course.yearlyAverage}</div>
           </div>
         </div>
+        <div className="pt-2 border-t border-purple-300">
+          <div className="text-xs text-purple-700 font-semibold mb-1 flex items-center">
+            <TrendingUp className="w-3 h-3 mr-1" />
+            Predicted Bid (Current Demand)
+          </div>
+          <div className="text-sm font-bold text-purple-900">{predictedBid}</div>
+        </div>
+        <div className="mt-2 text-xs text-purple-700">
+          Success Rate: <strong className="text-purple-900">{Math.round(successRate.medium)}%</strong> @ e$ {Math.round(successRate.avgBid * 1.05)} | <strong className="text-purple-900">{Math.round(successRate.high)}%</strong> @ e$ {Math.round(successRate.avgBid * 1.15)}+
+        </div>
       </div>
 
       {/* Class Schedule Preview */}
-      <div className="mt-3 p-3 bg-indigo-50 rounded-lg border border-indigo-200">
-        <div className="text-xs text-indigo-700 font-semibold mb-2">⏰ Class Schedule</div>
+      <div className={`mt-3 p-3 rounded-lg border ${scheduleClashes.length > 0 ? 'bg-red-50 border-red-300' : 'bg-indigo-50 border-indigo-200'}`}>
+        <div className={`text-xs font-semibold mb-2 flex items-center ${scheduleClashes.length > 0 ? 'text-red-700' : 'text-indigo-700'}`}>
+          ⏰ Class Schedule
+          {scheduleClashes.length > 0 && (
+            <span className="ml-2 flex items-center text-red-600">
+              <AlertCircle className="w-3 h-3 mr-1" />
+              Clash Detected!
+            </span>
+          )}
+        </div>
         <div className="space-y-1">
-          {course.schedule.map((s, i) => (
-            <div key={i} className="text-xs text-indigo-900">
-              <span className="font-semibold">{s.day}</span>: {s.time}
-            </div>
-          ))}
+          {course.schedule.map((s, i) => {
+            const clash = scheduleClashes.find(c => c.day === s.day && c.time === s.time);
+            return (
+              <div key={i} className={`text-xs ${clash ? 'text-red-900 font-semibold' : 'text-indigo-900'}`}>
+                <span className="font-semibold">{s.day}</span>: {s.time}
+                {clash && (
+                  <span className="ml-2 text-red-600 bg-red-100 px-1.5 py-0.5 rounded text-xs">
+                    ⚠️ Clash with {clash.conflictWith}
+                  </span>
+                )}
+              </div>
+            );
+          })}
         </div>
       </div>
 
       {/* Assessment Summary */}
       <div className="mt-3 p-3 bg-blue-50 rounded-lg border border-blue-200">
         <div className="text-xs text-blue-700 font-semibold mb-2">📊 Workload Preview</div>
+
+        {/* Visual Stacked Bar */}
+        <div className="mb-2">
+          <div className="flex h-6 rounded-full overflow-hidden border border-blue-300">
+            {course.assessments.map((assessment, i) => {
+              const colors = [
+                'bg-blue-500',
+                'bg-purple-500',
+                'bg-pink-500',
+                'bg-indigo-500',
+                'bg-cyan-500'
+              ];
+              return (
+                <div
+                  key={i}
+                  className={`${colors[i % colors.length]} flex items-center justify-center text-white text-xs font-bold transition-all hover:opacity-80`}
+                  style={{ width: `${assessment.weight}%` }}
+                  title={`${assessment.type}: ${assessment.weight}%`}
+                >
+                  {assessment.weight >= 15 && `${assessment.weight}%`}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
         <div className="flex flex-wrap gap-2">
           {course.assessments.map((assessment, i) => (
             <span key={i} className="text-xs bg-white text-blue-700 px-2 py-1 rounded border border-blue-300">
@@ -175,54 +335,82 @@ function CourseBrowser({ cart, addToCart, removeFromCart }) {
         </div>
       </div>
 
-      <div className="mt-4 flex space-x-2">
-        {isInCart(course.id) ? (
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              removeFromCart(course.id);
-            }}
-            className="btn-danger flex-1 flex items-center justify-center"
-          >
-            <XCircle className="w-4 h-4 mr-2" />
-            Remove from Cart
-          </button>
-        ) : (
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              addToCart(course.id);
-            }}
-            className="btn-primary flex-1 flex items-center justify-center"
-          >
-            <ShoppingCart className="w-4 h-4 mr-2" />
-            Add to Cart
-          </button>
-        )}
-        <button
-          onClick={(e) => {
-            e.stopPropagation();
-            toggleSubscription(course.id);
-          }}
-          className={`${
-            isSubscribed(course.id) ? 'btn-secondary' : 'btn-success'
-          } flex items-center`}
-        >
-          {isSubscribed(course.id) ? (
-            <>
-              <BellOff className="w-4 h-4 mr-2" />
-              Unsubscribe
-            </>
+      <div className="mt-4 space-y-2">
+        <div className="flex space-x-2">
+          {isInCart(course.id) ? (
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                removeFromCart(course.id);
+              }}
+              className="btn-danger flex-1 flex items-center justify-center"
+            >
+              <XCircle className="w-4 h-4 mr-2" />
+              Remove from Cart
+            </button>
           ) : (
-            <>
-              <Bell className="w-4 h-4 mr-2" />
-              Subscribe
-            </>
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                addToCart(course.id);
+              }}
+              className="btn-primary flex-1 flex items-center justify-center"
+            >
+              <ShoppingCart className="w-4 h-4 mr-2" />
+              Add to Cart
+            </button>
           )}
-        </button>
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              toggleWishlist(course.id);
+            }}
+            className={`${
+              isInWishlist(course.id) ? 'bg-pink-100 text-pink-700 border-pink-300' : 'btn-secondary'
+            } flex items-center px-3 border`}
+            title="Save for Later"
+          >
+            <Heart className={`w-4 h-4 ${isInWishlist(course.id) ? 'fill-current' : ''}`} />
+          </button>
+        </div>
+        <div className="flex space-x-2">
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              setSelectedCourse(course);
+              addToRecentlyViewed(course);
+            }}
+            className="btn-secondary flex-1 flex items-center justify-center text-sm"
+          >
+            <Eye className="w-4 h-4 mr-2" />
+            View Full Details
+          </button>
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              toggleSubscription(course.id);
+            }}
+            className={`${
+              isSubscribed(course.id) ? 'btn-secondary' : 'btn-success'
+            } flex items-center flex-1 text-sm justify-center`}
+          >
+            {isSubscribed(course.id) ? (
+              <>
+                <BellOff className="w-4 h-4 mr-2" />
+                Unsubscribe
+              </>
+            ) : (
+              <>
+                <Bell className="w-4 h-4 mr-2" />
+                Subscribe
+              </>
+            )}
+          </button>
+        </div>
       </div>
     </div>
-  );
+    );
+  };
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -320,6 +508,32 @@ function CourseBrowser({ cart, addToCart, removeFromCart }) {
           <span>{cart.length} in cart</span>
         </div>
       </div>
+
+      {/* Recently Viewed Courses */}
+      {recentlyViewed.length > 0 && (
+        <div className="mb-6 bg-gradient-to-r from-purple-50 to-pink-50 rounded-lg p-4 border border-purple-200">
+          <div className="flex items-center mb-3">
+            <Eye className="w-5 h-5 text-purple-600 mr-2" />
+            <h3 className="font-semibold text-purple-900">Recently Viewed</h3>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            {recentlyViewed.map((course) => (
+              <button
+                key={course.id}
+                onClick={() => {
+                  setSelectedCourse(course);
+                  addToRecentlyViewed(course);
+                }}
+                className="px-3 py-2 bg-white rounded-lg border border-purple-300 hover:bg-purple-50 transition-colors text-sm flex items-center space-x-2"
+              >
+                <span className="font-semibold text-purple-700">{course.id}</span>
+                <span className="text-gray-600">•</span>
+                <span className="text-gray-700">{course.name}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Course Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
