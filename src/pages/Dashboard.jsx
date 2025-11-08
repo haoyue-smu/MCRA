@@ -220,12 +220,86 @@ function Dashboard({ cart, removeFromCart }) {
   const biddingHealth = calculateBiddingHealth();
   const HealthIcon = biddingHealth.icon;
 
+  const [showClashDetails, setShowClashDetails] = useState(false);
+  const [showPrereqDetails, setShowPrereqDetails] = useState(false);
+
+  const timeClashes = checkTimeClashes();
+  const missingPrereqs = checkPrerequisites();
+
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       {/* Page Header */}
       <div className="page-header">
         <h1 className="page-title">My Dashboard</h1>
       </div>
+
+      {/* Schedule Conflicts Alert */}
+      {timeClashes.length > 0 && (
+        <div className="bg-red-50 border-2 border-red-500 rounded-lg p-4 mb-4">
+          <div className="flex items-start justify-between">
+            <div className="flex items-start space-x-3 flex-1">
+              <AlertOctagon className="w-6 h-6 text-red-600 flex-shrink-0 mt-0.5" />
+              <div className="flex-1">
+                <h3 className="font-bold text-lg text-red-900">Schedule Conflicts Detected!</h3>
+                <p className="text-sm text-red-800 mt-1">
+                  {timeClashes.length} schedule conflict{timeClashes.length > 1 ? 's' : ''} found in your cart.
+                </p>
+                <button
+                  onClick={() => setShowClashDetails(!showClashDetails)}
+                  className="text-sm text-red-700 underline mt-2 hover:text-red-900"
+                >
+                  {showClashDetails ? 'Hide details' : 'View details'}
+                </button>
+                {showClashDetails && (
+                  <div className="mt-3 p-3 bg-white rounded border border-red-300">
+                    <div className="space-y-2">
+                      {timeClashes.map((clash, idx) => (
+                        <div key={idx} className="text-sm text-red-900">
+                          <strong>{clash.course1}</strong> and <strong>{clash.course2}</strong> both have classes on <strong>{clash.day}</strong>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Missing Prerequisites Alert */}
+      {missingPrereqs.length > 0 && (
+        <div className="bg-yellow-50 border-2 border-yellow-500 rounded-lg p-4 mb-4">
+          <div className="flex items-start justify-between">
+            <div className="flex items-start space-x-3 flex-1">
+              <AlertTriangle className="w-6 h-6 text-yellow-600 flex-shrink-0 mt-0.5" />
+              <div className="flex-1">
+                <h3 className="font-bold text-lg text-yellow-900">Missing Prerequisites!</h3>
+                <p className="text-sm text-yellow-800 mt-1">
+                  {missingPrereqs.length} course{missingPrereqs.length > 1 ? 's' : ''} in your cart {missingPrereqs.length > 1 ? 'have' : 'has'} unfulfilled prerequisites.
+                </p>
+                <button
+                  onClick={() => setShowPrereqDetails(!showPrereqDetails)}
+                  className="text-sm text-yellow-700 underline mt-2 hover:text-yellow-900"
+                >
+                  {showPrereqDetails ? 'Hide details' : 'View details'}
+                </button>
+                {showPrereqDetails && (
+                  <div className="mt-3 p-3 bg-white rounded border border-yellow-300">
+                    <div className="space-y-2">
+                      {missingPrereqs.map((item, idx) => (
+                        <div key={idx} className="text-sm text-yellow-900">
+                          <strong>{item.course}</strong> requires: <strong>{item.prerequisites.join(', ')}</strong>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Bidding Health Check Banner */}
       <div className={`${biddingHealth.bgColor} ${biddingHealth.borderColor} border-2 rounded-lg p-4 mb-6`}>
@@ -399,86 +473,6 @@ function Dashboard({ cart, removeFromCart }) {
           </div>
         </div>
       </div>
-
-      {/* Requirements Tracker */}
-      <div className="bg-white rounded-lg shadow-md p-6 mb-8">
-        <h3 className="text-lg font-semibold text-gray-900 mb-4">Program Requirements</h3>
-        <div className="space-y-4">
-          {programRequirements.map((req, index) => (
-            <div key={index} className="border-b border-gray-200 pb-4 last:border-0">
-              <div className="flex items-center justify-between mb-2">
-                <h4 className="font-semibold text-gray-900">{req.category}</h4>
-                <span className="text-sm text-gray-600">
-                  {req.completed}/{req.required} credits
-                </span>
-              </div>
-              <div className="w-full bg-gray-200 rounded-full h-2 mb-3">
-                <div
-                  className="bg-green-500 h-2 rounded-full"
-                  style={{ width: `${(req.completed / req.required) * 100}%` }}
-                />
-              </div>
-              <div className="flex flex-wrap gap-2">
-                {req.modules.map((module, idx) => (
-                  <span
-                    key={idx}
-                    className={`text-xs px-2 py-1 rounded ${
-                      module.status === 'completed' ? 'bg-green-100 text-green-700' :
-                      module.status === 'in_cart' ? 'bg-blue-100 text-blue-700' :
-                      'bg-gray-100 text-gray-600'
-                    }`}
-                  >
-                    {module.id}
-                    {module.status === 'completed' && ' ✓'}
-                    {module.status === 'in_cart' && ' 🛒'}
-                  </span>
-                ))}
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Current Semester - Rate Your Courses */}
-      {cart.length > 0 && (
-        <div className="bg-white rounded-lg shadow-md p-6 mb-8">
-          <h3 className="text-lg font-semibold text-gray-900 mb-2">Rate Your Current Courses</h3>
-          <p className="text-sm text-gray-600 mb-4">
-            Help fellow students by rating your courses! Your ratings contribute to the community.
-          </p>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {cart.map(course => (
-              <div key={course.id} className="border border-gray-200 rounded-lg p-4">
-                <h4 className="font-semibold text-gray-900 mb-1">{course.id}</h4>
-                <p className="text-sm text-gray-600 mb-3">{course.name}</p>
-                <div className="flex items-center justify-between">
-                  <span className="text-xs text-gray-500">Your rating:</span>
-                  <div className="flex gap-1">
-                    {[1, 2, 3, 4, 5].map((rating) => (
-                      <button
-                        key={rating}
-                        onClick={() => handleRateCourse(course.id, rating)}
-                        className="focus:outline-none"
-                      >
-                        <Star
-                          className={`w-5 h-5 ${
-                            courseRatings[course.id] >= rating
-                              ? 'text-yellow-500 fill-current'
-                              : 'text-gray-300'
-                          }`}
-                        />
-                      </button>
-                    ))}
-                  </div>
-                </div>
-                {courseRatings[course.id] && (
-                  <p className="text-xs text-green-600 mt-2">✓ Thanks for your feedback!</p>
-                )}
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
 
       {/* Course Cards and Insights - Only show if cart has courses */}
       {cart.length > 0 ? (
@@ -702,43 +696,110 @@ function Dashboard({ cart, removeFromCart }) {
                   View Full Calendar <ArrowRight className="w-4 h-4 ml-1" />
                 </Link>
               </div>
-              <div className="grid grid-cols-7 gap-2">
+
+              {/* Month Header */}
+              <div className="text-center mb-4">
+                <h4 className="text-xl font-bold text-gray-900">
+                  {new Date().toLocaleString('en-US', { month: 'long', year: 'numeric' })}
+                </h4>
+              </div>
+
+              <div className="grid grid-cols-7 gap-1">
                 {/* Calendar header */}
-                {['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map(day => (
-                  <div key={day} className="text-center text-xs font-semibold text-gray-600 p-2">
+                {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (
+                  <div key={day} className="text-center text-sm font-bold text-gray-700 p-2 bg-gray-100 rounded">
                     {day}
                   </div>
                 ))}
-                {/* Calendar days - showing upcoming weeks */}
-                {[...Array(28)].map((_, i) => {
-                  const dayNum = i + 1;
-                  // Simplified assessment detection
-                  const hasAssessment = cart.some(course =>
-                    course.assessments.some(a => {
-                      const date = new Date(a.date);
-                      return date.getDate() === dayNum + 14; // Offset for demo
-                    })
-                  );
 
-                  return (
-                    <div
-                      key={i}
-                      className={`text-center p-2 rounded text-sm ${
-                        hasAssessment
-                          ? 'bg-red-100 border-2 border-red-400 font-bold text-red-800'
-                          : i % 7 >= 5
-                          ? 'bg-gray-50 text-gray-400'
-                          : 'bg-white border border-gray-200'
-                      }`}
-                    >
-                      {dayNum}
-                    </div>
-                  );
-                })}
+                {/* Calendar days */}
+                {(() => {
+                  const today = new Date();
+                  const year = today.getFullYear();
+                  const month = today.getMonth();
+                  const firstDay = new Date(year, month, 1);
+                  const lastDay = new Date(year, month + 1, 0);
+                  const startingDayOfWeek = firstDay.getDay(); // 0 = Sunday
+                  const monthLength = lastDay.getDate();
+
+                  // Get all assessment dates from cart
+                  const assessmentDates = new Map();
+                  cart.forEach(course => {
+                    course.assessments.forEach(assessment => {
+                      const assessmentDate = new Date(assessment.date);
+                      if (assessmentDate.getMonth() === month && assessmentDate.getFullYear() === year) {
+                        const dateKey = assessmentDate.getDate();
+                        if (!assessmentDates.has(dateKey)) {
+                          assessmentDates.set(dateKey, []);
+                        }
+                        assessmentDates.get(dateKey).push({
+                          course: course.id,
+                          type: assessment.type
+                        });
+                      }
+                    });
+                  });
+
+                  const calendarCells = [];
+
+                  // Empty cells before the first day
+                  for (let i = 0; i < startingDayOfWeek; i++) {
+                    calendarCells.push(
+                      <div key={`empty-${i}`} className="p-2 bg-gray-50 rounded"></div>
+                    );
+                  }
+
+                  // Days of the month
+                  for (let day = 1; day <= monthLength; day++) {
+                    const isToday = day === today.getDate() && month === today.getMonth() && year === today.getFullYear();
+                    const hasAssessments = assessmentDates.has(day);
+                    const assessmentCount = hasAssessments ? assessmentDates.get(day).length : 0;
+                    const dayOfWeek = (startingDayOfWeek + day - 1) % 7;
+                    const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
+
+                    calendarCells.push(
+                      <div
+                        key={day}
+                        className={`p-2 min-h-[3rem] rounded border transition-all ${
+                          hasAssessments
+                            ? 'bg-red-50 border-red-400 border-2 cursor-pointer hover:bg-red-100'
+                            : isToday
+                            ? 'bg-blue-100 border-blue-500 border-2'
+                            : isWeekend
+                            ? 'bg-gray-50 border-gray-200'
+                            : 'bg-white border-gray-200'
+                        }`}
+                      >
+                        <div className={`text-sm font-semibold text-center ${
+                          hasAssessments ? 'text-red-800' : isToday ? 'text-blue-800' : isWeekend ? 'text-gray-400' : 'text-gray-700'
+                        }`}>
+                          {day}
+                        </div>
+                        {hasAssessments && (
+                          <div className="text-xs text-center mt-1">
+                            <span className="inline-block bg-red-600 text-white rounded-full px-1.5 py-0.5 font-bold">
+                              {assessmentCount}
+                            </span>
+                          </div>
+                        )}
+                      </div>
+                    );
+                  }
+
+                  return calendarCells;
+                })()}
               </div>
-              <div className="mt-4 flex items-center text-xs text-gray-600">
-                <div className="w-4 h-4 bg-red-100 border-2 border-red-400 rounded mr-2"></div>
-                <span>Assessment due</span>
+
+              {/* Legend */}
+              <div className="mt-4 flex flex-wrap items-center gap-4 text-xs text-gray-600">
+                <div className="flex items-center">
+                  <div className="w-4 h-4 bg-blue-100 border-2 border-blue-500 rounded mr-2"></div>
+                  <span>Today</span>
+                </div>
+                <div className="flex items-center">
+                  <div className="w-4 h-4 bg-red-50 border-2 border-red-400 rounded mr-2"></div>
+                  <span>Assessment due</span>
+                </div>
               </div>
             </div>
           </div>
@@ -756,32 +817,6 @@ function Dashboard({ cart, removeFromCart }) {
           </Link>
         </div>
       )}
-
-      {/* Quick Links */}
-      <div>
-        <h2 className="section-title">Quick Access</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {quickLinks.map((link) => {
-            const Icon = link.icon;
-            return (
-              <Link
-                key={link.path}
-                to={link.path}
-                className="card-hover group"
-              >
-                <div className="flex items-start justify-between mb-4">
-                  <div className={`${link.color} p-3 rounded-lg`}>
-                    <Icon className="w-6 h-6 text-white" />
-                  </div>
-                  <ArrowRight className="w-5 h-5 text-gray-400 group-hover:text-smu-blue group-hover:translate-x-1 transition-all" />
-                </div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">{link.title}</h3>
-                <p className="text-sm text-gray-600">{link.description}</p>
-              </Link>
-            );
-          })}
-        </div>
-      </div>
     </div>
   );
 }
