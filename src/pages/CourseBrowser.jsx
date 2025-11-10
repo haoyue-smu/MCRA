@@ -180,11 +180,51 @@ function CourseBrowser({ cart, addToCart, removeFromCart }) {
     return stars;
   };
 
+  const getInterestLevel = (course) => {
+    const ratio = (subscriberCounts[course.id] / course.capacity) * 100;
+    const isInterested = isSubscribed(course.id);
+
+    if (ratio > 150) {
+      // Extreme competition
+      return {
+        bgColor: isInterested ? 'bg-red-500 hover:bg-red-600' : 'bg-red-100 hover:bg-red-200',
+        textColor: isInterested ? 'text-white' : 'text-red-700',
+        icon: '❤️',
+        showFire: true
+      };
+    } else if (ratio > 120) {
+      // High competition
+      return {
+        bgColor: isInterested ? 'bg-orange-500 hover:bg-orange-600' : 'bg-orange-100 hover:bg-orange-200',
+        textColor: isInterested ? 'text-white' : 'text-orange-700',
+        icon: '🧡',
+        showFire: false
+      };
+    } else if (ratio > 80) {
+      // Medium competition
+      return {
+        bgColor: isInterested ? 'bg-yellow-500 hover:bg-yellow-600' : 'bg-yellow-100 hover:bg-yellow-200',
+        textColor: isInterested ? 'text-white' : 'text-yellow-700',
+        icon: '💛',
+        showFire: false
+      };
+    } else {
+      // Low competition
+      return {
+        bgColor: isInterested ? 'bg-gray-400 hover:bg-gray-500' : 'bg-gray-100 hover:bg-gray-200',
+        textColor: isInterested ? 'text-white' : 'text-gray-700',
+        icon: '🤍',
+        showFire: false
+      };
+    }
+  };
+
   const CourseCard = ({ course }) => {
     const scheduleClashes = checkScheduleClash(course);
     const successRate = getBiddingSuccessRate(course);
     const predictedBid = getPredictedBid(course);
     const demandEmoji = getDemandEmoji(course.demand);
+    const interestLevel = getInterestLevel(course);
 
     return (
     <div
@@ -306,61 +346,56 @@ function CourseBrowser({ cart, addToCart, removeFromCart }) {
       </div>
 
       {/* Action Buttons - Always at Bottom */}
-      <div className="flex items-center justify-between mt-auto gap-2">
-        <div className="flex-1">
-          {isInCart(course.id) ? (
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                removeFromCart(course.id);
-              }}
-              className="btn-danger w-full flex items-center justify-center"
-            >
-              <XCircle className="w-4 h-4 mr-2" />
-              Remove
-            </button>
-          ) : (
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                addToCart(course.id);
-              }}
-              className="btn-primary w-full flex items-center justify-center"
-            >
-              <ShoppingCart className="w-4 h-4 mr-2" />
-              Add to Cart
-            </button>
-          )}
-        </div>
-
-        <div className="flex items-center gap-2">
+      <div className="flex items-center mt-auto gap-2">
+        {isInCart(course.id) ? (
           <button
             onClick={(e) => {
               e.stopPropagation();
-              toggleSubscription(course.id);
+              removeFromCart(course.id);
             }}
-            className={`flex items-center gap-1.5 px-3 py-2 rounded-md transition-colors ${
-              isSubscribed(course.id) ? 'bg-pink-500 text-white hover:bg-pink-600' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-            }`}
-            title={isSubscribed(course.id) ? "Remove interest" : "Express interest"}
+            className="btn-danger flex-1 min-w-0 flex items-center justify-center"
           >
-            <Heart className={`w-4 h-4 ${isSubscribed(course.id) ? 'fill-current' : ''}`} />
-            <span className="font-semibold text-sm">{subscriberCounts[course.id]}</span>
-            <span className="text-xs opacity-70">/{course.capacity}</span>
+            <XCircle className="w-4 h-4 mr-2" />
+            <span className="truncate">Remove</span>
           </button>
-
+        ) : (
           <button
             onClick={(e) => {
               e.stopPropagation();
-              setSelectedCourse(course);
-              addToRecentlyViewed(course);
+              addToCart(course.id);
             }}
-            className="bg-gray-100 text-gray-600 hover:bg-gray-200 flex items-center p-2 rounded-md transition-colors"
-            title="View details"
+            className="btn-primary flex-1 min-w-0 flex items-center justify-center"
           >
-            <Eye className="w-4 h-4" />
+            <ShoppingCart className="w-4 h-4 mr-2" />
+            <span className="truncate">Add to Cart</span>
           </button>
-        </div>
+        )}
+
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            toggleSubscription(course.id);
+          }}
+          className={`flex items-center gap-1.5 px-3 py-2 rounded-md transition-colors flex-shrink-0 ${interestLevel.bgColor} ${interestLevel.textColor}`}
+          title={isSubscribed(course.id) ? "Remove interest" : "Express interest"}
+        >
+          <span className="text-base">{interestLevel.icon}</span>
+          <span className="font-semibold text-sm">{subscriberCounts[course.id]}</span>
+          <span className="text-xs opacity-70">/{course.capacity}</span>
+          {interestLevel.showFire && <span className="ml-0.5">🔥</span>}
+        </button>
+
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            setSelectedCourse(course);
+            addToRecentlyViewed(course);
+          }}
+          className="bg-gray-100 text-gray-600 hover:bg-gray-200 flex items-center p-2 rounded-md transition-colors flex-shrink-0"
+          title="View details"
+        >
+          <Eye className="w-4 h-4" />
+        </button>
       </div>
     </div>
     );
@@ -389,14 +424,32 @@ function CourseBrowser({ cart, addToCart, removeFromCart }) {
           </div>
         </div>
 
-        <div className="bg-orange-50 border border-orange-200 rounded-lg p-4">
+        <div className="bg-gradient-to-br from-orange-50 to-red-50 border border-orange-200 rounded-lg p-4">
           <div className="flex items-start">
-            <Flame className="w-5 h-5 text-orange-600 mt-0.5 mr-3 flex-shrink-0" />
+            <Heart className="w-5 h-5 text-orange-600 mt-0.5 mr-3 flex-shrink-0" />
             <div>
-              <h3 className="font-semibold text-orange-900 mb-1">Demand Indicator</h3>
-              <p className="text-sm text-orange-800">
-                🔥 = Very High Demand - These courses are highly competitive with more students interested than available seats.
+              <h3 className="font-semibold text-orange-900 mb-1">Interest Level Indicator</h3>
+              <p className="text-sm text-orange-800 mb-2">
+                Heart color shows competition level based on interest/capacity ratio:
               </p>
+              <div className="space-y-1 text-xs text-gray-700">
+                <div className="flex items-center">
+                  <span className="mr-2">🤍</span>
+                  <span>Low (&lt;80%) - Good availability</span>
+                </div>
+                <div className="flex items-center">
+                  <span className="mr-2">💛</span>
+                  <span>Medium (80-120%) - Moderate competition</span>
+                </div>
+                <div className="flex items-center">
+                  <span className="mr-2">🧡</span>
+                  <span>High (120-150%) - High competition</span>
+                </div>
+                <div className="flex items-center">
+                  <span className="mr-2">❤️🔥</span>
+                  <span>Extreme (&gt;150%) - Very high competition</span>
+                </div>
+              </div>
             </div>
           </div>
         </div>
