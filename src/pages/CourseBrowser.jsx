@@ -255,26 +255,10 @@ function CourseBrowser({ cart, addToCart, removeFromCart }) {
       <div className="flex-grow min-h-[180px] mb-3">
         {/* Stats Row - Clear Labels */}
         <div className="space-y-2 mb-3 text-sm">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center">
-              <Star className="w-4 h-4 text-yellow-500 fill-current mr-1.5" />
-              <span className="text-gray-600 text-xs mr-2">Rating:</span>
-              <span className="font-semibold text-gray-900">{course.afterClassRating}/5.0</span>
-            </div>
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                toggleSubscription(course.id);
-              }}
-              className={`flex items-center gap-1 px-2 py-1 rounded-md transition-colors ${
-                isSubscribed(course.id) ? 'bg-pink-100 text-pink-700' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-              }`}
-              title={isSubscribed(course.id) ? "Unsubscribe" : "Subscribe for updates"}
-            >
-              <Bell className={`w-3.5 h-3.5 ${isSubscribed(course.id) ? 'fill-current' : ''}`} />
-              <span className="font-semibold">{subscriberCounts[course.id]}</span>
-              <span className="text-gray-500 text-xs">/{course.capacity}</span>
-            </button>
+          <div className="flex items-center">
+            <Star className="w-4 h-4 text-yellow-500 fill-current mr-1.5" />
+            <span className="text-gray-600 text-xs mr-2">Rating:</span>
+            <span className="font-semibold text-gray-900">{course.afterClassRating}/5.0</span>
           </div>
 
           <div className="flex items-center">
@@ -302,62 +286,81 @@ function CourseBrowser({ cart, addToCart, removeFromCart }) {
           </div>
         )}
 
-        {/* Assessment Summary */}
+        {/* Assessment Summary with Percentages */}
         <div className="text-xs text-gray-600">
-          {course.assessments.filter(a => a.type.toLowerCase().includes('quiz')).length} Quiz{course.assessments.filter(a => a.type.toLowerCase().includes('quiz')).length > 1 ? 'zes' : ''} •
-          {course.assessments.filter(a => a.type.toLowerCase().includes('exam') && !a.type.toLowerCase().includes('midterm')).length > 0 ? ' Midterm + Final' : ' Midterm'} •
-          {course.assessments.filter(a => a.type.toLowerCase().includes('project')).length} Project{course.assessments.filter(a => a.type.toLowerCase().includes('project')).length > 1 ? 's' : ''}
+          {course.assessments
+            .filter(a => !a.type.toLowerCase().includes('participation'))
+            .map((a, idx) => {
+              const displayType = a.type
+                .replace(/Quiz \d+/, 'Quiz')
+                .replace(/Lab Assignment/, 'Lab')
+                .replace(/Group Project/, 'Project');
+              return (
+                <span key={idx}>
+                  {idx > 0 && ' • '}
+                  {displayType} {a.weight}%
+                </span>
+              );
+            })}
         </div>
       </div>
 
       {/* Action Buttons - Always at Bottom */}
-      <div className="flex space-x-2 mt-auto">
-        {isInCart(course.id) ? (
+      <div className="flex items-center justify-between mt-auto gap-2">
+        <div className="flex-1">
+          {isInCart(course.id) ? (
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                removeFromCart(course.id);
+              }}
+              className="btn-danger w-full flex items-center justify-center"
+            >
+              <XCircle className="w-4 h-4 mr-2" />
+              Remove
+            </button>
+          ) : (
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                addToCart(course.id);
+              }}
+              className="btn-primary w-full flex items-center justify-center"
+            >
+              <ShoppingCart className="w-4 h-4 mr-2" />
+              Add to Cart
+            </button>
+          )}
+        </div>
+
+        <div className="flex items-center gap-2">
           <button
             onClick={(e) => {
               e.stopPropagation();
-              removeFromCart(course.id);
+              toggleSubscription(course.id);
             }}
-            className="btn-danger flex-1 flex items-center justify-center"
+            className={`flex items-center gap-1.5 px-3 py-2 rounded-md transition-colors ${
+              isSubscribed(course.id) ? 'bg-pink-500 text-white hover:bg-pink-600' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+            }`}
+            title={isSubscribed(course.id) ? "Remove interest" : "Express interest"}
           >
-            <XCircle className="w-4 h-4 mr-2" />
-            Remove
+            <Heart className={`w-4 h-4 ${isSubscribed(course.id) ? 'fill-current' : ''}`} />
+            <span className="font-semibold text-sm">{subscriberCounts[course.id]}</span>
+            <span className="text-xs opacity-70">/{course.capacity}</span>
           </button>
-        ) : (
+
           <button
             onClick={(e) => {
               e.stopPropagation();
-              addToCart(course.id);
+              setSelectedCourse(course);
+              addToRecentlyViewed(course);
             }}
-            className="btn-primary flex-1 flex items-center justify-center"
+            className="bg-gray-100 text-gray-600 hover:bg-gray-200 flex items-center p-2 rounded-md transition-colors"
+            title="View details"
           >
-            <ShoppingCart className="w-4 h-4 mr-2" />
-            Add to Cart
+            <Eye className="w-4 h-4" />
           </button>
-        )}
-        <button
-          onClick={(e) => {
-            e.stopPropagation();
-            toggleWishlist(course.id);
-          }}
-          className={`${
-            isInWishlist(course.id) ? 'bg-pink-500 text-white hover:bg-pink-600' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-          } flex items-center px-4 rounded-md transition-colors`}
-          title={isInWishlist(course.id) ? "Remove from interested" : "Mark as interested"}
-        >
-          <Heart className={`w-4 h-4 ${isInWishlist(course.id) ? 'fill-current' : ''}`} />
-        </button>
-        <button
-          onClick={(e) => {
-            e.stopPropagation();
-            setSelectedCourse(course);
-            addToRecentlyViewed(course);
-          }}
-          className="bg-gray-100 text-gray-600 hover:bg-gray-200 flex items-center px-4 rounded-md transition-colors"
-          title="View details"
-        >
-          <Eye className="w-4 h-4" />
-        </button>
+        </div>
       </div>
     </div>
     );
@@ -371,16 +374,30 @@ function CourseBrowser({ cart, addToCart, removeFromCart }) {
         <p className="page-description">Browse courses with live demand transparency and S/U indicators</p>
       </div>
 
-      {/* S/U Policy Info Banner */}
-      <div className="alert-info">
-        <div className="flex items-start">
-          <AlertCircle className="w-5 h-5 text-blue-600 mt-0.5 mr-3 flex-shrink-0" />
-          <div>
-            <h3 className="font-semibold text-blue-900 mb-1">S/U Policy Reminder</h3>
-            <p className="text-sm text-blue-800">
-              You can S/U up to 12 CUs. Core modules and final semester courses cannot be S/U-ed.
-              Courses marked with a green badge are S/U eligible.
-            </p>
+      {/* Info Banners */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+        <div className="alert-info">
+          <div className="flex items-start">
+            <AlertCircle className="w-5 h-5 text-blue-600 mt-0.5 mr-3 flex-shrink-0" />
+            <div>
+              <h3 className="font-semibold text-blue-900 mb-1">S/U Policy Reminder</h3>
+              <p className="text-sm text-blue-800">
+                You can S/U up to 12 CUs. Core modules and final semester courses cannot be S/U-ed.
+                Courses marked with a green badge are S/U eligible.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-orange-50 border border-orange-200 rounded-lg p-4">
+          <div className="flex items-start">
+            <Flame className="w-5 h-5 text-orange-600 mt-0.5 mr-3 flex-shrink-0" />
+            <div>
+              <h3 className="font-semibold text-orange-900 mb-1">Demand Indicator</h3>
+              <p className="text-sm text-orange-800">
+                🔥 = Very High Demand - These courses are highly competitive with more students interested than available seats.
+              </p>
+            </div>
           </div>
         </div>
       </div>
