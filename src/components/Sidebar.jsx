@@ -59,12 +59,14 @@ function Sidebar({ cart, user, onLogout, onCollapseChange, isCollapsed }) {
   return (
     <>
       {/* Mobile Menu Button */}
-      <button
-        onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-        className="md:hidden fixed top-4 left-4 z-50 p-2 bg-smu-blue text-white rounded-lg shadow-lg"
-      >
-        {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-      </button>
+      <div className="md:hidden sticky top-0 z-50 px-4 pt-4 pb-2 bg-gradient-to-b from-white to-transparent">
+        <button
+          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          className="p-2 bg-smu-blue text-white rounded-lg shadow-lg"
+        >
+          {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+        </button>
+      </div>
 
       {/* Mobile Overlay */}
       {isMobileMenuOpen && (

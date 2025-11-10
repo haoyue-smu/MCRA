@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { GitBranch, Search, CheckCircle, Lock, AlertCircle, ArrowDown, ArrowRight, Clock, X } from 'lucide-react';
 import { courses, programRequirements } from '../data/mockData';
+import PageContainer from '../components/PageContainer';
 
 function PrerequisiteVisualizer() {
   const [selectedCourse, setSelectedCourse] = useState(null);
@@ -162,7 +163,7 @@ function PrerequisiteVisualizer() {
   };
 
   return (
-    <div className="w-full px-20 py-8">
+    <PageContainer className="space-y-6">
       {/* Header */}
       <div className="mb-6">
         <h1 className="text-3xl font-bold text-smu-blue mb-2">Prerequisite Visualizer</h1>
@@ -347,7 +348,7 @@ function PrerequisiteVisualizer() {
           )}
         </div>
       </div>
-    </div>
+    </PageContainer>
   );
 }
 

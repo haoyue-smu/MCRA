@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Briefcase, TrendingUp, DollarSign, Users, Target, Award, ExternalLink } from 'lucide-react';
 import { careerPaths, courses } from '../data/mockData';
+import PageContainer from '../components/PageContainer';
 
 function CareerPathway({ cart }) {
   const [selectedPath, setSelectedPath] = useState(null);
@@ -101,7 +102,7 @@ function CareerPathway({ cart }) {
   };
 
   return (
-    <div className="w-full px-20 py-8">
+    <PageContainer className="space-y-6">
       {/* Header */}
       <div className="mb-6">
         <h1 className="text-3xl font-bold text-smu-blue mb-2">Career Pathways</h1>
@@ -282,7 +283,7 @@ function CareerPathway({ cart }) {
           </div>
         </div>
       )}
-    </div>
+    </PageContainer>
   );
 }
 

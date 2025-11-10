@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { TrendingUp, DollarSign, AlertCircle, Target, Zap } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, LineChart, Line } from 'recharts';
+import PageContainer from '../components/PageContainer';
 
 function BiddingOptimizer({ cart }) {
   const [biddingAmounts, setBiddingAmounts] = useState({});
@@ -57,7 +58,7 @@ function BiddingOptimizer({ cart }) {
   };
 
   return (
-    <div className="w-full px-20 py-8">
+    <PageContainer className="space-y-6">
       {/* Header */}
       <div className="mb-6">
         <h1 className="text-3xl font-bold text-smu-blue mb-2">Bidding Optimizer</h1>
@@ -278,7 +279,7 @@ function BiddingOptimizer({ cart }) {
           </div>
         </div>
       )}
-    </div>
+    </PageContainer>
   );
 }
 

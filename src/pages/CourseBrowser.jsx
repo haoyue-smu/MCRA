@@ -5,6 +5,7 @@ import {
   Heart, Eye, TrendingDown, ArrowUp, Flame
 } from 'lucide-react';
 import { courses } from '../data/mockData';
+import PageContainer from '../components/PageContainer';
 
 function CourseBrowser({ cart, addToCart, removeFromCart }) {
   const [searchTerm, setSearchTerm] = useState('');
@@ -372,7 +373,7 @@ function CourseBrowser({ cart, addToCart, removeFromCart }) {
   };
 
   return (
-    <div className="w-full px-20 py-8">
+    <PageContainer className="space-y-6">
       {/* Header */}
       <div className="page-header">
         <h1 className="page-title">Course Browser</h1>
@@ -495,7 +496,7 @@ function CourseBrowser({ cart, addToCart, removeFromCart }) {
       )}
 
       {/* Course Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
         {filteredCourses.map(course => (
           <CourseCard key={course.id} course={course} />
         ))}
@@ -608,7 +609,7 @@ function CourseBrowser({ cart, addToCart, removeFromCart }) {
           </div>
         </div>
       )}
-    </div>
+    </PageContainer>
   );
 }
 

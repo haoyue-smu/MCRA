@@ -1,5 +1,6 @@
 import { AlertCircle, Calendar as CalendarIcon, Clock } from 'lucide-react';
 import { publicHolidays } from '../data/mockData';
+import PageContainer from '../components/PageContainer';
 
 function Timetable({ cart }) {
   const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
@@ -95,7 +96,7 @@ function Timetable({ cart }) {
   const workload = getTotalWorkload();
 
   return (
-    <div className="w-full px-20 py-8">
+    <PageContainer className="space-y-6">
       {/* Header */}
       <div className="mb-6">
         <h1 className="text-3xl font-bold text-smu-blue mb-2">My Timetable</h1>
@@ -282,7 +283,7 @@ function Timetable({ cart }) {
           </div>
         </div>
       )}
-    </div>
+    </PageContainer>
   );
 }
 

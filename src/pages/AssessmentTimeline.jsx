@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Calendar, Clock, AlertTriangle, CheckCircle, FileText } from 'lucide-react';
+import PageContainer from '../components/PageContainer';
 
 function AssessmentTimeline({ cart }) {
   const [viewMode, setViewMode] = useState('timeline'); // timeline or calendar
@@ -104,7 +105,7 @@ function AssessmentTimeline({ cart }) {
   }, {});
 
   return (
-    <div className="w-full px-20 py-8">
+    <PageContainer className="space-y-6">
       {/* Header */}
       <div className="mb-6">
         <h1 className="text-3xl font-bold text-smu-blue mb-2">Assessment Timeline</h1>
@@ -181,10 +182,10 @@ function AssessmentTimeline({ cart }) {
           </div>
 
           {/* View Mode Toggle */}
-          <div className="mb-6 flex space-x-2">
+          <div className="mb-6 flex flex-wrap gap-2">
             <button
               onClick={() => setViewMode('timeline')}
-              className={`px-4 py-2 rounded-md transition-colors ${
+              className={`w-full sm:w-auto px-4 py-2 rounded-md transition-colors ${
                 viewMode === 'timeline'
                   ? 'bg-smu-blue text-white'
                   : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
@@ -194,7 +195,7 @@ function AssessmentTimeline({ cart }) {
             </button>
             <button
               onClick={() => setViewMode('calendar')}
-              className={`px-4 py-2 rounded-md transition-colors ${
+              className={`w-full sm:w-auto px-4 py-2 rounded-md transition-colors ${
                 viewMode === 'calendar'
                   ? 'bg-smu-blue text-white'
                   : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
@@ -216,20 +217,20 @@ function AssessmentTimeline({ cart }) {
                     key={`${assessment.courseId}-${index}`}
                     className={`bg-white rounded-lg shadow-md p-4 border-l-4 ${getUrgencyColor(urgency)}`}
                   >
-                    <div className="flex items-start justify-between">
+                    <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                       <div className="flex-1">
-                        <div className="flex items-center space-x-3 mb-2">
+                        <div className="flex flex-wrap items-center gap-2 mb-2">
                           <span className={`${assessment.courseColor} text-white px-3 py-1 rounded-full text-sm font-semibold`}>
                             {assessment.courseId}
                           </span>
-                          <div className="flex items-center space-x-2">
+                          <div className="flex items-center gap-2">
                             {getAssessmentIcon(assessment.type)}
                             <span className="font-semibold text-gray-900">{assessment.type}</span>
                           </div>
                           <span className="text-sm text-gray-600">{assessment.weight}% of grade</span>
                         </div>
                         <p className="text-sm text-gray-700 mb-1">{assessment.courseName}</p>
-                        <div className="flex items-center space-x-4 text-sm text-gray-600">
+                        <div className="flex flex-wrap items-center gap-3 text-sm text-gray-600">
                           <div className="flex items-center">
                             <Calendar className="w-4 h-4 mr-1" />
                             {formatDate(assessment.date)}
@@ -243,7 +244,7 @@ function AssessmentTimeline({ cart }) {
                         </div>
                       </div>
                       {urgency === 'urgent' && (
-                        <div className="ml-4">
+                        <div className="ml-0 sm:ml-4">
                           <span className="px-3 py-1 bg-red-100 text-red-700 rounded-full text-xs font-semibold flex items-center">
                             <AlertTriangle className="w-3 h-3 mr-1" />
                             URGENT
@@ -280,7 +281,7 @@ function AssessmentTimeline({ cart }) {
                         : 'bg-white border-gray-200'
                     }`}
                   >
-                    <div className="flex items-center justify-between mb-4">
+                    <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between mb-4">
                       <h3 className="text-lg font-semibold text-smu-blue">
                         Week of {weekStart.toLocaleDateString('en-SG', { month: 'long', day: 'numeric' })} -{' '}
                         {weekEnd.toLocaleDateString('en-SG', { month: 'long', day: 'numeric' })}
@@ -305,7 +306,7 @@ function AssessmentTimeline({ cart }) {
                       {weekAssessments.map((assessment, index) => (
                         <div
                           key={`${assessment.courseId}-${index}`}
-                          className="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg"
+                          className="flex flex-wrap items-center gap-2 sm:gap-3 p-3 bg-gray-50 rounded-lg"
                         >
                           <span className={`${assessment.courseColor} text-white px-2 py-1 rounded text-xs font-semibold`}>
                             {assessment.courseId}
@@ -340,7 +341,7 @@ function AssessmentTimeline({ cart }) {
           </div>
         </>
       )}
-    </div>
+    </PageContainer>
   );
 }
 

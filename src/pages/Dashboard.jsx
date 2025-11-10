@@ -8,6 +8,7 @@ import {
 } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell, ReferenceLine } from 'recharts';
 import { studentProgress, programRequirements } from '../data/mockData';
+import PageContainer from '../components/PageContainer';
 
 function Dashboard({ cart, removeFromCart }) {
   const [courseRatings, setCourseRatings] = useState({});
@@ -252,7 +253,7 @@ function Dashboard({ cart, removeFromCart }) {
   const missingPrereqs = checkPrerequisites();
 
   return (
-    <div className="w-full px-20 py-8">
+    <PageContainer className="space-y-6">
       {/* Page Header */}
       <div className="page-header">
         <h1 className="page-title">My Dashboard</h1>
@@ -626,7 +627,7 @@ function Dashboard({ cart, removeFromCart }) {
           </Link>
         </div>
       )}
-    </div>
+    </PageContainer>
   );
 }
 

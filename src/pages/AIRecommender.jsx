@@ -291,91 +291,91 @@ function AIRecommender({ cart, addToCart }) {
   };
 
   // Modern Progress Indicator Component with Enhanced Visual Hierarchy
-  const renderProgressIndicator = () => (
-    <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-8 mb-8">
-      <div className="flex items-center justify-between max-w-4xl mx-auto">
-        {[
-          { num: 1, label: 'Interests', desc: 'What interests you?' },
-          { num: 2, label: 'Goals', desc: 'What are your priorities?' },
-          { num: 3, label: 'Constraints', desc: 'Any preferences?' },
-          { num: 4, label: 'Review', desc: 'Review & generate' }
-        ].map((step, idx) => (
-          <div key={step.num} className="flex items-center flex-1">
-            <div className="flex flex-col items-center flex-1">
-              {/* Step Circle with Enhanced Active State */}
-              <div className="relative">
-                {/* Glow effect for active step */}
-                {currentStep === step.num && (
-                  <div className="absolute inset-0 rounded-full bg-blue-400 opacity-30 animate-ping" />
-                )}
+  const renderProgressIndicator = () => {
+    const steps = [
+      { num: 1, label: 'Interests', desc: 'What interests you?' },
+      { num: 2, label: 'Goals', desc: 'What are your priorities?' },
+      { num: 3, label: 'Constraints', desc: 'Any preferences?' },
+      { num: 4, label: 'Review', desc: 'Review & generate' }
+    ];
+
+    const circleSize = 44;
+    const lineThickness = 3;
+    const progressPercent =
+      steps.length > 1 ? ((currentStep - 1) / (steps.length - 1)) * 100 : 0;
+
+    return (
+      <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-8 mb-8" style={{ minHeight: 120 }}>
+        <div
+          className="relative px-8"
+          style={{ paddingTop: circleSize + 24, paddingBottom: 24 }}
+        >
+          <div
+            className="absolute rounded-full"
+            style={{
+              left: circleSize / 2,
+              right: circleSize / 2,
+              top: circleSize / 2 + 16,
+              height: lineThickness,
+              background: `linear-gradient(to right, #10b981 ${progressPercent}%, #e0e0e0 ${progressPercent}%)`
+            }}
+          />
+
+          <div className="relative flex justify-between">
+            {steps.map((step) => {
+              const state =
+                step.num < currentStep
+                  ? 'complete'
+                  : step.num === currentStep
+                  ? 'active'
+                  : 'inactive';
+
+              const circleStyles = {
+                backgroundColor:
+                  state === 'complete'
+                    ? '#10b981'
+                    : state === 'active'
+                    ? '#3b82f6'
+                    : '#e5e7eb',
+                color: state === 'inactive' ? '#475569' : '#ffffff',
+                fontSize: 18,
+                boxShadow:
+                  state === 'inactive'
+                    ? 'none'
+                    : state === 'complete'
+                    ? '0 10px 20px rgba(16, 185, 129, 0.18)'
+                    : '0 10px 20px rgba(59, 130, 246, 0.18)'
+              };
+
+              return (
                 <div
-                  className={`relative w-12 h-12 rounded-full flex items-center justify-center font-bold text-base transition-all duration-300 ${
-                    currentStep >= step.num
-                      ? 'bg-blue-600 text-white shadow-lg'
-                      : 'bg-gray-100 text-gray-400'
-                  } ${
-                    currentStep === step.num
-                      ? 'ring-4 ring-blue-200 scale-125 shadow-xl'
-                      : currentStep > step.num
-                      ? 'scale-100'
-                      : 'scale-100'
-                  }`}
-                  style={{
-                    boxShadow: currentStep === step.num
-                      ? '0 10px 25px -5px rgba(59, 130, 246, 0.5), 0 8px 10px -6px rgba(59, 130, 246, 0.5)'
-                      : undefined
-                  }}
+                  key={step.num}
+                  className="flex flex-col items-center gap-3 text-center"
                 >
-                  {currentStep > step.num ? (
-                    <CheckCircle className="w-6 h-6" />
-                  ) : (
-                    step.num
-                  )}
+                  <div
+                    className="flex items-center justify-center rounded-full border-[3px] border-white shadow-sm relative z-10 font-semibold"
+                    style={{
+                      width: circleSize,
+                      height: circleSize,
+                      ...circleStyles
+                    }}
+                  >
+                    {step.num}
+                  </div>
+                  <div className="space-y-1.5">
+                    <div className="text-sm font-medium text-gray-900">
+                      {step.label}
+                    </div>
+                    <div className="text-sm text-gray-500">{step.desc}</div>
+                  </div>
                 </div>
-              </div>
-
-              {/* Step Label */}
-              <div className="mt-3 text-center">
-                <div className={`text-sm font-semibold transition-all duration-300 ${
-                  currentStep >= step.num ? 'text-blue-600' : 'text-gray-400'
-                } ${currentStep === step.num ? 'scale-105' : ''}`}>
-                  {step.label}
-                </div>
-                <div className={`text-xs mt-1 transition-colors ${
-                  currentStep === step.num ? 'text-gray-600' : 'text-gray-400'
-                }`}>
-                  {step.desc}
-                </div>
-              </div>
-            </div>
-
-            {/* Enhanced Connector Line */}
-            {idx < 3 && (
-              <div className="flex-1 mx-4 relative h-1">
-                <div
-                  className={`absolute inset-0 transition-all duration-500 rounded-full ${
-                    currentStep > step.num
-                      ? 'bg-green-500 h-1'
-                      : 'h-1'
-                  }`}
-                  style={{
-                    background: currentStep > step.num
-                      ? 'linear-gradient(to right, #10b981, #059669)'
-                      : undefined,
-                    backgroundImage: currentStep <= step.num
-                      ? 'repeating-linear-gradient(to right, #d1d5db 0px, #d1d5db 8px, transparent 8px, transparent 16px)'
-                      : undefined,
-                    height: '4px',
-                    top: '-1.5px'
-                  }}
-                />
-              </div>
-            )}
+              );
+            })}
           </div>
-        ))}
+        </div>
       </div>
-    </div>
-  );
+    );
+  };
 
   // Navigation Buttons Component
   const renderNavigation = () => {
@@ -845,13 +845,12 @@ function AIRecommender({ cart, addToCart }) {
       <div className="max-w-7xl mx-auto px-6 md:px-12 py-8">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-4xl font-bold text-gray-900 mb-3 flex items-center gap-3">
-            <div className="w-12 h-12 rounded-xl bg-blue-600 flex items-center justify-center">
-              <Brain className="w-7 h-7 text-white" />
-            </div>
+          <h1 className="text-3xl md:text-4xl font-bold text-smu-blue mb-2">
             AI Course Recommender
           </h1>
-          <p className="text-lg text-gray-600">Get personalized course suggestions powered by artificial intelligence</p>
+          <p className="text-base md:text-lg text-gray-600">
+            Get personalized course suggestions powered by artificial intelligence
+          </p>
         </div>
 
         {!showResults ? (
