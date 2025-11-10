@@ -201,9 +201,13 @@ function CourseBrowser({ cart, addToCart, removeFromCart }) {
           {demandEmoji && <span className="text-xl">{demandEmoji}</span>}
         </div>
         {course.suEligible ? (
-          <span className="badge-green text-xs">S/U</span>
+          <span className="px-3 py-1.5 bg-green-100 text-green-700 text-sm font-bold rounded-md border-2 border-green-400">
+            ✓ S/U Eligible
+          </span>
         ) : (
-          <span className="badge-red text-xs">No S/U</span>
+          <span className="px-2 py-1 bg-gray-100 text-gray-500 text-xs rounded-md">
+            Not S/U
+          </span>
         )}
       </div>
 
@@ -248,35 +252,42 @@ function CourseBrowser({ cart, addToCart, removeFromCart }) {
       </div>
 
       {/* Metadata Section with Fixed Height for Consistency */}
-      <div className="flex-grow min-h-[160px] mb-3">
-        {/* Stats Row with Like Button */}
-        <div className="flex items-center gap-3 mb-3 text-sm">
-          <div className="flex items-center">
-            <Star className="w-4 h-4 text-yellow-500 fill-current mr-1" />
-            <span className="font-semibold text-gray-900">{course.afterClassRating}</span>
+      <div className="flex-grow min-h-[180px] mb-3">
+        {/* Stats Row - Clear Labels */}
+        <div className="space-y-2 mb-3 text-sm">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center">
+              <Star className="w-4 h-4 text-yellow-500 fill-current mr-1.5" />
+              <span className="text-gray-600 text-xs mr-2">Rating:</span>
+              <span className="font-semibold text-gray-900">{course.afterClassRating}/5.0</span>
+            </div>
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                toggleSubscription(course.id);
+              }}
+              className={`flex items-center gap-1 px-2 py-1 rounded-md transition-colors ${
+                isSubscribed(course.id) ? 'bg-pink-100 text-pink-700' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+              }`}
+              title={isSubscribed(course.id) ? "Unsubscribe" : "Subscribe for updates"}
+            >
+              <Bell className={`w-3.5 h-3.5 ${isSubscribed(course.id) ? 'fill-current' : ''}`} />
+              <span className="font-semibold">{subscriberCounts[course.id]}</span>
+              <span className="text-gray-500 text-xs">/{course.capacity}</span>
+            </button>
           </div>
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              toggleSubscription(course.id);
-            }}
-            className={`flex items-center gap-1 px-2 py-1 rounded-md transition-colors ${
-              isSubscribed(course.id) ? 'bg-pink-100 text-pink-700' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-            }`}
-            title={isSubscribed(course.id) ? "Unsubscribe" : "Subscribe for updates"}
-          >
-            <Bell className={`w-3.5 h-3.5 ${isSubscribed(course.id) ? 'fill-current' : ''}`} />
-            <span className="font-semibold">{subscriberCounts[course.id]}</span>
-            <span className="text-gray-500">/{course.capacity}</span>
-          </button>
-          <div className="text-xs text-gray-600">{course.workload}</div>
-        </div>
 
-        {/* Difficulty Rating */}
-        <div className="mb-3 flex items-center">
-          <span className="text-xs text-gray-600 mr-2">Difficulty:</span>
-          <div className="text-base leading-none">
-            {renderDifficultyStars(course.difficulty)}
+          <div className="flex items-center">
+            <span className="text-gray-600 text-xs mr-2">Difficulty:</span>
+            <div className="text-base leading-none mr-2">
+              {renderDifficultyStars(course.difficulty)}
+            </div>
+            <span className="text-gray-500 text-xs">({course.difficulty}/5)</span>
+          </div>
+
+          <div className="flex items-center">
+            <span className="text-gray-600 text-xs mr-2">Time Commitment:</span>
+            <span className="font-semibold text-gray-900 text-sm">{course.weeklyHours}</span>
           </div>
         </div>
 
