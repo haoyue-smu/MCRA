@@ -138,6 +138,9 @@ function CourseBrowser({ cart, addToCart, removeFromCart }) {
   const checkScheduleClash = (course) => {
     const clashes = [];
     cart.forEach(cartCourse => {
+      // Don't check for clash with itself
+      if (cartCourse.id === course.id) return;
+
       course.schedule.forEach(schedule1 => {
         cartCourse.schedule.forEach(schedule2 => {
           if (schedule1.day === schedule2.day && schedule1.time === schedule2.time) {
@@ -337,7 +340,7 @@ function CourseBrowser({ cart, addToCart, removeFromCart }) {
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div className="w-full px-6 py-8">
       {/* Header */}
       <div className="page-header">
         <h1 className="page-title">Course Browser</h1>
@@ -460,7 +463,7 @@ function CourseBrowser({ cart, addToCart, removeFromCart }) {
       )}
 
       {/* Course Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-6">
         {filteredCourses.map(course => (
           <CourseCard key={course.id} course={course} />
         ))}

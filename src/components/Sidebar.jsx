@@ -79,7 +79,7 @@ function Sidebar({ cart, user, onLogout, onCollapseChange }) {
 
       {/* Sidebar */}
       <div className={`fixed left-0 top-0 h-full bg-white transition-all duration-300 z-40 shadow-xl border-r border-gray-200 ${
-        isCollapsed ? 'w-16' : 'w-64'
+        isCollapsed ? 'w-20' : 'w-72'
       } ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0`}>
         {/* Gradient Header */}
         <div className="bg-gradient-to-br from-smu-blue via-blue-700 to-smu-blue p-6 relative overflow-hidden">
