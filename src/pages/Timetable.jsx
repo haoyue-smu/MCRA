@@ -95,7 +95,7 @@ function Timetable({ cart }) {
   const workload = getTotalWorkload();
 
   return (
-    <div className="w-full px-10 py-8">
+    <div className="w-full px-16 py-8">
       {/* Header */}
       <div className="mb-6">
         <h1 className="text-3xl font-bold text-smu-blue mb-2">My Timetable</h1>

@@ -125,8 +125,8 @@ function Sidebar({ cart, user, onLogout, onCollapseChange, isCollapsed }) {
                 key={item.path}
                 to={item.path}
                 onClick={() => setIsMobileMenuOpen(false)}
-                className={`flex items-center justify-center mx-2 px-4 py-3 rounded-lg transition-all ${
-                  isCollapsed ? 'mx-auto w-16' : ''
+                className={`flex items-center mx-2 px-4 py-3 rounded-lg transition-all ${
+                  isCollapsed ? 'justify-center mx-auto w-16' : 'justify-start'
                 } ${
                   active
                     ? 'bg-gradient-to-r from-blue-50 to-purple-50 text-smu-blue border-l-4 border-smu-blue shadow-sm'
