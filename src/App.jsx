@@ -53,7 +53,7 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50/20 to-purple-50/20">
       <Routes>
         {/* Login Route */}
         <Route path="/login" element={
@@ -64,7 +64,7 @@ function App() {
         <Route path="/*" element={
           <ProtectedRoute>
             <Sidebar cart={cart} user={user} onLogout={handleLogout} />
-            <main className="ml-0 md:ml-80 transition-all duration-300 pb-8">
+            <main className="ml-0 md:ml-80 transition-all duration-300 pb-8 min-h-screen">
               <Routes>
                 <Route path="/" element={<Dashboard cart={cart} removeFromCart={removeFromCart} />} />
                 <Route path="/courses" element={<CourseBrowser cart={cart} addToCart={addToCart} removeFromCart={removeFromCart} />} />

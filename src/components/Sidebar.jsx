@@ -69,31 +69,39 @@ function Sidebar({ cart, user, onLogout }) {
       )}
 
       {/* Sidebar */}
-      <div className={`fixed left-0 top-0 h-full bg-smu-blue text-white transition-all duration-300 z-40 ${
+      <div className={`fixed left-0 top-0 h-full bg-white transition-all duration-300 z-40 shadow-xl border-r border-gray-200 ${
         isCollapsed ? 'w-20' : 'w-80'
       } ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0`}>
-        {/* Header */}
-        <div className="p-4 border-b border-blue-700 flex items-center justify-between">
-          {!isCollapsed && (
-            <div>
-              <h1 className="text-xl font-bold text-smu-gold">SCIS Smart Planner</h1>
-              <p className="text-xs text-blue-200">SMU Course Planning</p>
-            </div>
-          )}
-          <button
-            onClick={() => setIsCollapsed(!isCollapsed)}
-            className="p-2 hover:bg-blue-700 rounded-lg transition-colors ml-auto"
-          >
-            {isCollapsed ? <ChevronRight className="w-5 h-5" /> : <ChevronLeft className="w-5 h-5" />}
-          </button>
+        {/* Gradient Header */}
+        <div className="bg-gradient-to-br from-smu-blue via-blue-700 to-smu-blue p-6 relative overflow-hidden">
+          {/* Decorative overlay */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent"></div>
+
+          <div className="relative z-10 flex items-center justify-between">
+            {!isCollapsed && (
+              <div>
+                <h1 className="text-2xl font-bold text-white flex items-center">
+                  <span className="text-smu-gold mr-2">●</span>
+                  SCIS Planner
+                </h1>
+                <p className="text-xs text-blue-100 mt-1">Smart Course Planning</p>
+              </div>
+            )}
+            <button
+              onClick={() => setIsCollapsed(!isCollapsed)}
+              className="p-2 hover:bg-white/10 rounded-lg transition-colors ml-auto"
+            >
+              {isCollapsed ? <ChevronRight className="w-5 h-5 text-white" /> : <ChevronLeft className="w-5 h-5 text-white" />}
+            </button>
+          </div>
         </div>
 
         {/* Cart Count Badge */}
         {!isCollapsed && cart.length > 0 && (
-          <div className="px-4 py-3 bg-blue-700 border-b border-blue-600">
+          <div className="px-4 py-3 bg-gradient-to-r from-blue-50 to-purple-50 border-b border-gray-200">
             <div className="flex items-center justify-between">
-              <span className="text-sm">Courses in Cart</span>
-              <span className="bg-smu-gold text-smu-blue px-2 py-1 rounded-full text-xs font-bold">
+              <span className="text-sm text-gray-700 font-medium">Courses in Cart</span>
+              <span className="bg-gradient-to-r from-smu-blue to-blue-600 text-white px-3 py-1 rounded-full text-xs font-bold shadow-sm">
                 {cart.length}
               </span>
             </div>
@@ -101,7 +109,7 @@ function Sidebar({ cart, user, onLogout }) {
         )}
 
         {/* Navigation Items */}
-        <nav className="py-4 flex-1 overflow-y-auto">
+        <nav className="py-2 flex-1 overflow-y-auto">
           {visibleNavItems.map((item) => {
             const Icon = item.icon;
             const active = isActive(item.path);
@@ -111,16 +119,16 @@ function Sidebar({ cart, user, onLogout }) {
                 key={item.path}
                 to={item.path}
                 onClick={() => setIsMobileMenuOpen(false)}
-                className={`flex items-center px-4 py-3 transition-colors ${
+                className={`flex items-center mx-2 px-4 py-3 rounded-lg transition-all ${
                   active
-                    ? 'bg-blue-700 border-r-4 border-smu-gold'
-                    : 'hover:bg-blue-700'
+                    ? 'bg-gradient-to-r from-blue-50 to-purple-50 text-smu-blue border-l-4 border-smu-blue shadow-sm'
+                    : 'text-gray-700 hover:bg-gray-50 hover:text-smu-blue'
                 }`}
                 title={isCollapsed ? item.label : ''}
               >
-                <Icon className={`w-5 h-5 ${active ? 'text-smu-gold' : ''}`} />
+                <Icon className={`w-5 h-5 ${active ? 'text-smu-blue' : 'text-gray-500'}`} />
                 {!isCollapsed && (
-                  <span className={`ml-3 ${active ? 'font-semibold text-smu-gold' : ''}`}>
+                  <span className={`ml-3 ${active ? 'font-semibold' : 'font-medium'}`}>
                     {item.label}
                   </span>
                 )}
@@ -130,17 +138,17 @@ function Sidebar({ cart, user, onLogout }) {
         </nav>
 
         {/* User Section & Actions */}
-        <div className="border-t border-blue-700 p-4 space-y-2">
+        <div className="border-t border-gray-200 bg-gradient-to-b from-gray-50 to-white p-4 space-y-2">
           {/* User Info */}
           {user && !isCollapsed && (
-            <div className="px-4 py-2 bg-blue-700 rounded-lg mb-2">
+            <div className="px-4 py-3 bg-white rounded-lg mb-2 shadow-sm border border-gray-200">
               <div className="flex items-center">
-                <div className="w-8 h-8 bg-smu-gold rounded-full flex items-center justify-center text-smu-blue font-bold mr-3">
+                <div className="w-10 h-10 bg-gradient-to-br from-smu-blue to-blue-600 rounded-full flex items-center justify-center text-white font-bold mr-3 shadow-sm">
                   {user.name.charAt(0)}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-white truncate">{user.name}</p>
-                  <p className="text-xs text-blue-200 truncate">{user.email}</p>
+                  <p className="text-sm font-semibold text-gray-900 truncate">{user.name}</p>
+                  <p className="text-xs text-gray-500 truncate">{user.email}</p>
                 </div>
               </div>
             </div>
@@ -149,10 +157,10 @@ function Sidebar({ cart, user, onLogout }) {
           {/* Customize Button */}
           <button
             onClick={() => setShowCustomize(!showCustomize)}
-            className="flex items-center w-full px-4 py-2 hover:bg-blue-700 rounded-lg transition-colors"
+            className="flex items-center w-full px-4 py-2 hover:bg-gray-100 rounded-lg transition-colors text-gray-700"
           >
-            <Settings className="w-5 h-5" />
-            {!isCollapsed && <span className="ml-3">Customize Sidebar</span>}
+            <Settings className="w-5 h-5 text-gray-500" />
+            {!isCollapsed && <span className="ml-3 font-medium">Customize Sidebar</span>}
           </button>
 
           {/* Logout Button */}
@@ -162,10 +170,10 @@ function Sidebar({ cart, user, onLogout }) {
                 onLogout();
                 navigate('/login');
               }}
-              className="flex items-center w-full px-4 py-2 hover:bg-red-600 rounded-lg transition-colors text-red-200 hover:text-white"
+              className="flex items-center w-full px-4 py-2 hover:bg-red-50 rounded-lg transition-colors text-red-600 hover:text-red-700"
             >
               <LogOut className="w-5 h-5" />
-              {!isCollapsed && <span className="ml-3">Sign Out</span>}
+              {!isCollapsed && <span className="ml-3 font-medium">Sign Out</span>}
             </button>
           )}
         </div>
