@@ -184,39 +184,11 @@ function CourseBrowser({ cart, addToCart, removeFromCart }) {
     const ratio = (subscriberCounts[course.id] / course.capacity) * 100;
     const isInterested = isSubscribed(course.id);
 
-    if (ratio > 150) {
-      // Extreme competition
-      return {
-        bgColor: isInterested ? 'bg-red-500 hover:bg-red-600' : 'bg-red-100 hover:bg-red-200',
-        textColor: isInterested ? 'text-white' : 'text-red-700',
-        icon: '❤️',
-        showFire: true
-      };
-    } else if (ratio > 120) {
-      // High competition
-      return {
-        bgColor: isInterested ? 'bg-orange-500 hover:bg-orange-600' : 'bg-orange-100 hover:bg-orange-200',
-        textColor: isInterested ? 'text-white' : 'text-orange-700',
-        icon: '🧡',
-        showFire: false
-      };
-    } else if (ratio > 80) {
-      // Medium competition
-      return {
-        bgColor: isInterested ? 'bg-yellow-500 hover:bg-yellow-600' : 'bg-yellow-100 hover:bg-yellow-200',
-        textColor: isInterested ? 'text-white' : 'text-yellow-700',
-        icon: '💛',
-        showFire: false
-      };
-    } else {
-      // Low competition
-      return {
-        bgColor: isInterested ? 'bg-gray-400 hover:bg-gray-500' : 'bg-gray-100 hover:bg-gray-200',
-        textColor: isInterested ? 'text-white' : 'text-gray-700',
-        icon: '🤍',
-        showFire: false
-      };
-    }
+    return {
+      bgColor: isInterested ? 'bg-pink-500 hover:bg-pink-600' : 'bg-gray-100 hover:bg-gray-200',
+      textColor: isInterested ? 'text-white' : 'text-gray-700',
+      tooltip: `${subscriberCounts[course.id]} interested / ${course.capacity} slots (${Math.round(ratio)}% demand)`
+    };
   };
 
   const CourseCard = ({ course }) => {
@@ -377,12 +349,10 @@ function CourseBrowser({ cart, addToCart, removeFromCart }) {
             toggleSubscription(course.id);
           }}
           className={`flex items-center gap-1.5 px-3 py-2 rounded-md transition-colors flex-shrink-0 ${interestLevel.bgColor} ${interestLevel.textColor}`}
-          title={isSubscribed(course.id) ? "Remove interest" : "Express interest"}
+          title={interestLevel.tooltip}
         >
-          <span className="text-base">{interestLevel.icon}</span>
-          <span className="font-semibold text-sm">{subscriberCounts[course.id]}</span>
-          <span className="text-xs opacity-70">/{course.capacity}</span>
-          {interestLevel.showFire && <span className="ml-0.5">🔥</span>}
+          <Heart className={`w-4 h-4 ${isSubscribed(course.id) ? 'fill-current' : ''}`} />
+          <span className="font-semibold text-sm">{subscriberCounts[course.id]}/{course.capacity}</span>
         </button>
 
         <button
@@ -409,48 +379,16 @@ function CourseBrowser({ cart, addToCart, removeFromCart }) {
         <p className="page-description">Browse courses with live demand transparency and S/U indicators</p>
       </div>
 
-      {/* Info Banners */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-        <div className="alert-info">
-          <div className="flex items-start">
-            <AlertCircle className="w-5 h-5 text-blue-600 mt-0.5 mr-3 flex-shrink-0" />
-            <div>
-              <h3 className="font-semibold text-blue-900 mb-1">S/U Policy Reminder</h3>
-              <p className="text-sm text-blue-800">
-                You can S/U up to 12 CUs. Core modules and final semester courses cannot be S/U-ed.
-                Courses marked with a green badge are S/U eligible.
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <div className="bg-gradient-to-br from-orange-50 to-red-50 border border-orange-200 rounded-lg p-4">
-          <div className="flex items-start">
-            <Heart className="w-5 h-5 text-orange-600 mt-0.5 mr-3 flex-shrink-0" />
-            <div>
-              <h3 className="font-semibold text-orange-900 mb-1">Interest Level Indicator</h3>
-              <p className="text-sm text-orange-800 mb-2">
-                Heart color shows competition level based on interest/capacity ratio:
-              </p>
-              <div className="space-y-1 text-xs text-gray-700">
-                <div className="flex items-center">
-                  <span className="mr-2">🤍</span>
-                  <span>Low (&lt;80%) - Good availability</span>
-                </div>
-                <div className="flex items-center">
-                  <span className="mr-2">💛</span>
-                  <span>Medium (80-120%) - Moderate competition</span>
-                </div>
-                <div className="flex items-center">
-                  <span className="mr-2">🧡</span>
-                  <span>High (120-150%) - High competition</span>
-                </div>
-                <div className="flex items-center">
-                  <span className="mr-2">❤️🔥</span>
-                  <span>Extreme (&gt;150%) - Very high competition</span>
-                </div>
-              </div>
-            </div>
+      {/* S/U Policy Info Banner */}
+      <div className="alert-info mb-6">
+        <div className="flex items-start">
+          <AlertCircle className="w-5 h-5 text-blue-600 mt-0.5 mr-3 flex-shrink-0" />
+          <div>
+            <h3 className="font-semibold text-blue-900 mb-1">S/U Policy Reminder</h3>
+            <p className="text-sm text-blue-800">
+              You can S/U up to 12 CUs. Core modules and final semester courses cannot be S/U-ed.
+              Courses marked with a green badge are S/U eligible.
+            </p>
           </div>
         </div>
       </div>
@@ -617,19 +555,19 @@ function CourseBrowser({ cart, addToCart, removeFromCart }) {
                 </div>
 
                 {/* Bidding Information in Modal */}
-                <div className="bg-purple-50 rounded-lg p-4 border border-purple-200">
-                  <h3 className="font-semibold mb-3">Bidding Information</h3>
+                <div className="bg-gradient-to-r from-blue-50 to-sky-100 rounded-lg p-4 border border-blue-200">
+                  <h3 className="font-semibold mb-3 text-blue-900">Bidding Information</h3>
                   <div className="grid grid-cols-2 gap-4 mb-3">
                     <div>
-                      <div className="text-xs text-purple-700 font-semibold mb-1">Yearly Average</div>
-                      <div className="text-2xl font-bold text-purple-900">e$ {selectedCourse.yearlyAverage}</div>
+                      <div className="text-xs text-blue-600 font-semibold mb-1">Yearly Average</div>
+                      <div className="text-2xl font-bold text-blue-900">e$ {selectedCourse.yearlyAverage}</div>
                     </div>
                     <div>
-                      <div className="text-xs text-purple-700 font-semibold mb-1">Bidding Range</div>
-                      <div className="text-xl font-bold text-purple-900">{selectedCourse.bidRange}</div>
+                      <div className="text-xs text-blue-600 font-semibold mb-1">Bidding Range</div>
+                      <div className="text-xl font-bold text-blue-900">{selectedCourse.bidRange}</div>
                     </div>
                   </div>
-                  <div className="text-xs text-purple-700 font-semibold mb-2">Historical Trends (Past Year)</div>
+                  <div className="text-xs text-blue-700 font-semibold mb-2">Historical Trends (Past Year)</div>
                   <div className="space-y-1">
                     {selectedCourse.bidHistory.map((history, i) => (
                       <div key={i} className="flex justify-between text-sm bg-white p-2 rounded">
