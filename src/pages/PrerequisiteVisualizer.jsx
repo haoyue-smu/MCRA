@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { GitBranch, Search, CheckCircle, Lock, AlertCircle, ArrowDown, ArrowRight } from 'lucide-react';
-import { courses } from '../data/mockData';
+import { GitBranch, Search, CheckCircle, Lock, AlertCircle, ArrowDown, ArrowRight, Clock, X } from 'lucide-react';
+import { courses, programRequirements } from '../data/mockData';
 
 function PrerequisiteVisualizer() {
   const [selectedCourse, setSelectedCourse] = useState(null);
@@ -32,6 +32,42 @@ function PrerequisiteVisualizer() {
     return courses.filter(c => c.prerequisites.includes(courseId));
   };
 
+  // Get course status from program requirements
+  const getCourseStatus = (courseId) => {
+    for (const category of programRequirements) {
+      const module = category.modules.find(m => m.id === courseId);
+      if (module) {
+        return module.status; // 'completed', 'in_cart', 'pending'
+      }
+    }
+    return 'pending';
+  };
+
+  // Get all direct prerequisites
+  const getDirectPrerequisites = (courseId) => {
+    const course = courses.find(c => c.id === courseId);
+    if (!course || !course.prerequisites || course.prerequisites.length === 0) return [];
+
+    return course.prerequisites.map(preqId => courses.find(c => c.id === preqId)).filter(Boolean);
+  };
+
+  // Get all indirect prerequisites (prerequisites of prerequisites)
+  const getIndirectPrerequisites = (courseId) => {
+    const directPrereqs = getDirectPrerequisites(courseId);
+    const indirectPrereqs = [];
+
+    directPrereqs.forEach(prereq => {
+      const prereqPrereqs = getAllPrerequisites(prereq.id);
+      prereqPrereqs.forEach(p => {
+        if (!indirectPrereqs.find(ip => ip.id === p.id) && !directPrereqs.find(dp => dp.id === p.id)) {
+          indirectPrereqs.push(p);
+        }
+      });
+    });
+
+    return indirectPrereqs;
+  };
+
   const getAllPrerequisites = (courseId) => {
     const course = courses.find(c => c.id === courseId);
     if (!course || !course.prerequisites || course.prerequisites.length === 0) return [];
@@ -46,6 +82,12 @@ function PrerequisiteVisualizer() {
     });
 
     return allPrereqs;
+  };
+
+  // Check if all prerequisites are satisfied
+  const arePrerequisitesSatisfied = (courseId) => {
+    const allPrereqs = [...getDirectPrerequisites(courseId), ...getIndirectPrerequisites(courseId)];
+    return allPrereqs.every(prereq => getCourseStatus(prereq.id) === 'completed');
   };
 
   const filteredCourses = courses.filter(c =>
@@ -87,6 +129,34 @@ function PrerequisiteVisualizer() {
             )}
           </div>
         </div>
+      </div>
+    );
+  };
+
+  const PrerequisiteItem = ({ course }) => {
+    const status = getCourseStatus(course.id);
+    const statusConfig = {
+      completed: { icon: CheckCircle, color: 'text-green-600', bg: 'bg-green-50', label: 'Completed', date: 'T2 2024' },
+      in_cart: { icon: Clock, color: 'text-orange-600', bg: 'bg-orange-50', label: 'In Progress', date: null },
+      pending: { icon: X, color: 'text-red-600', bg: 'bg-red-50', label: 'Not Taken', date: null }
+    };
+
+    const config = statusConfig[status] || statusConfig.pending;
+    const StatusIcon = config.icon;
+
+    return (
+      <div className={`${config.bg} border-2 border-gray-200 rounded-lg p-3 flex items-start justify-between`}>
+        <div className="flex items-start gap-3 flex-1">
+          <StatusIcon className={`w-5 h-5 ${config.color} flex-shrink-0 mt-0.5`} />
+          <div className="flex-1">
+            <div className="font-semibold text-gray-900">{course.id} - {course.name}</div>
+            <div className="text-xs text-gray-600 mt-1">{course.professor}</div>
+            {config.date && (
+              <div className="text-xs text-gray-500 mt-1">Completed: {config.date}</div>
+            )}
+          </div>
+        </div>
+        <span className={`text-xs font-medium ${config.color} whitespace-nowrap ml-2`}>{config.label}</span>
       </div>
     );
   };
@@ -154,79 +224,124 @@ function PrerequisiteVisualizer() {
         {/* Visualization */}
         <div className="lg:col-span-2">
           {selectedCourse ? (
-            <div className="bg-white rounded-lg shadow-md p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-6">
-                Course Path for {selectedCourse.id}
-              </h3>
-
-              {/* Prerequisite Chain */}
-              {selectedCourse.prerequisites.length > 0 ? (
-                <div className="mb-8">
-                  <h4 className="text-sm font-semibold text-blue-700 mb-4 flex items-center">
-                    <Lock className="w-4 h-4 mr-2" />
-                    Prerequisites (Complete These First)
-                  </h4>
-                  <div className="space-y-3">
-                    {getAllPrerequisites(selectedCourse.id).reverse().map((prereq, index) => (
-                      <div key={prereq.id}>
-                        <CourseCard course={prereq} type="prerequisite" onClick={setSelectedCourse} />
-                        <div className="flex justify-center my-2">
-                          <ArrowDown className="w-6 h-6 text-blue-500" />
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              ) : (
-                <div className="mb-8 p-4 bg-green-50 border border-green-200 rounded-lg">
-                  <div className="flex items-center text-green-700">
-                    <CheckCircle className="w-5 h-5 mr-2" />
-                    <span className="text-sm font-medium">No prerequisites required - you can take this course immediately!</span>
-                  </div>
-                </div>
-              )}
-
-              {/* Current Course */}
-              <div className="mb-8">
-                <CourseCard course={selectedCourse} type="current" />
+            <div className="space-y-6">
+              {/* Course Header */}
+              <div className="bg-white rounded-lg shadow-md p-6">
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                  {selectedCourse.id} - {selectedCourse.name}
+                </h3>
+                <p className="text-sm text-gray-600">{selectedCourse.professor}</p>
               </div>
 
-              {/* Dependent Courses */}
-              {findDependentCourses(selectedCourse.id).length > 0 ? (
-                <div>
-                  <div className="flex justify-center mb-4">
-                    <ArrowDown className="w-6 h-6 text-green-500" />
+              {/* Prerequisites Status */}
+              <div className="bg-white rounded-lg shadow-md p-6">
+                <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                  <Lock className="w-5 h-5 mr-2" />
+                  Prerequisites Status
+                </h3>
+
+                {selectedCourse.prerequisites.length === 0 ? (
+                  <div className="p-4 bg-green-50 border-2 border-green-200 rounded-lg">
+                    <div className="flex items-center text-green-700">
+                      <CheckCircle className="w-5 h-5 mr-2" />
+                      <span className="text-sm font-semibold">✓ No prerequisites required!</span>
+                    </div>
+                    <p className="text-xs text-green-600 mt-1 ml-7">
+                      This is a foundation course - you can take it immediately!
+                    </p>
                   </div>
-                  <h4 className="text-sm font-semibold text-green-700 mb-4 flex items-center">
-                    <CheckCircle className="w-4 h-4 mr-2" />
-                    Unlocks These Courses
-                  </h4>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {findDependentCourses(selectedCourse.id).map(dependent => (
-                      <CourseCard
-                        key={dependent.id}
-                        course={dependent}
-                        type="dependent"
-                        onClick={setSelectedCourse}
-                      />
-                    ))}
+                ) : (
+                  <>
+                    {/* Summary Message */}
+                    <div className={`p-3 ${arePrerequisitesSatisfied(selectedCourse.id) ? 'bg-green-50 border-green-200' : 'bg-orange-50 border-orange-200'} border-2 rounded-lg mb-4`}>
+                      <div className={`flex items-center ${arePrerequisitesSatisfied(selectedCourse.id) ? 'text-green-700' : 'text-orange-700'}`}>
+                        {arePrerequisitesSatisfied(selectedCourse.id) ? (
+                          <CheckCircle className="w-5 h-5 mr-2" />
+                        ) : (
+                          <AlertCircle className="w-5 h-5 mr-2" />
+                        )}
+                        <span className="text-sm font-semibold">
+                          {arePrerequisitesSatisfied(selectedCourse.id) ? '✓ All requirements satisfied' : '⚠️ Prerequisites incomplete'}
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Direct Requirements */}
+                    {getDirectPrerequisites(selectedCourse.id).length > 0 && (
+                      <div className="mb-4">
+                        <h4 className="text-sm font-semibold text-blue-700 mb-3">Direct Requirements</h4>
+                        <div className="space-y-2">
+                          {getDirectPrerequisites(selectedCourse.id).map(prereq => (
+                            <PrerequisiteItem key={prereq.id} course={prereq} />
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Indirect Requirements */}
+                    {getIndirectPrerequisites(selectedCourse.id).length > 0 && (
+                      <div>
+                        <h4 className="text-sm font-semibold text-indigo-700 mb-3">Indirect Requirements</h4>
+                        <div className="space-y-2">
+                          {getIndirectPrerequisites(selectedCourse.id).map(prereq => (
+                            <PrerequisiteItem key={prereq.id} course={prereq} />
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </>
+                )}
+              </div>
+
+              {/* Unlocks Section */}
+              <div className="bg-white rounded-lg shadow-md p-6">
+                <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center">
+                  <CheckCircle className="w-5 h-5 mr-2 text-green-600" />
+                  Unlocks
+                </h3>
+
+                {findDependentCourses(selectedCourse.id).length === 0 ? (
+                  <div className="p-4 bg-gray-50 border-2 border-gray-200 rounded-lg">
+                    <div className="flex items-center text-gray-600">
+                      <AlertCircle className="w-5 h-5 mr-2" />
+                      <span className="text-sm font-medium">This is a terminal course</span>
+                    </div>
+                    <p className="text-xs text-gray-500 mt-1 ml-7">
+                      No other courses require this as a prerequisite
+                    </p>
                   </div>
-                </div>
-              ) : (
-                <div className="p-4 bg-gray-50 border border-gray-200 rounded-lg">
-                  <div className="flex items-center text-gray-600">
-                    <AlertCircle className="w-5 h-5 mr-2" />
-                    <span className="text-sm">This course is not a prerequisite for any other courses</span>
-                  </div>
-                </div>
-              )}
+                ) : (
+                  <>
+                    <div className="p-3 bg-green-50 border-2 border-green-200 rounded-lg mb-4">
+                      <p className="text-sm text-green-700">
+                        <span className="font-semibold">Foundation course:</span> Completing this will unlock {findDependentCourses(selectedCourse.id).length} course{findDependentCourses(selectedCourse.id).length > 1 ? 's' : ''}!
+                      </p>
+                    </div>
+                    <div className="space-y-2">
+                      {findDependentCourses(selectedCourse.id).map(dependent => (
+                        <div
+                          key={dependent.id}
+                          onClick={() => setSelectedCourse(dependent)}
+                          className="flex items-start p-3 bg-green-50 border-2 border-green-200 rounded-lg hover:bg-green-100 cursor-pointer transition-all"
+                        >
+                          <ArrowRight className="w-5 h-5 text-green-600 flex-shrink-0 mr-2 mt-0.5" />
+                          <div>
+                            <div className="font-semibold text-gray-900">{dependent.id} - {dependent.name}</div>
+                            <div className="text-xs text-gray-600 mt-1">{dependent.professor}</div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </>
+                )}
+              </div>
             </div>
           ) : (
             <div className="bg-white rounded-lg shadow-md p-12 text-center">
               <GitBranch className="w-16 h-16 text-gray-300 mx-auto mb-4" />
               <h3 className="text-lg font-semibold text-gray-900 mb-2">Select a Course</h3>
               <p className="text-gray-600">
-                Click on any course from the list to view its prerequisite path and dependencies
+                Click on any course from the list to view its prerequisite requirements and unlocks
               </p>
             </div>
           )}

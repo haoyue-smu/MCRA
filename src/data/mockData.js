@@ -4,7 +4,7 @@ export const courses = [
   {
     id: 'IS111',
     name: 'Introduction to Programming',
-    professor: 'Dr. Lee Wei Ming',
+    professor: 'Prof. Lee Wei Ming',
     credits: 1.0,
     moduleType: 'Core',
     demand: 'High',
@@ -83,7 +83,7 @@ export const courses = [
   {
     id: 'IS210',
     name: 'Business Process Analysis & Solutioning',
-    professor: 'Dr. James Wong',
+    professor: 'Prof. James Wong',
     credits: 1.0,
     moduleType: 'Core',
     demand: 'High',
@@ -122,7 +122,7 @@ export const courses = [
   {
     id: 'IS216',
     name: 'Web Application Development I',
-    professor: 'Dr. Chen Yixuan',
+    professor: 'Prof. Chen Yixuan',
     credits: 1.0,
     moduleType: 'Major Elective',
     demand: 'Very High',
@@ -201,7 +201,7 @@ export const courses = [
   {
     id: 'IS445',
     name: 'Artificial Intelligence & Machine Learning',
-    professor: 'Dr. Lim Mei Ling',
+    professor: 'Prof. Lim Mei Ling',
     credits: 1.0,
     moduleType: 'Major Elective',
     demand: 'Very High',
@@ -241,7 +241,7 @@ export const courses = [
   {
     id: 'IS213',
     name: 'Object Oriented Programming',
-    professor: 'Dr. Patricia Ng',
+    professor: 'Prof. Patricia Ng',
     credits: 1.0,
     moduleType: 'Major Elective',
     demand: 'High',
@@ -320,7 +320,7 @@ export const courses = [
   {
     id: 'IS214',
     name: 'Business Intelligence Systems',
-    professor: 'Dr. Andrew Lim',
+    professor: 'Prof. Andrew Lim',
     credits: 1.0,
     moduleType: 'Core',
     demand: 'High',
@@ -398,7 +398,7 @@ export const courses = [
   {
     id: 'IS315',
     name: 'Mobile Application Development',
-    professor: 'Dr. Rachel Koh',
+    professor: 'Prof. Rachel Koh',
     credits: 1.0,
     moduleType: 'Major Elective',
     demand: 'Very High',

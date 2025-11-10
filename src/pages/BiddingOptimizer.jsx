@@ -4,8 +4,7 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Responsive
 
 function BiddingOptimizer({ cart }) {
   const [biddingAmounts, setBiddingAmounts] = useState({});
-
-  const totalEDollars = 1000; // Mock total e$ available
+  const [totalEDollars, setTotalEDollars] = useState(120); // Default semester budget
 
   const handleBidChange = (courseId, amount) => {
     setBiddingAmounts({
@@ -71,7 +70,17 @@ function BiddingOptimizer({ cart }) {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-gray-600 mb-1">Total Budget</p>
-              <p className="text-3xl font-bold text-smu-blue">e$ {totalEDollars}</p>
+              <div className="flex items-center gap-2">
+                <input
+                  type="number"
+                  value={totalEDollars}
+                  onChange={(e) => setTotalEDollars(parseInt(e.target.value) || 120)}
+                  className="w-24 text-3xl font-bold text-smu-blue border-b-2 border-gray-300 focus:border-smu-blue focus:outline-none"
+                  min="0"
+                />
+                <span className="text-3xl font-bold text-smu-blue">e$</span>
+              </div>
+              <p className="text-xs text-gray-500 mt-1">Click to customize</p>
             </div>
             <DollarSign className="w-12 h-12 text-smu-gold" />
           </div>
