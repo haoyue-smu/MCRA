@@ -252,7 +252,7 @@ function Dashboard({ cart, removeFromCart }) {
   const missingPrereqs = checkPrerequisites();
 
   return (
-    <div className="w-full px-16 py-8">
+    <div className="w-full px-20 py-8">
       {/* Page Header */}
       <div className="page-header">
         <h1 className="page-title">My Dashboard</h1>

@@ -37,12 +37,8 @@ export const courses = [
     skills: ['Python', 'Problem Solving', 'Algorithmic Thinking'],
     afterClassRating: 4.2,
     workload: 'High',
-    difficulty: 'Medium',
-    reviews: [
-      { rating: 4, comment: "Challenging but rewarding. Heavy workload but you learn a lot.", term: "2024-25 T1" },
-      { rating: 5, comment: "Professor Lee is very patient and explains concepts clearly.", term: "2023-24 T3" },
-      { rating: 3, comment: "Tough if you have no prior coding experience. Start early on projects!", term: "2024-25 T2" }
-    ]
+    difficulty: 3,
+    tags: ['Programming', 'Project-Heavy', 'Beginner-Friendly']
   },
   {
     id: 'IS112',
@@ -79,11 +75,8 @@ export const courses = [
     skills: ['SQL', 'Database Design', 'Data Modeling'],
     afterClassRating: 4.5,
     workload: 'Medium',
-    difficulty: 'Medium',
-    reviews: [
-      { rating: 5, comment: "Prof Tan is amazing! Very practical course with real-world applications.", term: "2024-25 T1" },
-      { rating: 4, comment: "SQL can be tricky at first but the project really helps solidify concepts.", term: "2023-24 T3" }
-    ]
+    difficulty: 3,
+    tags: ['Database', 'Project-Heavy', 'Beginner-Friendly']
   },
   {
     id: 'IS210',
@@ -120,12 +113,8 @@ export const courses = [
     skills: ['Business Process Modeling', 'Requirements Analysis', 'Process Optimization'],
     afterClassRating: 4.0,
     workload: 'Very High',
-    difficulty: 'Hard',
-    reviews: [
-      { rating: 4, comment: "Dr. Wong makes complex concepts easy to understand. Group project is intensive but rewarding.", term: "2024-25 T1" },
-      { rating: 3, comment: "Heavy workload with lots of group work. Make sure you have good teammates.", term: "2023-24 T3" },
-      { rating: 5, comment: "Excellent course for learning real-world business process modeling. Very practical!", term: "2024-25 T2" }
-    ]
+    difficulty: 4,
+    tags: ['Business Focus', 'Group Work', 'Theory-Heavy']
   },
   {
     id: 'IS216',
@@ -163,12 +152,8 @@ export const courses = [
     skills: ['JavaScript', 'React', 'Node.js', 'HTML/CSS'],
     afterClassRating: 4.7,
     workload: 'Very High',
-    difficulty: 'Hard',
-    reviews: [
-      { rating: 5, comment: "Best coding module I've taken! Dr. Chen is super helpful and the project is really fun.", term: "2024-25 T1" },
-      { rating: 5, comment: "Workload is intense but you'll build a real portfolio-worthy web app. Totally worth it!", term: "2023-24 T3" },
-      { rating: 4, comment: "Fast-paced but rewarding. Prior JavaScript knowledge definitely helps.", term: "2024-25 T2" }
-    ]
+    difficulty: 4,
+    tags: ['Web Development', 'Programming', 'Project-Heavy']
   },
   {
     id: 'IS424',
@@ -205,11 +190,8 @@ export const courses = [
     skills: ['Security Analysis', 'Risk Assessment', 'Compliance'],
     afterClassRating: 4.3,
     workload: 'Medium',
-    difficulty: 'Medium',
-    reviews: [
-      { rating: 4, comment: "Prof Kumar brings real industry experience. Case studies are based on actual security breaches.", term: "2024-25 T1" },
-      { rating: 5, comment: "Very relevant in today's world. Great for those interested in cybersecurity careers.", term: "2023-24 T3" }
-    ]
+    difficulty: 4,
+    tags: ['Security', 'Networking', 'Theory-Heavy']
   },
   {
     id: 'IS445',
@@ -247,12 +229,8 @@ export const courses = [
     skills: ['Python', 'Machine Learning', 'Deep Learning', 'TensorFlow'],
     afterClassRating: 4.8,
     workload: 'Very High',
-    difficulty: 'Very Hard',
-    reviews: [
-      { rating: 5, comment: "Amazing professor! Dr. Lim makes complex ML concepts understandable. Challenging but life-changing.", term: "2024-25 T1" },
-      { rating: 4, comment: "Very tough module but you'll learn so much. Strong Python and statistics background is a must.", term: "2023-24 T3" },
-      { rating: 5, comment: "Best elective I've taken. Workload is heavy but the project is incredibly rewarding.", term: "2024-25 T2" }
-    ]
+    difficulty: 5,
+    tags: ['AI/ML', 'Programming', 'Advanced']
   },
   {
     id: 'IS213',
@@ -290,12 +268,8 @@ export const courses = [
     skills: ['Java', 'OOP Design', 'Design Patterns', 'Software Architecture'],
     afterClassRating: 4.4,
     workload: 'High',
-    difficulty: 'Medium',
-    reviews: [
-      { rating: 4, comment: "Dr. Ng is very knowledgeable. The design patterns section is especially useful for software engineering.", term: "2024-25 T1" },
-      { rating: 5, comment: "Great course for building a strong foundation in Java and OOP. Project is practical and fun!", term: "2023-24 T3" },
-      { rating: 4, comment: "Manageable workload with clear expectations. Good follow-up to IS111.", term: "2024-25 T2" }
-    ]
+    difficulty: 3,
+    tags: ['Programming', 'Project-Heavy', 'Individual Work']
   },
   {
     id: 'IS442',
@@ -332,12 +306,8 @@ export const courses = [
     skills: ['AWS', 'Azure', 'Docker', 'Kubernetes', 'CI/CD'],
     afterClassRating: 4.6,
     workload: 'Very High',
-    difficulty: 'Hard',
-    reviews: [
-      { rating: 5, comment: "Hands-on labs with AWS are fantastic. Prof Chen has tons of industry experience to share.", term: "2024-25 T1" },
-      { rating: 5, comment: "One of the most practical courses. You'll be job-ready for cloud engineering roles after this.", term: "2023-24 T3" },
-      { rating: 4, comment: "Heavy workload but the skills you gain are in high demand. Definitely worth taking!", term: "2024-25 T2" }
-    ]
+    difficulty: 4,
+    tags: ['Networking', 'Project-Heavy', 'Group Work', 'Advanced']
   },
   {
     id: 'IS214',
@@ -374,12 +344,8 @@ export const courses = [
     skills: ['SQL', 'ETL', 'Data Visualization', 'Business Analytics'],
     afterClassRating: 4.1,
     workload: 'High',
-    difficulty: 'Medium',
-    reviews: [
-      { rating: 4, comment: "Very practical course. Dashboard project lets you use Tableau/Power BI which looks great on resume.", term: "2024-25 T1" },
-      { rating: 4, comment: "Dr. Lim explains ETL processes clearly. Good course for aspiring data analysts.", term: "2023-24 T3" },
-      { rating: 3, comment: "Content is useful but can be dry at times. Project saves the module.", term: "2024-25 T2" }
-    ]
+    difficulty: 3,
+    tags: ['Analytics', 'Data Visualization', 'Database']
   },
   {
     id: 'IS428',
@@ -416,11 +382,8 @@ export const courses = [
     skills: ['Architecture Design', 'System Integration', 'IT Strategy'],
     afterClassRating: 4.2,
     workload: 'Medium',
-    difficulty: 'Medium',
-    reviews: [
-      { rating: 4, comment: "Good for understanding how large-scale systems are designed. Prof Tan has great consulting stories.", term: "2024-25 T1" },
-      { rating: 4, comment: "More conceptual than hands-on. Case studies help make the frameworks more concrete.", term: "2023-24 T3" }
-    ]
+    difficulty: 4,
+    tags: ['Theory-Heavy', 'Group Work', 'Business Focus']
   },
   {
     id: 'IS315',
@@ -458,12 +421,8 @@ export const courses = [
     skills: ['React Native', 'Swift', 'Kotlin', 'Mobile UI/UX'],
     afterClassRating: 4.7,
     workload: 'Very High',
-    difficulty: 'Hard',
-    reviews: [
-      { rating: 5, comment: "Dr. Koh is fantastic! You'll build an actual mobile app that you can publish to app stores.", term: "2024-25 T1" },
-      { rating: 5, comment: "Amazing hands-on experience. If you like IS216, you'll love this course!", term: "2023-24 T3" },
-      { rating: 4, comment: "Very practical and industry-relevant. Workload is heavy but you learn so much.", term: "2024-25 T2" }
-    ]
+    difficulty: 4,
+    tags: ['Programming', 'Web Development', 'Project-Heavy']
   }
 ];
 
