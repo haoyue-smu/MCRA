@@ -92,7 +92,7 @@ function PrerequisiteVisualizer() {
   };
 
   return (
-    <div className="w-full px-6 py-8">
+    <div className="w-full px-10 py-8">
       {/* Header */}
       <div className="mb-6">
         <h1 className="text-3xl font-bold text-smu-blue mb-2">Prerequisite Visualizer</h1>

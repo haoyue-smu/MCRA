@@ -340,7 +340,7 @@ function CourseBrowser({ cart, addToCart, removeFromCart }) {
   };
 
   return (
-    <div className="w-full px-6 py-8">
+    <div className="w-full px-10 py-8">
       {/* Header */}
       <div className="page-header">
         <h1 className="page-title">Course Browser</h1>

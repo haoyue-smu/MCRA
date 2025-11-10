@@ -5,19 +5,16 @@ import {
   ClipboardList, Briefcase, Brain, Menu, X, Settings, ChevronLeft, ChevronRight, LogOut, User
 } from 'lucide-react';
 
-function Sidebar({ cart, user, onLogout, onCollapseChange }) {
+function Sidebar({ cart, user, onLogout, onCollapseChange, isCollapsed }) {
   const navigate = useNavigate();
   const location = useLocation();
-  const [isCollapsed, setIsCollapsed] = useState(false);
   const [showCustomize, setShowCustomize] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   // Notify parent when collapse state changes
   const handleToggleCollapse = () => {
-    const newCollapsed = !isCollapsed;
-    setIsCollapsed(newCollapsed);
     if (onCollapseChange) {
-      onCollapseChange(newCollapsed);
+      onCollapseChange(!isCollapsed);
     }
   };
 
@@ -79,7 +76,7 @@ function Sidebar({ cart, user, onLogout, onCollapseChange }) {
 
       {/* Sidebar */}
       <div className={`fixed left-0 top-0 h-full bg-white transition-all duration-300 z-40 shadow-xl border-r border-gray-200 ${
-        isCollapsed ? 'w-20' : 'w-72'
+        isCollapsed ? 'w-24' : 'w-80'
       } ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0`}>
         {/* Gradient Header */}
         <div className="bg-gradient-to-br from-smu-blue via-blue-700 to-smu-blue p-6 relative overflow-hidden">
@@ -128,14 +125,16 @@ function Sidebar({ cart, user, onLogout, onCollapseChange }) {
                 key={item.path}
                 to={item.path}
                 onClick={() => setIsMobileMenuOpen(false)}
-                className={`flex items-center mx-2 px-4 py-3 rounded-lg transition-all ${
+                className={`flex items-center justify-center mx-2 px-4 py-3 rounded-lg transition-all ${
+                  isCollapsed ? 'mx-auto w-16' : ''
+                } ${
                   active
                     ? 'bg-gradient-to-r from-blue-50 to-purple-50 text-smu-blue border-l-4 border-smu-blue shadow-sm'
                     : 'text-gray-700 hover:bg-gray-50 hover:text-smu-blue'
                 }`}
                 title={isCollapsed ? item.label : ''}
               >
-                <Icon className={`w-5 h-5 ${active ? 'text-smu-blue' : 'text-gray-500'}`} />
+                <Icon className={`${isCollapsed ? 'w-6 h-6' : 'w-5 h-5'} ${active ? 'text-smu-blue' : 'text-gray-500'}`} />
                 {!isCollapsed && (
                   <span className={`ml-3 ${active ? 'font-semibold' : 'font-medium'}`}>
                     {item.label}

@@ -68,9 +68,15 @@ function App() {
         {/* Protected Routes */}
         <Route path="/*" element={
           <ProtectedRoute>
-            <Sidebar cart={cart} user={user} onLogout={handleLogout} onCollapseChange={handleSidebarCollapseChange} />
+            <Sidebar
+              cart={cart}
+              user={user}
+              onLogout={handleLogout}
+              onCollapseChange={handleSidebarCollapseChange}
+              isCollapsed={sidebarCollapsed}
+            />
             <main className={`transition-all duration-300 pb-8 min-h-screen ${
-              sidebarCollapsed ? 'ml-0 md:ml-20' : 'ml-0 md:ml-72'
+              sidebarCollapsed ? 'ml-0 md:ml-24' : 'ml-0 md:ml-80'
             }`}>
               <Routes>
                 <Route path="/" element={<Dashboard cart={cart} removeFromCart={removeFromCart} />} />
