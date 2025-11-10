@@ -15,6 +15,7 @@ import { courses, studentCart as initialCart } from './data/mockData';
 function App() {
   const [cart, setCart] = useState(initialCart);
   const [user, setUser] = useState(null);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
   // Check for saved user session
   useEffect(() => {
@@ -23,6 +24,10 @@ function App() {
       setUser(JSON.parse(savedUser));
     }
   }, []);
+
+  const handleSidebarCollapseChange = (collapsed) => {
+    setSidebarCollapsed(collapsed);
+  };
 
   const handleLogin = (userData) => {
     setUser(userData);
@@ -53,7 +58,7 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50/20 to-purple-50/20">
+    <div className="min-h-screen bg-gradient-to-br from-white via-blue-50/30 to-purple-50/20">
       <Routes>
         {/* Login Route */}
         <Route path="/login" element={
@@ -63,8 +68,10 @@ function App() {
         {/* Protected Routes */}
         <Route path="/*" element={
           <ProtectedRoute>
-            <Sidebar cart={cart} user={user} onLogout={handleLogout} />
-            <main className="ml-0 md:ml-80 transition-all duration-300 pb-8 min-h-screen">
+            <Sidebar cart={cart} user={user} onLogout={handleLogout} onCollapseChange={handleSidebarCollapseChange} />
+            <main className={`transition-all duration-300 pb-8 min-h-screen ${
+              sidebarCollapsed ? 'ml-0 md:ml-16' : 'ml-0 md:ml-64'
+            }`}>
               <Routes>
                 <Route path="/" element={<Dashboard cart={cart} removeFromCart={removeFromCart} />} />
                 <Route path="/courses" element={<CourseBrowser cart={cart} addToCart={addToCart} removeFromCart={removeFromCart} />} />

@@ -5,12 +5,21 @@ import {
   ClipboardList, Briefcase, Brain, Menu, X, Settings, ChevronLeft, ChevronRight, LogOut, User
 } from 'lucide-react';
 
-function Sidebar({ cart, user, onLogout }) {
+function Sidebar({ cart, user, onLogout, onCollapseChange }) {
   const navigate = useNavigate();
   const location = useLocation();
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [showCustomize, setShowCustomize] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  // Notify parent when collapse state changes
+  const handleToggleCollapse = () => {
+    const newCollapsed = !isCollapsed;
+    setIsCollapsed(newCollapsed);
+    if (onCollapseChange) {
+      onCollapseChange(newCollapsed);
+    }
+  };
 
   // Load saved preferences from localStorage
   const [visibleItems, setVisibleItems] = useState(() => {
@@ -70,7 +79,7 @@ function Sidebar({ cart, user, onLogout }) {
 
       {/* Sidebar */}
       <div className={`fixed left-0 top-0 h-full bg-white transition-all duration-300 z-40 shadow-xl border-r border-gray-200 ${
-        isCollapsed ? 'w-20' : 'w-80'
+        isCollapsed ? 'w-16' : 'w-64'
       } ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0`}>
         {/* Gradient Header */}
         <div className="bg-gradient-to-br from-smu-blue via-blue-700 to-smu-blue p-6 relative overflow-hidden">
@@ -88,7 +97,7 @@ function Sidebar({ cart, user, onLogout }) {
               </div>
             )}
             <button
-              onClick={() => setIsCollapsed(!isCollapsed)}
+              onClick={handleToggleCollapse}
               className="p-2 hover:bg-white/10 rounded-lg transition-colors ml-auto"
             >
               {isCollapsed ? <ChevronRight className="w-5 h-5 text-white" /> : <ChevronLeft className="w-5 h-5 text-white" />}

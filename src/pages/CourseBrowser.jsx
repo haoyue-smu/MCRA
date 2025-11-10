@@ -88,12 +88,9 @@ function CourseBrowser({ cart, addToCart, removeFromCart }) {
   };
 
   const getDemandEmoji = (demand) => {
-    switch(demand) {
-      case 'Very High': return '🔥🔥🔥';
-      case 'High': return '🔥🔥';
-      case 'Medium': return '🔥';
-      default: return '✅';
-    }
+    // Simplified: only show fire emoji for Very High demand to reduce visual noise
+    if (demand === 'Very High') return '🔥';
+    return null;
   };
 
   const getPredictedBid = (course) => {
@@ -171,8 +168,8 @@ function CourseBrowser({ cart, addToCart, removeFromCart }) {
   const CourseCard = ({ course }) => {
     const scheduleClashes = checkScheduleClash(course);
     const successRate = getBiddingSuccessRate(course);
-    const trend = getSubscriberTrend(course.id);
     const predictedBid = getPredictedBid(course);
+    const demandEmoji = getDemandEmoji(course.demand);
 
     return (
     <div
@@ -182,123 +179,112 @@ function CourseBrowser({ cart, addToCart, removeFromCart }) {
         addToRecentlyViewed(course);
       }}
     >
-      <div className="flex items-start justify-between mb-3">
-        <div className="flex-1">
-          <div className="flex items-center space-x-2 mb-2">
-            <h3 className="text-lg font-bold text-smu-blue">{course.id}</h3>
-            {course.suEligible ? (
-              <span className="badge-green flex items-center">
-                <CheckCircle className="w-3 h-3 mr-1" />
-                S/U Eligible
-              </span>
-            ) : (
-              <span className="badge-red flex items-center">
-                <XCircle className="w-3 h-3 mr-1" />
-                No S/U
-              </span>
-            )}
-          </div>
-          <h4 className="text-md font-semibold text-gray-900 mb-2">{course.name}</h4>
-          <p className="text-sm text-gray-600 mb-2">{course.professor}</p>
-          <p className="text-sm text-gray-700">{course.description}</p>
+      {/* Header: Course ID and S/U Badge */}
+      <div className="flex items-center justify-between mb-3">
+        <div className="flex items-center space-x-2">
+          <h3 className="text-xl font-bold text-smu-blue">{course.id}</h3>
+          {demandEmoji && <span className="text-xl">{demandEmoji}</span>}
         </div>
+        {course.suEligible ? (
+          <span className="badge-green text-xs">S/U</span>
+        ) : (
+          <span className="badge-red text-xs">No S/U</span>
+        )}
       </div>
 
-      <div className="flex items-center gap-4 mt-3 text-sm">
-        <div className="flex items-center">
-          <span className="text-2xl mr-1">{getDemandEmoji(course.demand)}</span>
-          <span className="text-xs text-gray-500">Demand</span>
-        </div>
-        <div className="flex items-center">
-          <Bell className="w-4 h-4 mr-1 text-blue-500" />
-          <span className="font-semibold text-gray-900">{subscriberCounts[course.id]}</span>
-          {trend !== 0 && (
-            <span className={`ml-1 text-xs ${trend > 0 ? 'text-red-600' : 'text-green-600'}`}>
-              {trend > 0 ? '⬆️' : '⬇️'}{Math.abs(trend)}
-            </span>
-          )}
-        </div>
-        <div className="flex items-center">
-          <Star className="w-4 h-4 text-yellow-500 fill-current mr-1" />
-          <span className="font-semibold text-gray-900">{course.afterClassRating}</span>
-        </div>
-        <div className="text-xs text-gray-600">
-          {course.workload}
-        </div>
-      </div>
+      <h4 className="text-base font-semibold text-gray-900 mb-1">{course.name}</h4>
+      <p className="text-sm text-gray-600 mb-3">{course.professor}</p>
 
-      {/* Bidding Information */}
-      <div className="mt-3 p-3 bg-purple-50 rounded-lg border border-purple-200">
+      {/* PRIORITY 1: Bidding Information - Most Important */}
+      <div className="mb-3 p-4 bg-gradient-to-r from-purple-50 to-purple-100 rounded-lg border-2 border-purple-300">
         <div className="flex items-center justify-between mb-2">
           <div>
-            <span className="text-xs text-purple-700">Avg Bid: </span>
-            <span className="text-lg font-bold text-purple-900">e$ {course.yearlyAverage}</span>
+            <div className="text-xs text-purple-600 font-medium mb-1">Average Bid</div>
+            <div className="text-2xl font-bold text-purple-900">e$ {course.yearlyAverage}</div>
           </div>
           <div className="text-right">
-            <div className="text-xs text-purple-700">Predicted</div>
-            <div className="text-sm font-bold text-purple-900">{predictedBid}</div>
+            <div className="text-xs text-purple-600 font-medium mb-1">Predicted Range</div>
+            <div className="text-lg font-bold text-purple-900">{predictedBid}</div>
           </div>
         </div>
-        <div className="text-xs text-purple-700">
-          💡 {Math.round(successRate.high)}% success @ e$ {Math.round(successRate.avgBid * 1.15)}+
+        <div className="text-xs text-purple-700 bg-white/50 rounded px-2 py-1">
+          {Math.round(successRate.high)}% success rate @ e$ {Math.round(successRate.avgBid * 1.15)}+
         </div>
       </div>
 
-      {/* Class Schedule */}
-      <div className={`mt-3 p-2 rounded border ${scheduleClashes.length > 0 ? 'bg-red-50 border-red-300' : 'bg-gray-50 border-gray-200'}`}>
+      {/* PRIORITY 2: Schedule - Very Important */}
+      <div className={`mb-3 p-3 rounded-lg ${scheduleClashes.length > 0 ? 'bg-red-50 border-2 border-red-400' : 'bg-blue-50 border border-blue-200'}`}>
         {course.schedule.map((s, i) => {
           const clash = scheduleClashes.find(c => c.day === s.day && c.time === s.time);
           return (
-            <div key={i} className="text-sm">
-              {clash && <span className="text-red-600 font-bold mr-1">⚠️</span>}
-              <span className="font-semibold">{s.day}</span> {s.time}
-              {clash && (
-                <span className="ml-2 text-xs text-red-600">
-                  (Clash with {clash.conflictWith})
-                </span>
-              )}
+            <div key={i} className="flex items-center">
+              {clash && <span className="text-red-600 font-bold mr-2 text-lg">⚠️</span>}
+              <div className={clash ? 'text-red-700' : 'text-gray-900'}>
+                <span className="font-bold text-base">{s.day} {s.time}</span>
+                {clash && (
+                  <span className="ml-2 text-sm font-semibold">
+                    Clash with {clash.conflictWith}
+                  </span>
+                )}
+              </div>
             </div>
           );
         })}
       </div>
 
-      {/* Assessment Summary */}
-      <div className="mt-3 text-xs text-gray-600">
-        {course.assessments.filter(a => a.type.toLowerCase().includes('quiz')).length} Quizzes • {course.assessments.filter(a => a.type.toLowerCase().includes('exam') && !a.type.toLowerCase().includes('midterm')).length > 0 ? 'Midterm + Final' : 'Midterm'} • {course.assessments.filter(a => a.type.toLowerCase().includes('project')).length} Project{course.assessments.filter(a => a.type.toLowerCase().includes('project')).length > 1 ? 's' : ''}
+      {/* Compact Stats Row */}
+      <div className="flex items-center gap-4 mb-3 text-sm text-gray-600">
+        <div className="flex items-center">
+          <Star className="w-4 h-4 text-yellow-500 fill-current mr-1" />
+          <span className="font-semibold text-gray-900">{course.afterClassRating}</span>
+        </div>
+        <div className="flex items-center">
+          <Users className="w-4 h-4 mr-1" />
+          <span>{subscriberCounts[course.id]}/{course.capacity}</span>
+        </div>
+        <div>{course.workload}</div>
       </div>
 
-      {/* Student Reviews */}
+      {/* Assessment Summary */}
+      <div className="mb-3 text-xs text-gray-600 bg-gray-50 rounded px-3 py-2">
+        {course.assessments.filter(a => a.type.toLowerCase().includes('quiz')).length} Quiz{course.assessments.filter(a => a.type.toLowerCase().includes('quiz')).length > 1 ? 'zes' : ''} •
+        {course.assessments.filter(a => a.type.toLowerCase().includes('exam') && !a.type.toLowerCase().includes('midterm')).length > 0 ? ' Midterm + Final' : ' Midterm'} •
+        {course.assessments.filter(a => a.type.toLowerCase().includes('project')).length} Project{course.assessments.filter(a => a.type.toLowerCase().includes('project')).length > 1 ? 's' : ''}
+      </div>
+
+      {/* Student Reviews - Toned Down */}
       {course.reviews && course.reviews.length > 0 && (
-        <div className="mt-3 p-3 bg-yellow-50 rounded-lg border border-yellow-200">
-          <div className="text-xs font-semibold text-yellow-900 mb-2">💬 What Students Say:</div>
+        <div className="mb-3 p-3 bg-gray-50 rounded-lg border border-gray-200">
+          <div className="text-xs font-medium text-gray-700 mb-2">Student Reviews</div>
           <div className="space-y-2">
-            {course.reviews.slice(0, 2).map((review, i) => (
+            {course.reviews.slice(0, 1).map((review, i) => (
               <div key={i} className="text-xs">
                 <div className="flex items-center mb-1">
                   {[...Array(5)].map((_, idx) => (
                     <Star key={idx} className={`w-3 h-3 ${idx < review.rating ? 'text-yellow-500 fill-current' : 'text-gray-300'}`} />
                   ))}
-                  <span className="ml-2 text-gray-500">• {review.term}</span>
+                  <span className="ml-2 text-gray-500 text-xs">• {review.term}</span>
                 </div>
-                <p className="text-gray-700 italic">"{review.comment}"</p>
+                <p className="text-gray-600 italic">"{review.comment}"</p>
               </div>
             ))}
           </div>
-          {course.reviews.length > 2 && (
+          {course.reviews.length > 1 && (
             <button
               onClick={(e) => {
                 e.stopPropagation();
                 setSelectedCourse(course);
               }}
-              className="text-xs text-yellow-700 underline mt-2 hover:text-yellow-900"
+              className="text-xs text-gray-600 underline mt-2 hover:text-gray-900"
             >
-              View all {course.reviews.length} reviews →
+              +{course.reviews.length - 1} more review{course.reviews.length > 2 ? 's' : ''}
             </button>
           )}
         </div>
       )}
 
-      <div className="mt-4 flex space-x-2">
+      {/* Action Buttons */}
+      <div className="flex space-x-2">
         {isInCart(course.id) ? (
           <button
             onClick={(e) => {
@@ -449,10 +435,10 @@ function CourseBrowser({ cart, addToCart, removeFromCart }) {
 
       {/* Recently Viewed Courses */}
       {recentlyViewed.length > 0 && (
-        <div className="mb-6 bg-gradient-to-r from-purple-50 to-pink-50 rounded-lg p-4 border border-purple-200">
+        <div className="mb-6 bg-white rounded-lg p-4 border border-gray-200 shadow-sm">
           <div className="flex items-center mb-3">
-            <Eye className="w-5 h-5 text-purple-600 mr-2" />
-            <h3 className="font-semibold text-purple-900">Recently Viewed</h3>
+            <Eye className="w-4 h-4 text-gray-600 mr-2" />
+            <h3 className="font-medium text-gray-900 text-sm">Recently Viewed</h3>
           </div>
           <div className="flex flex-wrap gap-2">
             {recentlyViewed.map((course) => (
@@ -462,10 +448,10 @@ function CourseBrowser({ cart, addToCart, removeFromCart }) {
                   setSelectedCourse(course);
                   addToRecentlyViewed(course);
                 }}
-                className="px-3 py-2 bg-white rounded-lg border border-purple-300 hover:bg-purple-50 transition-colors text-sm flex items-center space-x-2"
+                className="px-3 py-2 bg-gray-50 rounded-lg border border-gray-200 hover:bg-blue-50 hover:border-blue-300 transition-colors text-sm flex items-center space-x-2"
               >
-                <span className="font-semibold text-purple-700">{course.id}</span>
-                <span className="text-gray-600">•</span>
+                <span className="font-semibold text-smu-blue">{course.id}</span>
+                <span className="text-gray-400">•</span>
                 <span className="text-gray-700">{course.name}</span>
               </button>
             ))}
