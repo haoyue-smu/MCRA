@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import {
   Home, BookOpen, Calendar, TrendingUp, GitBranch,
-  ClipboardList, Briefcase, Brain, Menu, X, Settings, ChevronLeft, ChevronRight, LogOut, User
+  ClipboardList, Briefcase, Brain, Menu, X, Settings, ChevronLeft, ChevronRight, LogOut, User, Bell, TrendingDown
 } from 'lucide-react';
 
 function Sidebar({ cart, user, onLogout, onCollapseChange, isCollapsed }) {
@@ -55,6 +55,15 @@ function Sidebar({ cart, user, onLogout, onCollapseChange, isCollapsed }) {
   const isActive = (path) => {
     return location.pathname === path;
   };
+
+  // Check for demand changes in cart courses
+  const demandChanges = cart.filter(course => course.demandChange).map(course => ({
+    courseId: course.id,
+    courseName: course.name,
+    type: course.demandChange.type,
+    changePercent: course.demandChange.changePercent,
+    suggestedBid: course.demandChange.suggestedBid
+  }));
 
   return (
     <>
@@ -112,6 +121,43 @@ function Sidebar({ cart, user, onLogout, onCollapseChange, isCollapsed }) {
               <span className="bg-gradient-to-r from-smu-blue to-blue-600 text-white px-3 py-1 rounded-full text-xs font-bold shadow-sm">
                 {cart.length}
               </span>
+            </div>
+          </div>
+        )}
+
+        {/* Demand Change Notifications */}
+        {!isCollapsed && demandChanges.length > 0 && (
+          <div className="mx-4 my-3 bg-blue-50 border border-blue-200 rounded-lg p-3">
+            <div className="flex items-start space-x-2">
+              <Bell className="w-4 h-4 text-blue-600 flex-shrink-0 mt-0.5" />
+              <div className="flex-1 min-w-0">
+                <p className="text-xs font-semibold text-blue-900 mb-1">
+                  Demand Changes
+                </p>
+                <div className="space-y-2">
+                  {demandChanges.map((change) => (
+                    <div key={change.courseId} className="text-xs bg-white rounded p-2 border border-blue-100">
+                      <div className="font-medium text-gray-900 truncate">{change.courseId}</div>
+                      <div className="flex items-center space-x-1 mt-1">
+                        {change.type === 'increase' ? (
+                          <>
+                            <TrendingUp className="w-3 h-3 text-red-600" />
+                            <span className="text-red-700">+{change.changePercent}%</span>
+                          </>
+                        ) : (
+                          <>
+                            <TrendingDown className="w-3 h-3 text-green-600" />
+                            <span className="text-green-700">{change.changePercent}%</span>
+                          </>
+                        )}
+                      </div>
+                      <div className="text-blue-800 font-semibold mt-1">
+                        💡 e$ {change.suggestedBid}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
             </div>
           </div>
         )}

@@ -541,11 +541,11 @@ export const suPolicy = {
 // Student Progress Data
 export const studentProgress = {
   totalCreditsRequired: 36,
-  creditsCompleted: 90,
+  creditsCompleted: 27,
   creditsByType: {
-    core: { completed: 30, required: 36 },
-    majorElective: { completed: 45, required: 48 },
-    freeElective: { completed: 15, required: 36 }
+    core: { completed: 8, required: 12 },
+    majorElective: { completed: 12, required: 15 },
+    freeElective: { completed: 7, required: 9 }
   },
   currentSemester: 'Term 3 2024-25',
   yearLevel: 'Year 3'
@@ -555,8 +555,8 @@ export const studentProgress = {
 export const programRequirements = [
   {
     category: 'Core Modules',
-    required: 36,
-    completed: 30,
+    required: 12,
+    completed: 8,
     modules: [
       { id: 'IS111', name: 'Introduction to Programming', status: 'completed' },
       { id: 'IS112', name: 'Data Management', status: 'completed' },
@@ -568,8 +568,8 @@ export const programRequirements = [
   },
   {
     category: 'Major Electives',
-    required: 48,
-    completed: 45,
+    required: 15,
+    completed: 12,
     modules: [
       { id: 'IS216', name: 'Web Application Development I', status: 'in_cart' },
       { id: 'IS213', name: 'Object Oriented Programming', status: 'pending' },
@@ -579,8 +579,8 @@ export const programRequirements = [
   },
   {
     category: 'Free Electives',
-    required: 36,
-    completed: 15,
+    required: 9,
+    completed: 7,
     modules: [
       { id: 'IS442', name: 'Cloud Management and Engineering', status: 'pending' },
       { id: 'ECON101', name: 'Introduction to Economics', status: 'completed' },
