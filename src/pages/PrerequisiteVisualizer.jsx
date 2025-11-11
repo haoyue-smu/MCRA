@@ -117,14 +117,14 @@ function PrerequisiteVisualizer() {
             <div className="text-sm mt-1">{course.name}</div>
             <div className="text-xs mt-2 opacity-75">{course.professor}</div>
           </div>
-          <div className="flex flex-col gap-1">
+          <div className="flex flex-col gap-2">
             {course.prerequisites.length > 0 && (
-              <span className="text-xs bg-blue-200 text-blue-800 px-2 py-0.5 rounded-full">
-                {course.prerequisites.length} prereq
+              <span className="text-xs font-semibold bg-blue-100 text-blue-700 px-2.5 py-1 rounded-full border border-blue-300">
+                {course.prerequisites.length} prereq{course.prerequisites.length > 1 ? 's' : ''}
               </span>
             )}
             {dependents.length > 0 && (
-              <span className="text-xs bg-green-200 text-green-800 px-2 py-0.5 rounded-full">
+              <span className="text-xs font-semibold bg-green-100 text-green-700 px-2.5 py-1 rounded-full border border-green-300">
                 {dependents.length} unlock{dependents.length > 1 ? 's' : ''}
               </span>
             )}

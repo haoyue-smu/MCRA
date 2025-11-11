@@ -273,7 +273,7 @@ function BiddingOptimizer({ cart }) {
                 <li>• Consider bidding slightly above average for courses with Very High demand</li>
                 <li>• Save e$ on Medium/Low demand courses by bidding near minimum</li>
                 <li>• Monitor live demand changes and adjust your strategy accordingly</li>
-                <li>• Keep a buffer of 100-150 e$ for emergency adjustments in later rounds</li>
+                <li>• Keep a buffer of 30-40 e$ for emergency adjustments in later rounds</li>
               </ul>
             </div>
           </div>
