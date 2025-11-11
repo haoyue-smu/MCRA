@@ -681,16 +681,11 @@ export const courses = [
 // - IS214 has demand change (increase)
 // - IS428 has demand change (decrease)
 // - IS216 has demand change (increase)
-// - IS315 has demand change (increase)
-// - Mix of under-demand (IS415), normal (IS453), and over-demand (IS460, IS216) courses
+// - Mix of demand levels: High (IS214), Medium (IS428), Very High (IS216)
 export const studentCart = [
-  courses.find(c => c.id === 'IS214'),  // demand change: increase
-  courses.find(c => c.id === 'IS428'),  // demand change: decrease
-  courses.find(c => c.id === 'IS216'),  // demand change: increase
-  courses.find(c => c.id === 'IS315'),  // demand change: increase
-  courses.find(c => c.id === 'IS415'),  // under-demand (45/80)
-  courses.find(c => c.id === 'IS453'),  // normal demand (95/100)
-  courses.find(c => c.id === 'IS460')   // over-demand (195/80)
+  courses.find(c => c.id === 'IS214'),  // demand change: increase, high demand
+  courses.find(c => c.id === 'IS428'),  // demand change: decrease, medium demand
+  courses.find(c => c.id === 'IS216')   // demand change: increase, very high demand
 ].filter(Boolean); // Filter out any undefined values
 
 // Initialize default subscriptions for cart courses
