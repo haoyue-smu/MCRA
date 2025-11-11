@@ -43,8 +43,22 @@ function CourseBrowser({ cart, addToCart, removeFromCart }) {
     courses.forEach(course => {
       initialCounts[course.id] = course.subscribers;
     });
+    // Save to localStorage for consistency
+    localStorage.setItem('subscriberCounts', JSON.stringify(initialCounts));
     return initialCounts;
   });
+
+  // Ensure default cart courses are always subscribed
+  useEffect(() => {
+    const currentSubscriptions = JSON.parse(localStorage.getItem('courseSubscriptions') || '[]');
+    const needsUpdate = defaultSubscriptions.some(id => !currentSubscriptions.includes(id));
+
+    if (needsUpdate) {
+      const merged = [...new Set([...currentSubscriptions, ...defaultSubscriptions])];
+      setSubscriptions(merged);
+      localStorage.setItem('courseSubscriptions', JSON.stringify(merged));
+    }
+  }, []); // Run once on mount
 
   const filteredCourses = courses.filter(course => {
     const matchesSearch = course.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -102,7 +116,8 @@ function CourseBrowser({ cart, addToCart, removeFromCart }) {
   const getPredictedBid = (course) => {
     // Calculate predicted bid based on demand and historical data
     const baseBid = course.yearlyAverage;
-    const subscriberRatio = subscriberCounts[course.id] / course.capacity;
+    const count = subscriberCounts[course.id] ?? course.subscribers;
+    const subscriberRatio = count / course.capacity;
 
     if (subscriberRatio > 1.8) {
       return `e$ ${Math.round(baseBid * 1.15)}-${Math.round(baseBid * 1.25)}`;
@@ -166,10 +181,11 @@ function CourseBrowser({ cart, addToCart, removeFromCart }) {
     // Simulate success rate based on bid amount
     // In a real app, this would come from historical data
     const avgBid = course.yearlyAverage;
+    const count = subscriberCounts[course.id] ?? course.subscribers;
     return {
-      low: Math.max(30, Math.min(50, 100 - (subscriberCounts[course.id] / course.capacity) * 50)),
-      medium: Math.max(60, Math.min(85, 100 - (subscriberCounts[course.id] / course.capacity) * 30)),
-      high: Math.max(90, Math.min(98, 100 - (subscriberCounts[course.id] / course.capacity) * 10)),
+      low: Math.max(30, Math.min(50, 100 - (count / course.capacity) * 50)),
+      medium: Math.max(60, Math.min(85, 100 - (count / course.capacity) * 30)),
+      high: Math.max(90, Math.min(98, 100 - (count / course.capacity) * 10)),
       avgBid: avgBid
     };
   };
@@ -187,13 +203,14 @@ function CourseBrowser({ cart, addToCart, removeFromCart }) {
   };
 
   const getInterestLevel = (course) => {
-    const ratio = (subscriberCounts[course.id] / course.capacity) * 100;
+    const count = subscriberCounts[course.id] ?? course.subscribers;
+    const ratio = (count / course.capacity) * 100;
     const isInterested = isSubscribed(course.id);
 
     return {
       bgColor: isInterested ? 'bg-pink-500 hover:bg-pink-600' : 'bg-gray-100 hover:bg-gray-200',
       textColor: isInterested ? 'text-white' : 'text-gray-700',
-      tooltip: `${subscriberCounts[course.id]} interested / ${course.capacity} slots (${Math.round(ratio)}% demand)`
+      tooltip: `${count} interested / ${course.capacity} slots (${Math.round(ratio)}% demand)`
     };
   };
 
@@ -362,7 +379,7 @@ function CourseBrowser({ cart, addToCart, removeFromCart }) {
           title={interestLevel.tooltip}
         >
           <Heart className={`w-4 h-4 ${isSubscribed(course.id) ? 'fill-current' : ''}`} />
-          <span className="font-semibold text-sm">{subscriberCounts[course.id]}/{course.capacity}</span>
+          <span className="font-semibold text-sm">{subscriberCounts[course.id] ?? course.subscribers}/{course.capacity}</span>
         </button>
 
         <button
