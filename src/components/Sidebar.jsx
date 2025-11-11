@@ -11,6 +11,7 @@ function Sidebar({ cart, user, onLogout, onCollapseChange, isCollapsed }) {
   const [showCustomize, setShowCustomize] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [showDemandDetails, setShowDemandDetails] = useState(false);
+  const [showCartDetails, setShowCartDetails] = useState(false);
 
   // Notify parent when collapse state changes
   const handleToggleCollapse = () => {
@@ -117,12 +118,15 @@ function Sidebar({ cart, user, onLogout, onCollapseChange, isCollapsed }) {
         {/* Cart Count Badge */}
         {!isCollapsed && cart.length > 0 && (
           <div className="px-4 py-3 bg-gradient-to-r from-blue-50 to-purple-50 border-b border-gray-200">
-            <div className="flex items-center justify-between">
+            <button
+              onClick={() => setShowCartDetails(true)}
+              className="flex items-center justify-between w-full hover:opacity-80 transition-opacity"
+            >
               <span className="text-sm text-gray-700 font-medium">Courses in Cart</span>
               <span className="bg-gradient-to-r from-smu-blue to-blue-600 text-white px-3 py-1 rounded-full text-xs font-bold shadow-sm">
                 {cart.length}
               </span>
-            </div>
+            </button>
           </div>
         )}
 
@@ -133,8 +137,7 @@ function Sidebar({ cart, user, onLogout, onCollapseChange, isCollapsed }) {
               onClick={() => setShowDemandDetails(true)}
               className="flex items-center justify-between w-full hover:opacity-80 transition-opacity"
             >
-              <span className="text-sm text-gray-700 font-medium flex items-center">
-                <Bell className="w-4 h-4 mr-2 text-blue-600" />
+              <span className="text-sm text-gray-700 font-medium">
                 Demand Changes
               </span>
               <span className="bg-gradient-to-r from-blue-500 to-blue-600 text-white px-3 py-1 rounded-full text-xs font-bold shadow-sm">
@@ -274,7 +277,7 @@ function Sidebar({ cart, user, onLogout, onCollapseChange, isCollapsed }) {
       {/* Demand Changes Modal */}
       {showDemandDetails && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg shadow-xl max-w-md w-full mx-4 max-h-[80vh] overflow-hidden flex flex-col">
+          <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full mx-4 max-h-[85vh] overflow-hidden flex flex-col">
             <div className="p-6 border-b border-gray-200">
               <div className="flex items-center justify-between">
                 <div className="flex items-center">
@@ -332,6 +335,76 @@ function Sidebar({ cart, user, onLogout, onCollapseChange, isCollapsed }) {
             <div className="p-6 border-t border-gray-200 bg-gray-50 rounded-b-lg">
               <button
                 onClick={() => setShowDemandDetails(false)}
+                className="w-full bg-smu-blue text-white px-4 py-2 rounded-lg hover:bg-blue-800 transition-colors"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Cart Details Modal */}
+      {showCartDetails && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full mx-4 max-h-[85vh] overflow-hidden flex flex-col">
+            <div className="p-6 border-b border-gray-200">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center">
+                  <BookOpen className="w-6 h-6 text-smu-blue mr-2" />
+                  <h3 className="text-xl font-bold text-gray-900">Courses in Cart</h3>
+                </div>
+                <button
+                  onClick={() => setShowCartDetails(false)}
+                  className="text-gray-400 hover:text-gray-600"
+                >
+                  <X className="w-6 h-6" />
+                </button>
+              </div>
+              <p className="text-sm text-gray-600 mt-2">
+                {cart.length} course{cart.length !== 1 ? 's' : ''} in your cart
+              </p>
+            </div>
+
+            <div className="p-6 space-y-3 overflow-y-auto">
+              {cart.map((course) => (
+                <div key={course.id} className="p-4 bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg border border-blue-200">
+                  <div className="flex items-start justify-between">
+                    <div className="flex-1">
+                      <div className="font-semibold text-gray-900 mb-1">
+                        {course.id} - {course.name}
+                      </div>
+                      <div className="text-sm text-gray-600 mb-2">
+                        {course.professor}
+                      </div>
+                      <div className="flex flex-wrap gap-2 mb-2">
+                        <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                          {course.credits} CU
+                        </span>
+                        <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
+                          {course.moduleType}
+                        </span>
+                        {course.suEligible && (
+                          <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                            S/U Eligible
+                          </span>
+                        )}
+                      </div>
+                      <div className="text-sm text-gray-700 mt-2">
+                        <div className="flex items-center justify-between">
+                          <span>Avg Bid:</span>
+                          <span className="font-semibold text-purple-900">e$ {course.yearlyAverage}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div className="p-6 border-t border-gray-200 bg-gray-50 rounded-b-lg">
+              <button
+                onClick={() => setShowCartDetails(false)}
                 className="w-full bg-smu-blue text-white px-4 py-2 rounded-lg hover:bg-blue-800 transition-colors"
               >
                 Close
