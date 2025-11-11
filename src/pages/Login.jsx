@@ -48,7 +48,10 @@ function Login({ onLogin }) {
       <div className="max-w-md w-full">
         {/* Logo & Header */}
         <div className="text-center mb-8">
-          <h1 className="text-5xl font-bold text-white mb-3">SCIS Smart Planner</h1>
+          <h1 className="text-5xl font-bold text-white mb-3">
+            <span className="block">BOSS</span>
+            <span className="block">Smart Planner</span>
+          </h1>
           <p className="text-lg text-blue-100">Singapore Management University</p>
           <p className="text-blue-200 mt-1">Sign in with your SMU account</p>
         </div>
@@ -117,7 +120,7 @@ function Login({ onLogin }) {
 
           <div className="mt-6 text-center">
             <p className="text-xs text-gray-500">
-              By signing in, you agree to SCIS Smart Planner's Terms of Service and Privacy Policy
+              By signing in, you agree to BOSS Smart Planner's Terms of Service and Privacy Policy
             </p>
           </div>
         </div>
