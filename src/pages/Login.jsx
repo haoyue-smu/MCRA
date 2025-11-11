@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Mail, Lock, AlertCircle } from 'lucide-react';
+import { Mail, AlertCircle } from 'lucide-react';
+import { validateEmail } from '../utils/validationUtils';
+import { saveUser } from '../utils/storageUtils';
 
 function Login({ onLogin }) {
   const navigate = useNavigate();
@@ -9,28 +11,38 @@ function Login({ onLogin }) {
 
   const handleGmailLogin = (e) => {
     e.preventDefault();
+    setError('');
 
-    // Validate SMU email domain - only @smu.edu.sg allowed
-    if (!email.endsWith('@smu.edu.sg')) {
-      setError('Please use your SMU email address (@smu.edu.sg)');
+    // Validate email with proper validation
+    const validation = validateEmail(email, true);
+    if (!validation.isValid) {
+      setError(validation.error);
       return;
     }
 
     // Simulate successful login
     const user = {
-      email: email,
-      name: email.split('@')[0].split('.').map(n => n.charAt(0).toUpperCase() + n.slice(1)).join(' '),
+      email: validation.email,
+      name: validation.email.split('@')[0].split('.').map(n =>
+        n.charAt(0).toUpperCase() + n.slice(1)
+      ).join(' '),
       loginTime: new Date().toISOString()
     };
 
-    localStorage.setItem('user', JSON.stringify(user));
+    // Save with error handling
+    const saved = saveUser(user);
+    if (!saved) {
+      setError('Failed to save login session. Please try again.');
+      return;
+    }
+
     onLogin(user);
     navigate('/');
   };
 
   const handleGoogleSignIn = () => {
     // In a real app, this would trigger Google OAuth
-    // For now, we'll simulate it
+    // For now, we'll simulate it with proper error handling
     const mockEmail = 'john.tan.2023@smu.edu.sg';
     const user = {
       email: mockEmail,
@@ -38,7 +50,12 @@ function Login({ onLogin }) {
       loginTime: new Date().toISOString()
     };
 
-    localStorage.setItem('user', JSON.stringify(user));
+    const saved = saveUser(user);
+    if (!saved) {
+      setError('Failed to save login session. Please try again.');
+      return;
+    }
+
     onLogin(user);
     navigate('/');
   };

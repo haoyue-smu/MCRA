@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { useState } from 'react';
+import { useState, useMemo, useCallback } from 'react';
 import {
   BookOpen, Calendar, TrendingUp, GitBranch,
   ClipboardList, Briefcase, Brain, ArrowRight, Star, AlertTriangle,
@@ -9,9 +9,22 @@ import {
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell, ReferenceLine } from 'recharts';
 import { studentProgress, programRequirements } from '../data/mockData';
 import PageContainer from '../components/PageContainer';
+import { detectTimeClashes, checkPrerequisites, calculateTotalCredits } from '../utils/courseUtils';
+import {
+  DEFAULT_STUDENT_BUDGET,
+  CHART_COLORS,
+  ASSESSMENT_LOAD_HIGH,
+  ASSESSMENT_LOAD_VERY_HIGH
+} from '../utils/constants';
+import { getCourseRatings, saveCourseRatings, getCompletedCourses } from '../utils/storageUtils';
 
 function Dashboard({ cart, removeFromCart }) {
-  const [courseRatings, setCourseRatings] = useState({});
+  const [courseRatings, setCourseRatings] = useState(() => getCourseRatings());
+  const [showClashDetails, setShowClashDetails] = useState(false);
+  const [showPrereqDetails, setShowPrereqDetails] = useState(false);
+
+  // Get completed courses from storage
+  const completedCourses = useMemo(() => getCompletedCourses(), []);
   const quickLinks = [
     {
       title: 'Course Browser',
@@ -64,53 +77,70 @@ function Dashboard({ cart, removeFromCart }) {
     }
   ];
 
-  // Helper functions for dashboard stats
-  const getTotalAssessments = () => {
-    let total = 0;
-    cart.forEach(course => {
-      total += course.assessments.length;
-    });
-    return total;
-  };
+  // Memoized helper functions for dashboard stats
+  const totalAssessments = useMemo(() => {
+    return cart.reduce((total, course) => {
+      return total + (course.assessments?.length || 0);
+    }, 0);
+  }, [cart]);
 
-  const getAverageBid = () => {
+  const averageBid = useMemo(() => {
     if (cart.length === 0) return 0;
-    const sum = cart.reduce((acc, course) => acc + course.yearlyAverage, 0);
+    const sum = cart.reduce((acc, course) => acc + (course.yearlyAverage || 0), 0);
     return Math.round(sum / cart.length);
-  };
+  }, [cart]);
 
-  const getSUEligibleCount = () => {
+  const suEligibleCount = useMemo(() => {
     return cart.filter(c => c.suEligible).length;
-  };
+  }, [cart]);
 
-  // Prepare credit distribution data for pie chart
-  const prepareCreditDistribution = () => {
+  const totalCartCredits = useMemo(() => {
+    return calculateTotalCredits(cart);
+  }, [cart]);
+
+  // Memoized credit distribution data for pie chart
+  const creditDistribution = useMemo(() => {
     return [
-      { name: 'Core Modules', value: studentProgress.creditsByType.core.completed, color: '#003D7C' },
+      { name: 'Core Modules', value: studentProgress.creditsByType.core.completed, color: CHART_COLORS.primary },
       { name: 'Major Electives', value: studentProgress.creditsByType.majorElective.completed, color: '#D4A76A' },
-      { name: 'Free Electives', value: studentProgress.creditsByType.freeElective.completed, color: '#10b981' },
+      { name: 'Free Electives', value: studentProgress.creditsByType.freeElective.completed, color: CHART_COLORS.success },
       { name: 'Remaining', value: studentProgress.totalCreditsRequired - studentProgress.creditsCompleted, color: '#e5e7eb' }
     ];
-  };
+  }, []);
 
-  const handleRateCourse = (courseId, rating) => {
-    setCourseRatings(prev => ({
-      ...prev,
-      [courseId]: rating
-    }));
-    // In a real app, this would save to backend
-    localStorage.setItem('courseRatings', JSON.stringify({
+  const handleRateCourse = useCallback((courseId, rating) => {
+    const newRatings = {
       ...courseRatings,
       [courseId]: rating
-    }));
-  };
+    };
+    setCourseRatings(newRatings);
+    saveCourseRatings(newRatings);
+  }, [courseRatings]);
 
-  const COLORS = ['#003D7C', '#D4A76A', '#10b981', '#e5e7eb'];
+  const COLORS = [CHART_COLORS.primary, '#D4A76A', CHART_COLORS.success, '#e5e7eb'];
 
-  // Bidding Health Check logic
-  const STUDENT_BUDGET = 100; // e$ budget for bidding
+  // Memoized time clash detection using optimized utility
+  const timeClashes = useMemo(() => {
+    return detectTimeClashes(cart);
+  }, [cart]);
 
-  const calculateBiddingHealth = () => {
+  // Memoized prerequisite checking using optimized utility
+  const missingPrerequisites = useMemo(() => {
+    const missing = [];
+    cart.forEach(course => {
+      const prereqCheck = checkPrerequisites(course, completedCourses);
+      if (!prereqCheck.isMet) {
+        missing.push({
+          course: course.id,
+          prerequisites: prereqCheck.missing
+        });
+      }
+    });
+    return missing;
+  }, [cart, completedCourses]);
+
+  // Memoized bidding health calculation
+  const biddingHealth = useMemo(() => {
     if (cart.length === 0) {
       return {
         status: 'action',
@@ -124,22 +154,15 @@ function Dashboard({ cart, removeFromCart }) {
       };
     }
 
-    const totalBidNeeded = cart.reduce((sum, c) => sum + c.yearlyAverage, 0);
-    const overBudget = totalBidNeeded > STUDENT_BUDGET;
-    const totalAssessments = getTotalAssessments();
-    const heavyWorkload = totalAssessments > 18;
+    const totalBidNeeded = cart.reduce((sum, c) => sum + (c.yearlyAverage || 0), 0);
+    const overBudget = totalBidNeeded > DEFAULT_STUDENT_BUDGET;
+    const heavyWorkload = totalAssessments > ASSESSMENT_LOAD_VERY_HIGH * 4;
 
-    // Check for time clashes
-    const timeClashes = checkTimeClashes();
-
-    // Check for missing prerequisites
-    const missingPrereqs = checkPrerequisites();
-
-    if (missingPrereqs.length > 0 || timeClashes.length > 0) {
+    if (missingPrerequisites.length > 0 || timeClashes.length > 0) {
       return {
         status: 'action',
         title: 'Action Required',
-        message: `${missingPrereqs.length > 0 ? 'Missing prerequisites. ' : ''}${timeClashes.length > 0 ? `${timeClashes.length} schedule conflicts detected.` : ''}`,
+        message: `${missingPrerequisites.length > 0 ? 'Missing prerequisites. ' : ''}${timeClashes.length > 0 ? `${timeClashes.length} schedule conflicts detected.` : ''}`,
         icon: AlertOctagon,
         color: 'from-red-500 to-red-600',
         bgColor: 'bg-red-50',
@@ -152,7 +175,7 @@ function Dashboard({ cart, removeFromCart }) {
       return {
         status: 'review',
         title: 'Review Needed',
-        message: `${overBudget ? `Budget exceeded by e$ ${totalBidNeeded - STUDENT_BUDGET}. ` : ''}${heavyWorkload ? `Heavy workload: ${totalAssessments} assessments.` : ''}`,
+        message: `${overBudget ? `Budget exceeded by e$ ${totalBidNeeded - DEFAULT_STUDENT_BUDGET}. ` : ''}${heavyWorkload ? `Heavy workload: ${totalAssessments} assessments.` : ''}`,
         icon: AlertTriangle,
         color: 'from-yellow-500 to-yellow-600',
         bgColor: 'bg-yellow-50',
@@ -164,93 +187,16 @@ function Dashboard({ cart, removeFromCart }) {
     return {
       status: 'ready',
       title: 'Ready to Bid',
-      message: `Budget: e$ ${totalBidNeeded}/${STUDENT_BUDGET}. All prerequisites met. No schedule conflicts.`,
+      message: `Budget: e$ ${totalBidNeeded}/${DEFAULT_STUDENT_BUDGET}. All prerequisites met. No schedule conflicts.`,
       icon: CheckCircle,
       color: 'from-green-500 to-green-600',
       bgColor: 'bg-green-50',
       textColor: 'text-green-800',
       borderColor: 'border-green-200'
     };
-  };
+  }, [cart, totalAssessments, missingPrerequisites, timeClashes]);
 
-  const checkTimeClashes = () => {
-    const clashes = [];
-
-    // Check for class time conflicts (same day + exact same time)
-    for (let i = 0; i < cart.length; i++) {
-      for (let j = i + 1; j < cart.length; j++) {
-        const course1 = cart[i];
-        const course2 = cart[j];
-
-        for (const schedule1 of course1.schedule) {
-          for (const schedule2 of course2.schedule) {
-            if (schedule1.day === schedule2.day && schedule1.time === schedule2.time) {
-              clashes.push({
-                type: 'class',
-                course1: course1.id,
-                course2: course2.id,
-                day: schedule1.day,
-                time: schedule1.time
-              });
-            }
-          }
-        }
-      }
-    }
-
-    // Check for exam conflicts (same exam date)
-    for (let i = 0; i < cart.length; i++) {
-      for (let j = i + 1; j < cart.length; j++) {
-        const course1 = cart[i];
-        const course2 = cart[j];
-
-        // Get final exams for both courses
-        const exam1 = course1.assessments.find(a => a.type.toLowerCase().includes('final exam'));
-        const exam2 = course2.assessments.find(a => a.type.toLowerCase().includes('final exam'));
-
-        if (exam1 && exam2 && exam1.date === exam2.date) {
-          clashes.push({
-            type: 'exam',
-            course1: course1.id,
-            course2: course2.id,
-            examDate: exam1.date
-          });
-        }
-      }
-    }
-
-    return clashes;
-  };
-
-  const checkPrerequisites = () => {
-    const missing = [];
-    const completedCourses = ['IS111', 'IS112', 'STAT151']; // Mock completed courses
-
-    cart.forEach(course => {
-      if (course.prerequisites && course.prerequisites.length > 0) {
-        const missingPrereqs = course.prerequisites.filter(
-          prereq => !completedCourses.includes(prereq)
-        );
-        if (missingPrereqs.length > 0) {
-          missing.push({
-            course: course.id,
-            prerequisites: missingPrereqs
-          });
-        }
-      }
-    });
-
-    return missing;
-  };
-
-  const biddingHealth = calculateBiddingHealth();
   const HealthIcon = biddingHealth.icon;
-
-  const [showClashDetails, setShowClashDetails] = useState(false);
-  const [showPrereqDetails, setShowPrereqDetails] = useState(false);
-
-  const timeClashes = checkTimeClashes();
-  const missingPrereqs = checkPrerequisites();
 
   return (
     <PageContainer className="space-y-6">
@@ -302,7 +248,7 @@ function Dashboard({ cart, removeFromCart }) {
       )}
 
       {/* Missing Prerequisites Alert */}
-      {missingPrereqs.length > 0 && (
+      {missingPrerequisites.length > 0 && (
         <div className="bg-yellow-50 border-2 border-yellow-500 rounded-lg p-4 mb-4">
           <div className="flex items-start justify-between">
             <div className="flex items-start space-x-3 flex-1">
@@ -310,7 +256,7 @@ function Dashboard({ cart, removeFromCart }) {
               <div className="flex-1">
                 <h3 className="font-bold text-lg text-yellow-900">Missing Prerequisites!</h3>
                 <p className="text-sm text-yellow-800 mt-1">
-                  {missingPrereqs.length} course{missingPrereqs.length > 1 ? 's' : ''} in your cart {missingPrereqs.length > 1 ? 'have' : 'has'} unfulfilled prerequisites.
+                  {missingPrerequisites.length} course{missingPrerequisites.length > 1 ? 's' : ''} in your cart {missingPrerequisites.length > 1 ? 'have' : 'has'} unfulfilled prerequisites.
                 </p>
                 <button
                   onClick={() => setShowPrereqDetails(!showPrereqDetails)}
@@ -321,7 +267,7 @@ function Dashboard({ cart, removeFromCart }) {
                 {showPrereqDetails && (
                   <div className="mt-3 p-3 bg-white rounded border border-yellow-300">
                     <div className="space-y-2">
-                      {missingPrereqs.map((item, idx) => (
+                      {missingPrerequisites.map((item, idx) => (
                         <div key={idx} className="text-sm text-yellow-900">
                           <strong>{item.course}</strong> requires: <strong>{item.prerequisites.join(', ')}</strong>
                         </div>
@@ -366,15 +312,15 @@ function Dashboard({ cart, removeFromCart }) {
           <div className="stat-label">Courses in Cart</div>
         </div>
         <div className="stat-card">
-          <div className="stat-value text-green-600">{getSUEligibleCount()}</div>
+          <div className="stat-value text-green-600">{suEligibleCount}</div>
           <div className="stat-label">S/U Eligible</div>
         </div>
         <div className="stat-card">
-          <div className="stat-value text-purple-600">e$ {getAverageBid()}</div>
+          <div className="stat-value text-purple-600">e$ {averageBid}</div>
           <div className="stat-label">Avg Bid Needed</div>
         </div>
         <div className="stat-card">
-          <div className="stat-value text-orange-600">{getTotalAssessments()}</div>
+          <div className="stat-value text-orange-600">{totalAssessments}</div>
           <div className="stat-label">Total Assessments</div>
         </div>
       </div>
@@ -445,7 +391,7 @@ function Dashboard({ cart, removeFromCart }) {
           <ResponsiveContainer width="100%" height={200}>
             <PieChart>
               <Pie
-                data={prepareCreditDistribution()}
+                data={creditDistribution}
                 cx="50%"
                 cy="50%"
                 innerRadius={60}
@@ -453,7 +399,7 @@ function Dashboard({ cart, removeFromCart }) {
                 paddingAngle={2}
                 dataKey="value"
               >
-                {prepareCreditDistribution().map((entry, index) => (
+                {creditDistribution.map((entry, index) => (
                   <Cell key={`cell-${index}`} fill={COLORS[index]} />
                 ))}
               </Pie>
