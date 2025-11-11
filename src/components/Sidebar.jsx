@@ -10,6 +10,7 @@ function Sidebar({ cart, user, onLogout, onCollapseChange, isCollapsed }) {
   const location = useLocation();
   const [showCustomize, setShowCustomize] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [showDemandDetails, setShowDemandDetails] = useState(false);
 
   // Notify parent when collapse state changes
   const handleToggleCollapse = () => {
@@ -127,38 +128,19 @@ function Sidebar({ cart, user, onLogout, onCollapseChange, isCollapsed }) {
 
         {/* Demand Change Notifications */}
         {!isCollapsed && demandChanges.length > 0 && (
-          <div className="mx-4 my-3 bg-blue-50 border border-blue-200 rounded-lg p-3">
-            <div className="flex items-start space-x-2">
-              <Bell className="w-4 h-4 text-blue-600 flex-shrink-0 mt-0.5" />
-              <div className="flex-1 min-w-0">
-                <p className="text-xs font-semibold text-blue-900 mb-1">
-                  Demand Changes
-                </p>
-                <div className="space-y-2">
-                  {demandChanges.map((change) => (
-                    <div key={change.courseId} className="text-xs bg-white rounded p-2 border border-blue-100">
-                      <div className="font-medium text-gray-900 truncate">{change.courseId}</div>
-                      <div className="flex items-center space-x-1 mt-1">
-                        {change.type === 'increase' ? (
-                          <>
-                            <TrendingUp className="w-3 h-3 text-red-600" />
-                            <span className="text-red-700">+{change.changePercent}%</span>
-                          </>
-                        ) : (
-                          <>
-                            <TrendingDown className="w-3 h-3 text-green-600" />
-                            <span className="text-green-700">{change.changePercent}%</span>
-                          </>
-                        )}
-                      </div>
-                      <div className="text-blue-800 font-semibold mt-1">
-                        💡 e$ {change.suggestedBid}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
+          <div className="px-4 py-3 bg-gradient-to-r from-blue-50 to-purple-50 border-b border-gray-200">
+            <button
+              onClick={() => setShowDemandDetails(true)}
+              className="flex items-center justify-between w-full hover:opacity-80 transition-opacity"
+            >
+              <span className="text-sm text-gray-700 font-medium flex items-center">
+                <Bell className="w-4 h-4 mr-2 text-blue-600" />
+                Demand Changes
+              </span>
+              <span className="bg-gradient-to-r from-blue-500 to-blue-600 text-white px-3 py-1 rounded-full text-xs font-bold shadow-sm">
+                {demandChanges.length}
+              </span>
+            </button>
           </div>
         )}
 
@@ -283,6 +265,76 @@ function Sidebar({ cart, user, onLogout, onCollapseChange, isCollapsed }) {
                 className="w-full bg-smu-blue text-white px-4 py-2 rounded-lg hover:bg-blue-800 transition-colors"
               >
                 Done
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Demand Changes Modal */}
+      {showDemandDetails && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg shadow-xl max-w-md w-full mx-4 max-h-[80vh] overflow-hidden flex flex-col">
+            <div className="p-6 border-b border-gray-200">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center">
+                  <Bell className="w-6 h-6 text-blue-600 mr-2" />
+                  <h3 className="text-xl font-bold text-gray-900">Demand Changes</h3>
+                </div>
+                <button
+                  onClick={() => setShowDemandDetails(false)}
+                  className="text-gray-400 hover:text-gray-600"
+                >
+                  <X className="w-6 h-6" />
+                </button>
+              </div>
+              <p className="text-sm text-gray-600 mt-2">
+                Courses in your cart with recent demand changes
+              </p>
+            </div>
+
+            <div className="p-6 space-y-3 overflow-y-auto">
+              {demandChanges.map((change) => (
+                <div key={change.courseId} className="p-4 bg-blue-50 rounded-lg border border-blue-200">
+                  <div className="font-semibold text-gray-900 mb-2">
+                    {change.courseName}
+                  </div>
+                  <div className="text-sm text-gray-600 mb-1">
+                    Course ID: <span className="font-medium">{change.courseId}</span>
+                  </div>
+                  <div className="flex items-center space-x-2 mb-3">
+                    {change.type === 'increase' ? (
+                      <>
+                        <TrendingUp className="w-4 h-4 text-red-600" />
+                        <span className="text-sm text-red-700 font-medium">
+                          Demand increased by {change.changePercent}%
+                        </span>
+                      </>
+                    ) : (
+                      <>
+                        <TrendingDown className="w-4 h-4 text-green-600" />
+                        <span className="text-sm text-green-700 font-medium">
+                          Demand decreased by {Math.abs(change.changePercent)}%
+                        </span>
+                      </>
+                    )}
+                  </div>
+                  <div className="mt-3 pt-3 border-t border-blue-200">
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm text-gray-700">💡 Suggested bid:</span>
+                      <span className="text-lg font-bold text-blue-900">e$ {change.suggestedBid}</span>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div className="p-6 border-t border-gray-200 bg-gray-50 rounded-b-lg">
+              <button
+                onClick={() => setShowDemandDetails(false)}
+                className="w-full bg-smu-blue text-white px-4 py-2 rounded-lg hover:bg-blue-800 transition-colors"
+              >
+                Close
               </button>
             </div>
           </div>

@@ -387,7 +387,7 @@ function CourseBrowser({ cart, addToCart, removeFromCart }) {
           <div>
             <h3 className="font-semibold text-blue-900 mb-1">S/U Policy Reminder</h3>
             <p className="text-sm text-blue-800">
-              You can S/U up to 12 CUs. Core modules and final semester courses cannot be S/U-ed.
+              You can S/U up to 2 modules in total. Core modules and final semester courses cannot be S/U-ed.
               Courses marked with a green badge are S/U eligible.
             </p>
           </div>

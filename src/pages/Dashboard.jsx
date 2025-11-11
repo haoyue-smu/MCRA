@@ -480,7 +480,7 @@ function Dashboard({ cart, removeFromCart }) {
                 <p>• Need {studentProgress.creditsByType.majorElective.required - studentProgress.creditsByType.majorElective.completed} more <strong>Major Elective</strong> credits (e.g., IS213, IS301)</p>
               )}
               {studentProgress.creditsByType.freeElective.completed < studentProgress.creditsByType.freeElective.required && (
-                <p>• Need {studentProgress.creditsByType.freeElective.required - studentProgress.creditsByType.freeElective.completed} more <strong>Free Elective</strong> credits (explore any department!)</p>
+                <p>• Need {studentProgress.creditsByType.freeElective.required - studentProgress.creditsByType.freeElective.completed} more <strong>Free Elective</strong> credits (explore any school!)</p>
               )}
               {studentProgress.creditsCompleted >= studentProgress.totalCreditsRequired && (
                 <p className="text-green-700">🎉 All degree requirements met! Ready to graduate!</p>
