@@ -132,7 +132,7 @@ function Sidebar({ cart, user, onLogout, onCollapseChange, isCollapsed }) {
 
         {/* Demand Change Notifications */}
         {!isCollapsed && demandChanges.length > 0 && (
-          <div className="px-4 py-3 bg-gradient-to-r from-blue-50 to-purple-50 border-b border-gray-200">
+          <div className="px-4 py-3 bg-gradient-to-r from-blue-50 to-purple-50 border-b border-gray-200 mb-4">
             <button
               onClick={() => setShowDemandDetails(true)}
               className="flex items-center justify-between w-full hover:opacity-80 transition-opacity"

@@ -42,6 +42,18 @@ function App() {
     const course = courses.find(c => c.id === courseId);
     if (course && !cart.find(c => c.id === courseId)) {
       setCart([...cart, course]);
+
+      // Auto-like when adding to cart
+      const subscriptions = JSON.parse(localStorage.getItem('courseSubscriptions') || '[]');
+      if (!subscriptions.includes(courseId)) {
+        subscriptions.push(courseId);
+        localStorage.setItem('courseSubscriptions', JSON.stringify(subscriptions));
+
+        // Update subscriber count
+        const subscriberCounts = JSON.parse(localStorage.getItem('subscriberCounts') || '{}');
+        subscriberCounts[courseId] = (subscriberCounts[courseId] || course.subscribers) + 1;
+        localStorage.setItem('subscriberCounts', JSON.stringify(subscriberCounts));
+      }
     }
   };
 

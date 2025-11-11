@@ -409,6 +409,7 @@ export const courses = [
     capacity: 110,
     subscribers: 221,
     suEligible: true,
+    demandChange: { type: 'increase', previousDemandCount: 170, changePercent: 10, suggestedBid: 36 },
     description: 'Native and cross-platform mobile app development for iOS and Android',
     assessments: [
       { type: 'Class Participation', date: '2025-05-01', weight: 10, title: 'Attendance & Engagement' },
@@ -437,17 +438,259 @@ export const courses = [
     workload: 'Very High',
     difficulty: 4,
     tags: ['Programming', 'Web Development', 'Project-Heavy']
+  },
+  {
+    id: 'IS217',
+    name: 'Web Application Development II',
+    professor: 'Prof. Benjamin Tan',
+    credits: 1.0,
+    moduleType: 'Major Elective',
+    demand: 'High',
+    demandCount: 148,
+    capacity: 110,
+    subscribers: 165,
+    suEligible: true,
+    description: 'Advanced web development with microservices and cloud deployment',
+    assessments: [
+      { type: 'Class Participation', date: '2025-04-29', weight: 10, title: 'Attendance & Engagement' },
+      { type: 'Quiz 1', date: '2025-02-23', weight: 10, title: 'Microservices Architecture' },
+      { type: 'Quiz 2', date: '2025-03-09', weight: 10, title: 'API Design' },
+      { type: 'Lab Assignment', date: '2025-03-25', weight: 20, title: 'RESTful API Development' },
+      { type: 'Project', date: '2025-04-16', weight: 35, title: 'Microservices Application' },
+      { type: 'Final Exam', date: '2025-04-29', weight: 15, title: 'Practical Exam' }
+    ],
+    schedule: [
+      { day: 'Thursday', time: '12:00-15:00', location: 'SCIS1 Lab 2' }
+    ],
+    prerequisites: ['IS216'],
+    bidHistory: [
+      { term: '2024-25 T2', minBid: 18, avgBid: 30, maxBid: 38 },
+      { term: '2024-25 T1', minBid: 17, avgBid: 29, maxBid: 37 },
+      { term: '2023-24 T3', minBid: 17, avgBid: 28, maxBid: 36 },
+      { term: '2023-24 T2', minBid: 16, avgBid: 27, maxBid: 35 }
+    ],
+    yearlyAverage: 30,
+    bidRange: '16-38 e$',
+    weeklyHours: '12-15 hrs/week',
+    careerPaths: ['Backend Developer', 'Full-Stack Developer', 'API Developer'],
+    skills: ['Node.js', 'Express', 'Microservices', 'REST APIs', 'Docker'],
+    afterClassRating: 4.5,
+    workload: 'Very High',
+    difficulty: 4,
+    tags: ['Web Development', 'Programming', 'Project-Heavy']
+  },
+  {
+    id: 'IS415',
+    name: 'Geospatial Analytics',
+    professor: 'Prof. Kam Tin Seong',
+    credits: 1.0,
+    moduleType: 'Major Elective',
+    demand: 'Low',
+    demandCount: 45,
+    capacity: 80,
+    subscribers: 52,
+    suEligible: true,
+    description: 'Spatial data analysis and visualization techniques for geographic insights',
+    assessments: [
+      { type: 'Class Participation', date: '2025-05-07', weight: 10, title: 'Attendance & Engagement' },
+      { type: 'Quiz 1', date: '2025-02-27', weight: 15, title: 'GIS Fundamentals' },
+      { type: 'Lab Assignment', date: '2025-03-15', weight: 20, title: 'Spatial Analysis' },
+      { type: 'Project', date: '2025-04-18', weight: 35, title: 'Geospatial Application' },
+      { type: 'Final Exam', date: '2025-05-07', weight: 20, title: 'Written Exam' }
+    ],
+    schedule: [
+      { day: 'Friday', time: '08:15-11:15', location: 'SCIS1 Lab 4' }
+    ],
+    prerequisites: ['IS112'],
+    bidHistory: [
+      { term: '2024-25 T2', minBid: 15, avgBid: 18, maxBid: 22 },
+      { term: '2024-25 T1', minBid: 15, avgBid: 17, maxBid: 21 },
+      { term: '2023-24 T3', minBid: 15, avgBid: 17, maxBid: 20 },
+      { term: '2023-24 T2', minBid: 15, avgBid: 16, maxBid: 19 }
+    ],
+    yearlyAverage: 18,
+    bidRange: '15-22 e$',
+    weeklyHours: '9-12 hrs/week',
+    careerPaths: ['GIS Analyst', 'Data Scientist', 'Urban Planner'],
+    skills: ['R', 'Python', 'QGIS', 'Spatial Analysis', 'Data Visualization'],
+    afterClassRating: 4.6,
+    workload: 'High',
+    difficulty: 3,
+    tags: ['Analytics', 'Data Visualization', 'Specialized']
+  },
+  {
+    id: 'IS429',
+    name: 'Enterprise Systems and Process Automation',
+    professor: 'Prof. Helen Chong',
+    credits: 1.0,
+    moduleType: 'Major Elective',
+    demand: 'Medium',
+    demandCount: 87,
+    capacity: 90,
+    subscribers: 96,
+    suEligible: true,
+    description: 'ERP systems, workflow automation, and enterprise integration',
+    assessments: [
+      { type: 'Class Participation', date: '2025-05-04', weight: 10, title: 'Attendance & Engagement' },
+      { type: 'Quiz 1', date: '2025-02-26', weight: 15, title: 'ERP Fundamentals' },
+      { type: 'Case Study', date: '2025-03-16', weight: 20, title: 'Process Automation Analysis' },
+      { type: 'Group Project', date: '2025-04-22', weight: 35, title: 'Enterprise System Implementation' },
+      { type: 'Final Exam', date: '2025-05-04', weight: 20, title: 'Written Exam' }
+    ],
+    schedule: [
+      { day: 'Wednesday', time: '08:15-11:15', location: 'SCIS1 SR 3-3' }
+    ],
+    prerequisites: ['IS210'],
+    bidHistory: [
+      { term: '2024-25 T2', minBid: 15, avgBid: 23, maxBid: 29 },
+      { term: '2024-25 T1', minBid: 15, avgBid: 22, maxBid: 28 },
+      { term: '2023-24 T3', minBid: 15, avgBid: 22, maxBid: 27 },
+      { term: '2023-24 T2', minBid: 15, avgBid: 21, maxBid: 26 }
+    ],
+    yearlyAverage: 23,
+    bidRange: '15-29 e$',
+    weeklyHours: '6-9 hrs/week',
+    careerPaths: ['ERP Consultant', 'Business Process Manager', 'Systems Integrator'],
+    skills: ['SAP', 'Process Automation', 'Business Process Management', 'Workflow Design'],
+    afterClassRating: 4.2,
+    workload: 'Medium',
+    difficulty: 3,
+    tags: ['Business Focus', 'Group Work', 'Theory-Heavy']
+  },
+  {
+    id: 'IS434',
+    name: 'Social Media and Network Analytics',
+    professor: 'Prof. Vivian Chen',
+    credits: 1.0,
+    moduleType: 'Major Elective',
+    demand: 'High',
+    demandCount: 152,
+    capacity: 100,
+    subscribers: 178,
+    suEligible: true,
+    description: 'Social network analysis, sentiment analysis, and social media mining',
+    assessments: [
+      { type: 'Class Participation', date: '2025-04-27', weight: 10, title: 'Attendance & Engagement' },
+      { type: 'Quiz 1', date: '2025-02-16', weight: 15, title: 'Network Theory' },
+      { type: 'Lab Assignment', date: '2025-03-11', weight: 20, title: 'Sentiment Analysis' },
+      { type: 'Project', date: '2025-04-13', weight: 35, title: 'Social Network Analysis Project' },
+      { type: 'Final Exam', date: '2025-04-27', weight: 20, title: 'Written Exam' }
+    ],
+    schedule: [
+      { day: 'Monday', time: '19:00-22:00', location: 'SCIS1 Lab 3' }
+    ],
+    prerequisites: ['IS112', 'STAT151'],
+    bidHistory: [
+      { term: '2024-25 T2', minBid: 18, avgBid: 29, maxBid: 36 },
+      { term: '2024-25 T1', minBid: 17, avgBid: 28, maxBid: 35 },
+      { term: '2023-24 T3', minBid: 17, avgBid: 27, maxBid: 34 },
+      { term: '2023-24 T2', minBid: 16, avgBid: 26, maxBid: 33 }
+    ],
+    yearlyAverage: 29,
+    bidRange: '16-36 e$',
+    weeklyHours: '9-12 hrs/week',
+    careerPaths: ['Social Media Analyst', 'Data Scientist', 'Marketing Analyst'],
+    skills: ['Python', 'Network Analysis', 'NLP', 'Data Mining', 'Visualization'],
+    afterClassRating: 4.4,
+    workload: 'High',
+    difficulty: 4,
+    tags: ['Analytics', 'AI/ML', 'Data Visualization']
+  },
+  {
+    id: 'IS453',
+    name: 'Data Visualization and Visual Analytics',
+    professor: 'Prof. Lisa Wong',
+    credits: 1.0,
+    moduleType: 'Major Elective',
+    demand: 'Medium',
+    demandCount: 95,
+    capacity: 100,
+    subscribers: 108,
+    suEligible: true,
+    description: 'Interactive visualizations and visual storytelling with data',
+    assessments: [
+      { type: 'Class Participation', date: '2025-05-09', weight: 10, title: 'Attendance & Engagement' },
+      { type: 'Quiz 1', date: '2025-03-02', weight: 15, title: 'Visualization Principles' },
+      { type: 'Lab Assignment', date: '2025-03-23', weight: 20, title: 'Dashboard Development' },
+      { type: 'Project', date: '2025-04-24', weight: 40, title: 'Interactive Visualization' },
+      { type: 'Final Exam', date: '2025-05-09', weight: 15, title: 'Practical Exam' }
+    ],
+    schedule: [
+      { day: 'Thursday', time: '15:30-18:30', location: 'SCIS1 Lab 1' }
+    ],
+    prerequisites: ['IS112'],
+    bidHistory: [
+      { term: '2024-25 T2', minBid: 15, avgBid: 26, maxBid: 33 },
+      { term: '2024-25 T1', minBid: 15, avgBid: 25, maxBid: 32 },
+      { term: '2023-24 T3', minBid: 15, avgBid: 24, maxBid: 31 },
+      { term: '2023-24 T2', minBid: 15, avgBid: 23, maxBid: 30 }
+    ],
+    yearlyAverage: 26,
+    bidRange: '15-33 e$',
+    weeklyHours: '9-12 hrs/week',
+    careerPaths: ['Data Visualization Specialist', 'BI Developer', 'UX Designer'],
+    skills: ['D3.js', 'Tableau', 'R', 'JavaScript', 'Visual Design'],
+    afterClassRating: 4.7,
+    workload: 'High',
+    difficulty: 3,
+    tags: ['Data Visualization', 'Programming', 'Creative']
+  },
+  {
+    id: 'IS460',
+    name: 'Blockchain Technologies and Applications',
+    professor: 'Prof. Nathan Lee',
+    credits: 1.0,
+    moduleType: 'Free Elective',
+    demand: 'Very High',
+    demandCount: 195,
+    capacity: 80,
+    subscribers: 230,
+    suEligible: true,
+    description: 'Distributed ledger technology, smart contracts, and blockchain applications',
+    assessments: [
+      { type: 'Class Participation', date: '2025-05-10', weight: 10, title: 'Attendance & Engagement' },
+      { type: 'Quiz 1', date: '2025-03-04', weight: 15, title: 'Blockchain Fundamentals' },
+      { type: 'Lab Assignment', date: '2025-03-26', weight: 20, title: 'Smart Contract Development' },
+      { type: 'Group Project', date: '2025-04-26', weight: 35, title: 'Blockchain Application' },
+      { type: 'Final Exam', date: '2025-05-10', weight: 20, title: 'Written Exam' }
+    ],
+    schedule: [
+      { day: 'Friday', time: '12:00-15:00', location: 'SCIS1 SR 2-2' }
+    ],
+    prerequisites: ['IS111', 'IS213'],
+    bidHistory: [
+      { term: '2024-25 T2', minBid: 22, avgBid: 37, maxBid: 46 },
+      { term: '2024-25 T1', minBid: 21, avgBid: 36, maxBid: 45 },
+      { term: '2023-24 T3', minBid: 21, avgBid: 35, maxBid: 44 },
+      { term: '2023-24 T2', minBid: 20, avgBid: 34, maxBid: 43 }
+    ],
+    yearlyAverage: 37,
+    bidRange: '20-46 e$',
+    weeklyHours: '12-15 hrs/week',
+    careerPaths: ['Blockchain Developer', 'Smart Contract Engineer', 'Crypto Analyst'],
+    skills: ['Solidity', 'Ethereum', 'Web3', 'Distributed Systems', 'Cryptography'],
+    afterClassRating: 4.8,
+    workload: 'Very High',
+    difficulty: 5,
+    tags: ['Programming', 'Advanced', 'Emerging Tech']
   }
 ];
 
 // Default cart with sample courses shown on login
 // Setup to demonstrate:
-// - IS214 and IS428 have same exam date (2025-04-28) AND same class time (Monday 12:00-15:00)
-// - IS428 has missing prerequisites (requires IS210 and IS213, which student hasn't completed)
+// - IS214 has demand change (increase)
+// - IS428 has demand change (decrease)
+// - IS216 has demand change (increase)
+// - IS315 has demand change (increase)
+// - Mix of under-demand (IS415), normal (IS453), and over-demand (IS460, IS216) courses
 export const studentCart = [
-  courses.find(c => c.id === 'IS214'),
-  courses.find(c => c.id === 'IS428'),
-  courses.find(c => c.id === 'IS216')
+  courses.find(c => c.id === 'IS214'),  // demand change: increase
+  courses.find(c => c.id === 'IS428'),  // demand change: decrease
+  courses.find(c => c.id === 'IS216'),  // demand change: increase
+  courses.find(c => c.id === 'IS315'),  // demand change: increase
+  courses.find(c => c.id === 'IS415'),  // under-demand (45/80)
+  courses.find(c => c.id === 'IS453'),  // normal demand (95/100)
+  courses.find(c => c.id === 'IS460')   // over-demand (195/80)
 ].filter(Boolean); // Filter out any undefined values
 
 export const studentTimetable = [];

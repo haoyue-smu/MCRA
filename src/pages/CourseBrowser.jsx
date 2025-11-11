@@ -336,6 +336,10 @@ function CourseBrowser({ cart, addToCart, removeFromCart }) {
             onClick={(e) => {
               e.stopPropagation();
               addToCart(course.id);
+              // Auto-like when adding to cart
+              if (!isSubscribed(course.id)) {
+                toggleSubscription(course.id);
+              }
             }}
             className="btn-primary flex-1 min-w-0 flex items-center justify-center"
           >
