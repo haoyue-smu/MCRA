@@ -1,7 +1,7 @@
 {
-  "name": "scis-smart-planner",
+  "name": "boss-smart-planner",
   "version": "1.0.0",
-  "description": "SMU SCIS Smart Planner - Student Portal",
+  "description": "SMU BOSS Smart Planner - Student Portal",
   "main": "index.js",
   "scripts": {
     "dev": "vite",

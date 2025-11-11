@@ -90,7 +90,7 @@ function Sidebar({ cart, user, onLogout, onCollapseChange, isCollapsed }) {
               <div>
                 <h1 className="text-2xl font-bold text-white flex items-center">
                   <span className="text-smu-gold mr-2">●</span>
-                  SCIS Planner
+                  BOSS Planner
                 </h1>
                 <p className="text-xs text-blue-100 mt-1">Smart Course Planning</p>
               </div>

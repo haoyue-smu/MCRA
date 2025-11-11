@@ -1,4 +1,4 @@
-// Mock data for SCIS Smart Planner
+// Mock data for BOSS Smart Planner
 
 export const courses = [
   {
@@ -130,6 +130,7 @@ export const courses = [
     capacity: 120,
     subscribers: 215,
     suEligible: true,
+    demandChange: { type: 'increase', previousDemandCount: 165, changePercent: 15, suggestedBid: 38 },
     description: 'Full-stack web development with modern frameworks',
     assessments: [
       { type: 'Class Participation', date: '2025-04-30', weight: 10, title: 'Attendance & Engagement' },
@@ -328,6 +329,7 @@ export const courses = [
     capacity: 120,
     subscribers: 158,
     suEligible: false,
+    demandChange: { type: 'increase', previousDemandCount: 118, changePercent: 14, suggestedBid: 33 },
     description: 'Data warehousing, ETL processes, and business analytics',
     assessments: [
       { type: 'Class Participation', date: '2025-04-28', weight: 10, title: 'Attendance & Engagement' },
@@ -367,6 +369,7 @@ export const courses = [
     capacity: 100,
     subscribers: 107,
     suEligible: true,
+    demandChange: { type: 'decrease', previousDemandCount: 115, changePercent: -20, suggestedBid: 22 },
     description: 'Enterprise architecture frameworks, solution design, and IT strategy',
     assessments: [
       { type: 'Class Participation', date: '2025-04-28', weight: 10, title: 'Attendance & Engagement' },
@@ -520,7 +523,7 @@ export const impactMetrics = {
 export const suPolicy = {
   title: 'S/U Policy Overview',
   rules: [
-    'Students can S/U up to 12 Course Units (CUs) throughout their undergraduate study',
+    'Students can S/U up to 2 modules in total, decided when towards graduating',
     'Core modules and major requirements cannot be S/U-ed',
     'Final semester courses cannot be S/U-ed',
     'S/U must be declared within the first 2 weeks of term',
@@ -537,7 +540,7 @@ export const suPolicy = {
 
 // Student Progress Data
 export const studentProgress = {
-  totalCreditsRequired: 120,
+  totalCreditsRequired: 36,
   creditsCompleted: 90,
   creditsByType: {
     core: { completed: 30, required: 36 },

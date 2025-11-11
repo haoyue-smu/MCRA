@@ -4,7 +4,7 @@ import {
   BookOpen, Calendar, TrendingUp, GitBranch,
   ClipboardList, Briefcase, Brain, ArrowRight, Star, AlertTriangle,
   CheckCircle, XCircle, DollarSign, Award, Zap, Trash2, GraduationCap, Target,
-  Clock, AlertOctagon
+  Clock, AlertOctagon, Bell, TrendingDown
 } from 'lucide-react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell, ReferenceLine } from 'recharts';
 import { studentProgress, programRequirements } from '../data/mockData';
@@ -243,14 +243,36 @@ function Dashboard({ cart, removeFromCart }) {
     return missing;
   };
 
+  const checkDemandChanges = () => {
+    const changes = [];
+
+    cart.forEach(course => {
+      if (course.demandChange) {
+        changes.push({
+          courseId: course.id,
+          courseName: course.name,
+          type: course.demandChange.type,
+          previousDemandCount: course.demandChange.previousDemandCount,
+          currentDemandCount: course.demandCount,
+          changePercent: course.demandChange.changePercent,
+          suggestedBid: course.demandChange.suggestedBid
+        });
+      }
+    });
+
+    return changes;
+  };
+
   const biddingHealth = calculateBiddingHealth();
   const HealthIcon = biddingHealth.icon;
 
   const [showClashDetails, setShowClashDetails] = useState(false);
   const [showPrereqDetails, setShowPrereqDetails] = useState(false);
+  const [showDemandDetails, setShowDemandDetails] = useState(false);
 
   const timeClashes = checkTimeClashes();
   const missingPrereqs = checkPrerequisites();
+  const demandChanges = checkDemandChanges();
 
   return (
     <PageContainer className="space-y-6">
@@ -324,6 +346,69 @@ function Dashboard({ cart, removeFromCart }) {
                       {missingPrereqs.map((item, idx) => (
                         <div key={idx} className="text-sm text-yellow-900">
                           <strong>{item.course}</strong> requires: <strong>{item.prerequisites.join(', ')}</strong>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Demand Change Notifications */}
+      {demandChanges.length > 0 && (
+        <div className="bg-blue-50 border-2 border-blue-500 rounded-lg p-4 mb-4">
+          <div className="flex items-start justify-between">
+            <div className="flex items-start space-x-3 flex-1">
+              <Bell className="w-6 h-6 text-blue-600 flex-shrink-0 mt-0.5" />
+              <div className="flex-1">
+                <h3 className="font-bold text-lg text-blue-900">Course Demand Changes Detected!</h3>
+                <p className="text-sm text-blue-800 mt-1">
+                  {demandChanges.length} course{demandChanges.length > 1 ? 's' : ''} in your cart {demandChanges.length > 1 ? 'have' : 'has'} experienced demand changes.
+                </p>
+                <button
+                  onClick={() => setShowDemandDetails(!showDemandDetails)}
+                  className="text-sm text-blue-700 underline mt-2 hover:text-blue-900"
+                >
+                  {showDemandDetails ? 'Hide details' : 'View details'}
+                </button>
+                {showDemandDetails && (
+                  <div className="mt-3 p-3 bg-white rounded border border-blue-300">
+                    <div className="space-y-3">
+                      {demandChanges.map((change, idx) => (
+                        <div key={idx} className="text-sm text-blue-900 p-3 bg-blue-50 rounded border border-blue-200">
+                          <div className="flex items-start justify-between">
+                            <div className="flex-1">
+                              <div className="font-semibold text-base mb-1">{change.courseName} ({change.courseId})</div>
+                              <div className="flex items-center space-x-2 mb-2">
+                                {change.type === 'increase' ? (
+                                  <>
+                                    <TrendingUp className="w-4 h-4 text-red-600" />
+                                    <span className="text-red-700 font-medium">
+                                      Demand increased by {change.changePercent}%
+                                    </span>
+                                  </>
+                                ) : (
+                                  <>
+                                    <TrendingDown className="w-4 h-4 text-green-600" />
+                                    <span className="text-green-700 font-medium">
+                                      Demand decreased by {Math.abs(change.changePercent)}%
+                                    </span>
+                                  </>
+                                )}
+                              </div>
+                              <div className="text-xs text-gray-600 space-y-1">
+                                <div>Previous demand: <strong>{change.previousDemandCount}</strong> students</div>
+                                <div>Current demand: <strong>{change.currentDemandCount}</strong> students</div>
+                                <div className="mt-2 pt-2 border-t border-blue-200">
+                                  <span className="text-blue-800 font-semibold">💡 Suggested bid: </span>
+                                  <span className="text-lg font-bold text-blue-900">e$ {change.suggestedBid}</span>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
                         </div>
                       ))}
                     </div>
