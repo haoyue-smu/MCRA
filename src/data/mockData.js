@@ -693,6 +693,20 @@ export const studentCart = [
   courses.find(c => c.id === 'IS460')   // over-demand (195/80)
 ].filter(Boolean); // Filter out any undefined values
 
+// Initialize default subscriptions for cart courses
+// This ensures courses in cart are already "liked" when user logs in
+export const defaultSubscriptions = studentCart.map(course => course?.id).filter(Boolean);
+
+// Initialize subscriber counts including default subscriptions
+export const initializeSubscriberCounts = () => {
+  const counts = {};
+  courses.forEach(course => {
+    counts[course.id] = course.subscribers;
+    // Don't increment here since the subscribers count already includes base numbers
+  });
+  return counts;
+};
+
 export const studentTimetable = [];
 
 export const publicHolidays = [

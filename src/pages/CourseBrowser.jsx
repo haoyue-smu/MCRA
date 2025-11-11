@@ -4,7 +4,7 @@ import {
   ShoppingCart, BookOpen, Users, Bell, BellOff, AlertCircle,
   Heart, Eye, TrendingDown, ArrowUp, Flame
 } from 'lucide-react';
-import { courses } from '../data/mockData';
+import { courses, defaultSubscriptions } from '../data/mockData';
 import PageContainer from '../components/PageContainer';
 
 function CourseBrowser({ cart, addToCart, removeFromCart }) {
@@ -16,7 +16,12 @@ function CourseBrowser({ cart, addToCart, removeFromCart }) {
   const [showFilters, setShowFilters] = useState(false);
   const [subscriptions, setSubscriptions] = useState(() => {
     const saved = localStorage.getItem('courseSubscriptions');
-    return saved ? JSON.parse(saved) : [];
+    if (saved) {
+      return JSON.parse(saved);
+    }
+    // Initialize with default subscriptions for cart courses
+    localStorage.setItem('courseSubscriptions', JSON.stringify(defaultSubscriptions));
+    return defaultSubscriptions;
   });
   const [wishlist, setWishlist] = useState(() => {
     const saved = localStorage.getItem('courseWishlist');
